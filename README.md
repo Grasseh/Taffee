@@ -1,5 +1,7 @@
 # PFE (Nom à déterminer)
 
+[![Build Status](https://travis-ci.org/Grasseh/PFE_H_2019.svg?branch=master)](https://travis-ci.org/Grasseh/PFE_H_2019)
+
 BDD Framework to sweetly display software test results.
 
 ## Description
