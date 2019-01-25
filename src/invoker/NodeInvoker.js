@@ -1,9 +1,9 @@
 const GenericInvoker = require('./GenericInvoker');
 
 class NodeInvoker extends GenericInvoker{
-    invoke(testName, project, _params){
+    invoke(testName, project, options){
         let testClass = new (this._loadModule(project))();
-        let returnVal = testClass[testName](_params);
+        let returnVal = testClass[testName](options.params);
         return returnVal;
     }
 
