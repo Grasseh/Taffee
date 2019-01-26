@@ -1,1 +1,10 @@
-language: node_js
+language:
+    - node_js
+install:
+    - npm install
+    - npm install -g codecov
+script:
+    - npm run eslint_prepush
+    - npm run cover
+    - npm run report
+    - codecov
