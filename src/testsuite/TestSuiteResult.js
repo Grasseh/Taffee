@@ -1,17 +1,15 @@
 class TestSuiteResult {
     constructor(testResults) {
-        let self = this;
+        this._successes = 0;
+        this._failures = 0;
+        this._testResults = testResults;
 
-        self._successes = 0;
-        self._failures = 0;
-        self._testResults = testResults;
-
-        testResults.forEach(function(testResult) {
+        testResults.forEach(testResult => {
             if(testResult.isSuccess()) {
-                self._successes++;
+                this._successes++;
             }
             else {
-                self._failures++;
+                this._failures++;
             }
         });
     }

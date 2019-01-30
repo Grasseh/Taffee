@@ -20,7 +20,7 @@ let files = fileLocator.locateFiles(basePath);
 let parser = new App.interpreter.MarkdownParser();
 let testSuiteDescriptors = [];
 
-files.forEach(function(file) {
+files.forEach(file => {
     let testSuiteDescriptor = parser.parseFile(file);
     testSuiteDescriptors.push(testSuiteDescriptor);
 });

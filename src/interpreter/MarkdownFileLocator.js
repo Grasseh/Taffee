@@ -4,20 +4,15 @@ const fs = require('fs');
 const path = require('path');
 
 class MarkdownFileLocator extends GenericFileLocator{
-    locateFiles(basePath, options){
-        options = typeof options === 'object' ? options : {
-            recursive: false
-        };
-
+    locateFiles(basePath, options = {recursive: false}){
         return this._readdir(basePath, options);
     }
 
     _readdir(basePath, options){
-        let self = this;
         let files = fs.readdirSync(basePath, {withFileTypes: true});
         let foundFiles = [];
 
-        files.forEach(function(file){
+        files.forEach(file => {
             if(file.isFile()) {
                 let ext = path.extname(path.join(basePath, file.name));
 
@@ -26,7 +21,7 @@ class MarkdownFileLocator extends GenericFileLocator{
 
             }
             else if(file.isDirectory() && options.recursive) {
-                let foundFilesInSubDir = self._readdir(path.join(basePath, file.name), options);
+                let foundFilesInSubDir = this._readdir(path.join(basePath, file.name), options);
                 foundFiles = foundFiles.concat(foundFilesInSubDir);
             }
         });
