@@ -17,7 +17,7 @@ describe('NodeInvoker', function() {
             let params = {className : 'abc'};
             let testResult = phpInvoker.invoke(testName, projectName, params);
             assert(getCwdStub.called);
-            assert(execStub.called);
+            assert(execStub.calledWith(`php myPath/src/invoker/PhpInvoker.php ${testName} ${params.className} ${projectName}`, {}));
             assert.strictEqual(testResult, endVal);
         });
     });
