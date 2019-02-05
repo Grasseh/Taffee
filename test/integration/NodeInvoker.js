@@ -9,7 +9,7 @@ describe('NodeInvoker Integration', function() {
             let nodeInvoker = new NodeInvoker();
             let testName = 'myTestFn';
             let params = [1, 2];
-            let projectName = path.join(process.cwd(), 'test', 'integration', 'artifacts', 'testModule');
+            let projectName = path.join(process.cwd(), 'test', 'integration', 'my artifacts', 'testModule');
             let testResult = nodeInvoker.invoke(testName, projectName, params);
             assert.strictEqual(testResult, 'Hello World');
         });

@@ -11,7 +11,7 @@ describe('PhpInvoker Integration', function() {
             let options = {
                 className : 'Test'
             };
-            let projectName = path.join(process.cwd(), 'test', 'integration', 'artifacts', 'testModule.php');
+            let projectName = path.join(process.cwd(), 'test', 'integration', 'my artifacts', 'testModule.php');
             let testResult = phpInvoker.invoke(testName, projectName, options);
             assert.strictEqual(testResult, 'Hello World');
         });
