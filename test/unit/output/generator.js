@@ -29,6 +29,7 @@ describe('Output Unit', function() {
                 assert(resultingHtml.includes('<a href="?=NoVars()">test invocation</a>'));
             });
 
+            /*
             it('Should convert tests with one variable.', function() {
                 let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'TestInvocation.md');
                 let mdContent = fs.readFileSync(testFile, 'UTF-8');
@@ -38,6 +39,7 @@ describe('Output Unit', function() {
 
                 assert(resultingHtml.includes('<a href="?=OneVar(#var1)">test invocation</a>'));
             });
+            */
 
             /*
             it('Should convert tests with multiple variables.', function() {
