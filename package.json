@@ -4,6 +4,7 @@
   "description": "Behavior Driven Development Test Report Framework",
   "main": "src/index.js",
   "scripts": {
+    "start": "node src/run.js",
     "eslint": "eslint src test --fix",
     "eslint_prepush": "eslint src test",
     "test": "mocha test --recursive",

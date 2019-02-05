@@ -1,10 +1,4 @@
-class EntryController{
-    init(){
-        console.info('Hello World');
-    }
-}
+'use strict';
 
-let entry = new EntryController();
-entry.init();
-
-module.exports = EntryController;
+exports.interpreter = require('./interpreter');
+exports.testSuite = require('./testsuite');

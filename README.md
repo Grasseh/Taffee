@@ -15,7 +15,9 @@ Whenever we package it we gotta fill this space
 
 ## Usage
 
-Whenever we can use it we gotta right the commands here
+In development, we can use it with `npm start` which launch the runner.
+In integration, we need to add a `bin` to the package so the end users can add
+the runner easily to their own `package.json` in the `scripts`.
 
 ## Development
 
