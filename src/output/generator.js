@@ -10,6 +10,14 @@ class HTMLGenerator {
     }
 
     _convertFile(mdContent) {
+        let multiVarTestRegex = /^(?:(?:(?:.*(\[(.*)\]\((\?=.*\((?:#.*, )+(?:#.*)\))\)))+(?:.*)))+$/gm;
+
+        let match = multiVarTestRegex.exec(mdContent);
+        while(match) {
+            // console.log(match);
+            match = multiVarTestRegex.exec(mdContent);
+        }
+
         let converter = new showdown.Converter();
         return converter.makeHtml(mdContent);
     }
