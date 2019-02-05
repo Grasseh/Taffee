@@ -11,7 +11,7 @@ class PhpInvoker extends GenericInvoker{
         let scriptPath = path.join(this._getCwd(), 'src', 'invoker', 'PhpInvoker.php');
         let command = `php ${scriptPath} ${testName} ${options.className} "${project}"`;
         let execOptions = {};
-        let stdout = this._exec(`${command}`, execOptions);
+        let stdout = this._exec(command, execOptions);
         return stdout.toString();
     }
 
