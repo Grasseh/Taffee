@@ -1,12 +1,13 @@
 <?php
 require_once('helloWorld.php');
 require_once('library.php');
-require_once('book.php');
 
 class TestFacade {
  
     public function testHelloWorld() {
-        return 'Hello World';
+        $helloWorld = new HelloWorld();
+        
+        return $helloWorld->getHelloWorld();
     }
 	
 	public function testGetBookFromLibrary(){

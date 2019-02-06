@@ -1,9 +1,9 @@
 class HelloWorld{
-	
-	getHelloWorld(){
-		return "Hello World";
-	}
-	
+
+    getHelloWorld(){
+        return 'Hello World';
+    }
+
 }
 
 module.exports = HelloWorld;
