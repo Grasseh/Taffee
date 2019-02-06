@@ -16,7 +16,7 @@ class TestStub {
     }
 
     getExpectedResult() {
-        return this.getExpectedResult;
+        return this.expectedResult;
     }
 
     getParameters() {
@@ -104,22 +104,33 @@ describe('Output Unit', function() {
                 let test = new TestStub('passingTest', 'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
 
-                let passingTestList = [testResult];
+                let successfulTests = [testResult];
 
                 let htmlGenerator = new HTMLGenerator();
-                let resultingHtml = htmlGenerator._formatSuccessfulTests(htmlContent, passingTestList);
+                let resultingHtml = htmlGenerator._formatSuccessfulTests(htmlContent, successfulTests);
 
                 assert(resultingHtml.includes('<span class="successful-test">passing</span>'));
             });
 
             it('Should convert passing tests to red spans with real values.', function() {
-                // let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'FailingTests.html');
-                // let htmlContent = fs.readFileSync(testFile, 'UTF-8');
+                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'FailingTests.html');
+                let htmlContent = fs.readFileSync(testFile, 'UTF-8');
 
-                // let htmlGenerator = new HTMLGenerator();
-                // let resultingHtml = htmlGenerator._formatFailedTests(htmlContent, []);
+                let testParameters = new Map();
+                let test = new TestStub('failingTest', 'failing', testParameters);
+                let testResult = new TestResultStub(false, 'actualValue', test);
 
-                // console.log(resultingHtml);
+                let failedTests = [testResult];
+
+                let htmlGenerator = new HTMLGenerator();
+                let resultingHtml = htmlGenerator._formatFailedTests(htmlContent, failedTests);
+
+                let expected = '<span class="failed-test">'
+                    + '<span class="failed-test-expected-result">failing</span> '
+                    + '<span class="failed-test-actual-result">actualValue</span>'
+                    + '</span>';
+
+                assert(resultingHtml.includes(expected));
             });
         });
     });
