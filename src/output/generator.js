@@ -26,13 +26,14 @@ class HTMLGenerator {
     }
 
     _convertFile(mdContent) {
-        mdContent = this._convertMultiVariableMethods(mdContent);
+        // mdContent = this._convertMultiVariableMethods(mdContent);
         mdContent = this._removeVariables(mdContent);
 
         let converter = new showdown.Converter();
         return converter.makeHtml(mdContent);
     }
 
+    /*
     _convertMultiVariableMethods(mdContent) {
         let multiVarTestRegex = /^(?:(?:(?:.*(\[(.*)\]\((\?=.*\((?:#.*, )+(?:#.*)\))\)))+(?:.*)))+$/gm;
         let match = multiVarTestRegex.exec(mdContent);
@@ -44,6 +45,7 @@ class HTMLGenerator {
 
         return mdContent;
     }
+    */
 
     _removeVariables(mdContent) {
         return mdContent;
@@ -54,8 +56,8 @@ class HTMLGenerator {
             let testName = testResult.getTest().getTestName();
             let actualResult = testResult.getActualResult();
 
-            let parameters = testResult.getTest().getParameters();
-            let formattedParameters = this._formatTestParameters(parameters);
+            // let parameters = testResult.getTest().getParameters();
+            let formattedParameters = ''; // this._formatTestParameters(parameters);
 
             let searchString = `<a href="?=${testName}(${formattedParameters})">${actualResult}</a>`;
             let replaceString = `<span class="successful-test">${actualResult}</span>`;
@@ -71,8 +73,8 @@ class HTMLGenerator {
             let expectedResult = testResult.getTest().getExpectedResult();
             let actualResult = testResult.getActualResult();
 
-            let parameters = testResult.getTest().getParameters();
-            let formattedParameters = this._formatTestParameters(parameters);
+            // let parameters = testResult.getTest().getParameters();
+            let formattedParameters = ''; // this._formatTestParameters(parameters);
 
             let searchString = `<a href="?=${testName}(${formattedParameters})">${expectedResult}</a>`;
             let replaceString = '<span class="failed-test">'
@@ -86,6 +88,7 @@ class HTMLGenerator {
         return htmlContent;
     }
 
+    /*
     _formatTestParameters(parameters) {
         let parametersList = [...parameters.keys()];
         let formattedParameters = parametersList
@@ -94,6 +97,7 @@ class HTMLGenerator {
 
         return formattedParameters.slice(0, -2);
     }
+    */
 }
 
 module.exports = HTMLGenerator;
