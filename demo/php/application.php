@@ -9,6 +9,7 @@ class Application {
 		$testFacade = new TestFacade();
 		$printer = new Printer();
 
+		$printer->basicMessage($testFacade->testHelloWorld());
 		$printer->basicMessage($testFacade->testLibraryAddBook());
 		$printer->basicDump($testFacade->testGetBookFromLibrary());
 		$printer->basicDump($testFacade->testGetLibrary());

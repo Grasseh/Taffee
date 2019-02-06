@@ -1,15 +1,8 @@
 const assert = require('assert');
 const path = require('path');
-const HelloWorld = require('./helloworld');
+const HelloWorld = require('./helloWorld');
+const Application = require('./application');
 
-var value = 'Hello World';
+let application = new Application();
 
-describe('Hello World', function() {
-    describe('get', function() {
-        it('Should receive a string received in parameters (Hello World), ${value}', function() {
-            let hello = new HelloWorld();
-            let test = hello.getHelloWorld();
-            assert.strictEqual(test, 'Hello World');
-        });
-    });
-});
+application.start();
