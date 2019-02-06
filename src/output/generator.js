@@ -1,11 +1,27 @@
 const fs = require('fs');
+const path = require('path');
 const showdown = require('showdown');
 
 class HTMLGenerator {
-    generate(mdFilePath) {
-        console.log(mdFilePath);
+    generate(testSuiteResult, cssFilePath) {
+        let mdFilePath = testSuiteResult.getTestFileName();
         let mdContent = fs.readFileSync(mdFilePath, 'UTF-8');
-        let htmlContent = this._convertFile(mdContent);
+
+        let relativeCssPath = path.relative(path.dirname(mdFilePath), cssFilePath);
+
+        let htmlContent = '<!DOCTYPE html>\n<html>\n<head>\n';
+        htmlContent += `<link rel="stylesheet" href="${relativeCssPath}">\n`;
+        htmlContent += '</head>\n<body>\n';
+
+        htmlContent += this._convertFile(mdContent);
+        htmlContent += '\n</body>\n</html>';
+
+        let successfulTests = testSuiteResult.getTestResults().filter((t) => t.isSuccess());
+        htmlContent = this._formatSuccessfulTests(htmlContent, successfulTests);
+
+        let failedTests = testSuiteResult.getTestResults().filter((t) => !t.isSuccess());
+        htmlContent = this._formatFailedTests(htmlContent, failedTests);
+
         return htmlContent;
     }
 

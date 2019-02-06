@@ -1,0 +1,15 @@
+span.successful-test {
+    background-color: green;
+}
+
+span.failed-test {
+    background-color: red;
+}
+
+span.failed-test-expected-result {
+    text-decoration: line-through;
+}
+
+span.failed-test-actual-result {
+    font-style: italic;
+}
