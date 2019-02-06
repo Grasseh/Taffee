@@ -4,6 +4,46 @@ const fs = require('fs');
 const path = require('path');
 const HTMLGenerator = require('../../../src/output/generator');
 
+class TestStub {
+    constructor(name, expectedResult, parameters) {
+        this.testName = name;
+        this.expectedResult = expectedResult;
+        this.parameters = parameters;
+    }
+
+    getTestName() {
+        return this.testName;
+    }
+
+    getExpectedResult() {
+        return this.getExpectedResult;
+    }
+
+    getParameters() {
+        return this.parameters;
+    }
+}
+
+class TestResultStub {
+    constructor(success, actualResult, test) {
+        this.success = success;
+        this.actualResult = actualResult;
+        this.test = test;
+    }
+
+    isSuccess() {
+        return this.success;
+    }
+
+    getActualResult() {
+        return this.actualResult;
+    }
+
+    getTest() {
+        return this.test;
+    }
+}
+
 describe('Output Unit', function() {
     describe('HTMLGenerator', function() {
         describe('MD Conversion', function() {
@@ -12,11 +52,11 @@ describe('Output Unit', function() {
                 let mdContent = fs.readFileSync(testFile, 'UTF-8');
 
                 let htmlGenerator = new HTMLGenerator();
-                let resultingHtml = htmlGenerator._convertFile(mdContent);
+                let resultingMd = htmlGenerator._convertFile(mdContent);
 
-                assert(resultingHtml.includes('<p>'));
-                assert(resultingHtml.includes('</p>'));
-                assert(resultingHtml.includes('<br />'));
+                assert(resultingMd.includes('<p>'));
+                assert(resultingMd.includes('</p>'));
+                assert(resultingMd.includes('<br />'));
             });
 
             it('Should convert tests without variables.', function() {
@@ -24,9 +64,9 @@ describe('Output Unit', function() {
                 let mdContent = fs.readFileSync(testFile, 'UTF-8');
 
                 let htmlGenerator = new HTMLGenerator();
-                let resultingHtml = htmlGenerator._convertFile(mdContent);
+                let resultingMd = htmlGenerator._convertFile(mdContent);
 
-                assert(resultingHtml.includes('<a href="?=NoVars()">test invocation</a>'));
+                assert(resultingMd.includes('<a href="?=NoVars()">test invocation</a>'));
             });
 
             /*
@@ -35,9 +75,9 @@ describe('Output Unit', function() {
                 let mdContent = fs.readFileSync(testFile, 'UTF-8');
 
                 let htmlGenerator = new HTMLGenerator();
-                let resultingHtml = htmlGenerator._convertFile(mdContent);
+                let resultingMd = htmlGenerator._convertFile(mdContent);
 
-                assert(resultingHtml.includes('<a href="?=OneVar(#var1)">test invocation</a>'));
+                assert(resultingMd.includes('<a href="?=OneVar(#var1)">test invocation</a>'));
             });
             */
 
@@ -47,12 +87,40 @@ describe('Output Unit', function() {
                 let mdContent = fs.readFileSync(testFile, 'UTF-8');
 
                 let htmlGenerator = new HTMLGenerator();
-                let resultingHtml = htmlGenerator._convertFile(mdContent);
+                let resultingMd = htmlGenerator._convertFile(mdContent);
 
-                assert(resultingHtml.includes('<a href="?=MultiVar(#var1, #var2)">test invocation</a>'));
-                assert(resultingHtml.includes('<a href="?=MultiVar(#var1, #var2, #var3)">test invocation</a>'));
+                assert(resultingMd.includes('<a href="?=MultiVar(#var1, #var2)">test invocation</a>'));
+                assert(resultingMd.includes('<a href="?=MultiVar(#var1, #var2, #var3)">test invocation</a>'));
             });
             */
+        });
+
+        describe('HTML Alterations', function() {
+            it('Should convert passing tests to green spans.', function() {
+                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'PassingTests.html');
+                let htmlContent = fs.readFileSync(testFile, 'UTF-8');
+
+                let testParameters = new Map();
+                let test = new TestStub('passingTest', 'passing', testParameters);
+                let testResult = new TestResultStub(true, 'passing', test);
+
+                let passingTestList = [testResult];
+
+                let htmlGenerator = new HTMLGenerator();
+                let resultingHtml = htmlGenerator._formatSuccessfulTests(htmlContent, passingTestList);
+
+                assert(resultingHtml.includes('<span class="successful-test">passing</span>'));
+            });
+
+            it('Should convert passing tests to red spans with real values.', function() {
+                // let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'FailingTests.html');
+                // let htmlContent = fs.readFileSync(testFile, 'UTF-8');
+
+                // let htmlGenerator = new HTMLGenerator();
+                // let resultingHtml = htmlGenerator._formatFailedTests(htmlContent, []);
+
+                // console.log(resultingHtml);
+            });
         });
     });
 });
