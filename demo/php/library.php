@@ -11,7 +11,6 @@ class Library {
     } 
     
     public function addBook($isbn, $title, $description){
-        
         $this->books[] = new Book($this->getNumberOfBook(),$isbn, $title, $description);
     }
     

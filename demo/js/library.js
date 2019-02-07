@@ -7,7 +7,6 @@ class Library {
     }
 
     addBook(isbn, title, description){
-
         this._books.push(new Book(this.getNumberOfBook(), isbn, title, description));
     }
 

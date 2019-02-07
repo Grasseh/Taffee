@@ -1,24 +1,10 @@
-
-const TestFacade = require('./testFacade');
 const Library = require('./library');
 const Printer = require('./printer');
 let readline = require('readline-sync');
 
 class Application {
-
-    test(){
-        let testFacade = new TestFacade();
-        let printer = new Printer();
-
-        printer.basicMessage(testFacade.testHelloWorld());
-        printer.basicMessage(testFacade.testLibraryAddBook());
-        printer.basicDump(testFacade.testGetBookFromLibrary());
-        printer.basicDump(testFacade.testGetLibrary());
-    }
-
     start(){
         let printer = new Printer();
-        this.test();
 
         printer.basicMessage('Welcome to this library demo!');
         while(true){

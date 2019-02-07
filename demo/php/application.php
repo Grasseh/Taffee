@@ -1,23 +1,10 @@
 <?php
-require_once('testFacade.php');
 require_once('library.php');
 require_once('printer.php');
 
 class Application {
-    
-    public function test(){
-        $testFacade = new TestFacade();
-        $printer = new Printer();
-        
-        $printer->basicMessage($testFacade->testHelloWorld());
-        $printer->basicMessage($testFacade->testLibraryAddBook());
-        $printer->basicDump($testFacade->testGetBookFromLibrary());
-        $printer->basicDump($testFacade->testGetLibrary());
-    }
-    
     public function start(){
         $printer = new Printer();
-        $this->test();
         
         $printer->basicMessage("Welcome to this library demo!");
         while(true){
