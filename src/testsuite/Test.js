@@ -1,8 +1,13 @@
 class Test {
-    constructor(testName, expectedResult, parameters) {
+    constructor(testClass, testName, expectedResult, parameters) {
+        this._testClass = testClass;
         this._testName = testName;
         this._expectedResult = expectedResult;
         this._parameters = parameters;
+    }
+
+    getTestClass(){
+        return this._testClass;
     }
 
     getTestName(){
