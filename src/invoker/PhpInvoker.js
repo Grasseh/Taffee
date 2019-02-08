@@ -9,7 +9,7 @@ const path = require('path');
 class PhpInvoker extends GenericInvoker{
     invoke(testName, project, options){
         let scriptPath = path.join(this._getCwd(), 'src', 'invoker', 'PhpInvoker.php');
-        let command = `php ${scriptPath} ${testName} ${options.className} "${project}"`;
+        let command = `php "${scriptPath}" ${testName} ${options.className} "${project}"`;
         let execOptions = {};
         let stdout = this._exec(command, execOptions);
         return stdout.toString();
