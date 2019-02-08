@@ -3,7 +3,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const PhpInvoker = require('../../src/invoker/PhpInvoker');
 
-describe('NodeInvoker', function() {
+describe('PhpInvoker', function() {
     describe('invoke', function() {
         it('Should return Hello world', function() {
             let phpInvoker = new PhpInvoker();
@@ -17,7 +17,7 @@ describe('NodeInvoker', function() {
             let params = {className : 'abc'};
             let testResult = phpInvoker.invoke(testName, projectName, params);
             assert(getCwdStub.called);
-            assert(execStub.calledWith(`php myPath/src/invoker/PhpInvoker.php ${testName} ${params.className} "${projectName}"`, {}));
+            assert(execStub.calledWith(`php "myPath/src/invoker/PhpInvoker.php" ${testName} ${params.className} "${projectName}"`, {}));
             assert.strictEqual(testResult, endVal);
         });
     });
