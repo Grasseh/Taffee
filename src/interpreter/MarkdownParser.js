@@ -1,6 +1,7 @@
 const GenericParser = require('./GenericParser');
 const Test = require('../testsuite/Test');
 const TestSuiteDescriptor = require('../testsuite/TestSuiteDescriptor');
+const path = require("path");
 
 const fs = require('fs'); // eslint-disable-line no-unused-vars
 const descriptorFlags_re = /\[\*(.*)\].*/ig;
@@ -11,10 +12,12 @@ class MarkdownParser extends GenericParser{
     parseFile(filePath, options){ // eslint-disable-line no-unused-vars
         let mdContent = fs.readFileSync(filePath, 'UTF-8');
         let descriptor_tags = this._getTags(mdContent, descriptorFlags_re);
-        let descriptor = this._generateDescriptor(descriptor_tags);
+        let descriptor = this._generateDescriptor(descriptor_tags, filePath);
         let result_tags = this._getTags(mdContent, resultFlags_re);
         let tests = this._generateTests(result_tags);
 
+        descriptor.setTests(tests);
+        return descriptor;
     }
 
     _getTags(mdContent, re) {
@@ -38,8 +41,12 @@ class MarkdownParser extends GenericParser{
         return tests;
     }
 
-    _generateDescriptor(descriptor_tags){
-        let descriptor = new TestSuiteDescriptor();
+    _generateDescriptor(descriptor_tags, filepath){
+        let directory = path.dirname(filepath);
+        let testFileName = path.join(directory, descriptor_tags['module']);
+        let invoker = descriptor_tags['invoker'];
+        let descriptor = new TestSuiteDescriptor(testFileName, invoker);
+        return descriptor;
     }
 }
 

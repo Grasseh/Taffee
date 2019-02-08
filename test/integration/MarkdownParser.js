@@ -5,11 +5,11 @@ const MarkdownParser = require('../../src/interpreter/MarkdownParser');
 
 describe('MarkdownParser', function() {
     describe('parseFile', function() {
-        it('lists 3 flags', function() {
+        it('returns testsuitedescriptor with correct invoker and # of tests', function() {
             let markdownParser = new MarkdownParser();
-            let tags = markdownParser.parseFile(`${__dirname}/artifacts/markdown/test1.md`);
-            console.log(tags);
-            assert.strictEqual(tags.length, 2);
+            let descriptor = markdownParser.parseFile(`${__dirname}/artifacts/markdown/test1.md`);
+            assert.strictEqual(descriptor.getInvoker(), "PhpInvoker");
+            assert.strictEqual(descriptor.getTests().length, 1);
         });
     });
 });
