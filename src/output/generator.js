@@ -2,102 +2,97 @@ const fs = require('fs');
 const path = require('path');
 const showdown = require('showdown');
 
+const TEST_NAME_INDEX = 1;
+
 class HTMLGenerator {
-    generate(testSuiteResult, cssFilePath) {
-        let mdFilePath = testSuiteResult.getTestFileName();
-        let mdContent = fs.readFileSync(mdFilePath, 'UTF-8');
+    constructor() {
+        this.testFormatting = Object.freeze({
+            true: this._formatSuccessfulTest,
+            false: this._formatFailedTest
+        });
+    }
 
-        let relativeCssPath = path.relative(path.dirname(mdFilePath), cssFilePath);
-
-        let htmlContent = '<!DOCTYPE html>\n<html>\n<head>\n';
-        htmlContent += `<link rel="stylesheet" href="${relativeCssPath}">\n`;
-        htmlContent += '</head>\n<body>\n';
-
-        htmlContent += this._convertFile(mdContent);
-        htmlContent += '\n</body>\n</html>';
-
-        let successfulTests = testSuiteResult.getTestResults().filter((t) => t.isSuccess());
-        htmlContent = this._formatSuccessfulTests(htmlContent, successfulTests);
-
-        let failedTests = testSuiteResult.getTestResults().filter((t) => !t.isSuccess());
-        htmlContent = this._formatFailedTests(htmlContent, failedTests);
+    generate(testSuiteResults, inputMdFilePath, outputDirectory, cssFilePath) {
+        let htmlContent = '<!DOCTYPE html>\n';
+        htmlContent += '<html>\n';
+        htmlContent += this._generateHtmlHeader(outputDirectory, cssFilePath);
+        htmlContent += this._generateHtmlBody(inputMdFilePath, testSuiteResults.getTestResults());
+        htmlContent += '\n</html>';
 
         return htmlContent;
     }
 
-    _convertFile(mdContent) {
-        // mdContent = this._convertMultiVariableMethods(mdContent);
-        mdContent = this._removeVariables(mdContent);
+    _generateHtmlHeader(outputDirectory, cssFilePath) {
+        let relativeCssPath = path.relative(outputDirectory, cssFilePath);
+        let htmlHeader = '<head>\n';
+        htmlHeader += `<link rel="stylesheet" href="${relativeCssPath}">\n`;
+        htmlHeader += '</head>\n';
 
-        let converter = new showdown.Converter();
-        return converter.makeHtml(mdContent);
+        return htmlHeader;
     }
 
-    /*
-    _convertMultiVariableMethods(mdContent) {
-        let multiVarTestRegex = /^(?:(?:(?:.*(\[(.*)\]\((\?=.*\((?:#.*, )+(?:#.*)\))\)))+(?:.*)))+$/gm;
-        let match = multiVarTestRegex.exec(mdContent);
+    _generateHtmlBody(inputMdFilePath, testResults) {
+        let converter = new showdown.Converter();
+        let mdContent = fs.readFileSync(inputMdFilePath, 'UTF-8');
 
-        while(match) {
-            // console.log(match);
-            match = multiVarTestRegex.exec(mdContent);
+        if (null !== testResults) {
+            mdContent = this._formatContent(mdContent, testResults);
         }
 
-        return mdContent;
-    }
-    */
+        let htmlBody = '<body>\n';
+        htmlBody += `${converter.makeHtml(mdContent)}\n`;
+        htmlBody += '</body>';
 
-    _removeVariables(mdContent) {
-        return mdContent;
-    }
-
-    _formatSuccessfulTests(htmlContent, successfulTests) {
-        successfulTests.forEach((testResult) => {
-            let testName = testResult.getTest().getTestName();
-            let actualResult = testResult.getActualResult();
-
-            // let parameters = testResult.getTest().getParameters();
-            let formattedParameters = ''; // this._formatTestParameters(parameters);
-
-            let searchString = `<a href="?=${testName}(${formattedParameters})">${actualResult}</a>`;
-            let replaceString = `<span class="successful-test">${actualResult}</span>`;
-            htmlContent = htmlContent.replace(searchString, replaceString);
-        });
-
-        return htmlContent;
+        return htmlBody;
     }
 
-    _formatFailedTests(htmlContent, failedTests) {
-        failedTests.forEach((testResult) => {
-            let testName = testResult.getTest().getTestName();
-            let expectedResult = testResult.getTest().getExpectedResult();
-            let actualResult = testResult.getActualResult();
-
-            // let parameters = testResult.getTest().getParameters();
-            let formattedParameters = ''; // this._formatTestParameters(parameters);
-
-            let searchString = `<a href="?=${testName}(${formattedParameters})">${expectedResult}</a>`;
-            let replaceString = '<span class="failed-test">'
-                + `<span class="failed-test-expected-result">${expectedResult}</span> `
-                + `<span class="failed-test-actual-result">${actualResult}</span>`
-                + '</span>';
-
-            htmlContent = htmlContent.replace(searchString, replaceString);
-        });
-
-        return htmlContent;
+    /**
+     * Format on a per line basis to avoid multiple test conversions in a single replace operation.
+     */
+    _formatContent(mdContent, testResults) {
+        let mdLines = mdContent.split('\n');
+        mdLines.forEach((line, i, arr) => arr[i] = this._convertTests(line, testResults));
+        return mdLines.join('\n');
     }
 
-    /*
-    _formatTestParameters(parameters) {
-        let parametersList = [...parameters.keys()];
-        let formattedParameters = parametersList
-            .map((p) => p = `#${p}`)
-            .reduce((acc, v) => acc += `${v}, `, '');
+    _convertTests(mdLine, testResults) {
+        let testDetectionRegex = /\[.*?\]\(\?=.*?\)\)/gm;
+        let matchedTests = mdLine.match(testDetectionRegex);
 
-        return formattedParameters.slice(0, -2);
+        if(null !== matchedTests) {
+            matchedTests.forEach((match) => mdLine = this._convertTest(mdLine, match, testResults));
+        }
+
+        return mdLine;
     }
-    */
+
+    _convertTest(mdLine, searchString, testResults) {
+        let testElementsRegex = /(?:\[(?:.*?)\])\(\?=(.*)\(\)\)/gm;
+        let testElements = testElementsRegex.exec(searchString);
+
+        let testName = testElements[TEST_NAME_INDEX];
+        let testResult = testResults.find((tr) => testName === tr.getTest().getTestName());
+
+        return this.testFormatting[testResult.isSuccess()](mdLine, searchString, testResult);
+    }
+
+    _formatSuccessfulTest(mdLine, searchString, successfulTest) {
+        let actualResult = successfulTest.getActualResult();
+        let replaceString = `<span class="successful-test">${actualResult}</span>`;
+        return mdLine.replace(searchString, replaceString);
+    }
+
+    _formatFailedTest(mdLine, searchString, failedTest) {
+        let expectedResult = failedTest.getTest().getExpectedResult();
+        let actualResult = failedTest.getActualResult();
+
+        let replaceString = '<span class="failed-test">'
+            + `<span class="failed-test-expected-result">${expectedResult}</span> `
+            + `<span class="failed-test-actual-result">${actualResult}</span>`
+            + '</span>';
+
+        return mdLine.replace(searchString, replaceString);
+    }
 }
 
 module.exports = HTMLGenerator;

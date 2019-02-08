@@ -61,8 +61,9 @@ class TestSuiteResultStub {
 
 describe('Output Integration', function() {
     describe('HTMLGenerator', function() {
-        it('Should convert MD to HTML.', function() {
+        it('Should convert MD to HTML', function() {
             let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'OutputIntegrationTest.md');
+            let outputDir = path.join(__dirname, '..', 'artifacts', 'output');
             let cssFile = path.join(__dirname, '..', 'artifacts', 'output', 'basic.css');
 
             let failingTest = new TestStub('failingTest', 'failing', new Map());
@@ -75,10 +76,10 @@ describe('Output Integration', function() {
             let testSuiteResult = new TestSuiteResultStub(testFile, testResults);
 
             let htmlGenerator = new HTMLGenerator();
-            let resultingHtml = htmlGenerator.generate(testSuiteResult, cssFile);
+            let resultingHtml = htmlGenerator.generate(testSuiteResult, testFile, outputDir, cssFile);
 
-            let expectedPath = path.join(__dirname, '..', 'artifacts', 'output', 'OutputIntegrationTest.html');
-            let expectedHtml = fs.readFileSync(expectedPath, 'UTF-8');
+            let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedOut.html');
+            let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
 
             assert.strictEqual(expectedHtml.slice(0, -1), resultingHtml);
         });

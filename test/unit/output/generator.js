@@ -46,91 +46,214 @@ class TestResultStub {
 
 describe('Output Unit', function() {
     describe('HTMLGenerator', function() {
-        describe('MD Conversion', function() {
-            it('Should convert testless MD To HTML.', function() {
-                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'NoTest.md');
-                let mdContent = fs.readFileSync(testFile, 'UTF-8');
-
+        describe('HTML Head generation', function() {
+            it('Should add basic tags', function() {
                 let htmlGenerator = new HTMLGenerator();
-                let resultingMd = htmlGenerator._convertFile(mdContent);
-
-                assert(resultingMd.includes('<p>'));
-                assert(resultingMd.includes('</p>'));
-                assert(resultingMd.includes('<br />'));
+                let header = htmlGenerator._generateHtmlHeader('', '');
+                assert(header.includes('<head>'));
+                assert(header.includes('<link'));
+                assert(header.includes('</head>'));
             });
 
-            it('Should convert tests without variables.', function() {
-                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'TestInvocation.md');
-                let mdContent = fs.readFileSync(testFile, 'UTF-8');
+            it('Should create a relative link to a css', function() {
+                let outputDir = path.join(__dirname);
+                let cssPath = path.join(__dirname, 'style.css');
 
                 let htmlGenerator = new HTMLGenerator();
-                let resultingMd = htmlGenerator._convertFile(mdContent);
+                let header = htmlGenerator._generateHtmlHeader(outputDir, cssPath);
 
-                assert(resultingMd.includes('<a href="?=NoVars()">test invocation</a>'));
+                assert(header.includes('<link rel="stylesheet" href="style.css">'));
             });
-
-            /*
-            it('Should convert tests with one variable.', function() {
-                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'TestInvocation.md');
-                let mdContent = fs.readFileSync(testFile, 'UTF-8');
-
-                let htmlGenerator = new HTMLGenerator();
-                let resultingMd = htmlGenerator._convertFile(mdContent);
-
-                assert(resultingMd.includes('<a href="?=OneVar(#var1)">test invocation</a>'));
-            });
-            */
-
-            /*
-            it('Should convert tests with multiple variables.', function() {
-                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'TestInvocation.md');
-                let mdContent = fs.readFileSync(testFile, 'UTF-8');
-
-                let htmlGenerator = new HTMLGenerator();
-                let resultingMd = htmlGenerator._convertFile(mdContent);
-
-                assert(resultingMd.includes('<a href="?=MultiVar(#var1, #var2)">test invocation</a>'));
-                assert(resultingMd.includes('<a href="?=MultiVar(#var1, #var2, #var3)">test invocation</a>'));
-            });
-            */
         });
 
-        describe('HTML Alterations', function() {
-            it('Should convert passing tests to green spans.', function() {
-                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'PassingTests.html');
-                let htmlContent = fs.readFileSync(testFile, 'UTF-8');
+        describe('HTML Body generation', function() {
+            it('Should convert testless MD To HTML', function() {
+                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'NoTest.md');
+
+                let htmlGenerator = new HTMLGenerator();
+                let body = htmlGenerator._generateHtmlBody(testFile, null);
+
+                assert(body.includes('<body>'));
+                assert(body.includes('<p>'));
+                assert(body.includes('</p>'));
+                assert(body.includes('<br />'));
+                assert(body.includes('</body>'));
+            });
+
+            it('Should convert all passing tests in the html body', function() {
+                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'PassingTests.md');
+                let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedPassingTests.html');
+
+                let testParameters = new Map();
+                let test = new TestStub('anotherPassingTest', 'passing', testParameters);
+                let testResult = new TestResultStub(true, 'passing', test);
+
+                let secondTestParameters = new Map();
+                let secondTest = new TestStub('passingTest', 'passing', secondTestParameters);
+                let secondTestResult = new TestResultStub(true, 'passing', secondTest);
+                let testResults = [testResult, secondTestResult];
+
+                let htmlGenerator = new HTMLGenerator();
+                let formattedLine = htmlGenerator._generateHtmlBody(testFile, testResults);
+
+                let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8').slice(0, -1);
+
+                assert.strictEqual(formattedLine, expectedHtml);
+            });
+
+            it('Should convert all failing tests in the html body', function() {
+                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'FailingTests.md');
+                let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedFailingTests.html');
+
+                let testParameters = new Map();
+                let test = new TestStub('failingTest', 'failing', testParameters);
+                let testResult = new TestResultStub(false, 'actual1', test);
+
+                let secondTestParameters = new Map();
+                let secondTest = new TestStub('anotherFailingTest', 'failing', secondTestParameters);
+                let secondTestResult = new TestResultStub(false, 'actual2', secondTest);
+                let testResults = [testResult, secondTestResult];
+
+                let htmlGenerator = new HTMLGenerator();
+                let formattedLine = htmlGenerator._generateHtmlBody(testFile, testResults);
+
+                let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8').slice(0, -1);
+
+                assert.strictEqual(formattedLine, expectedHtml);
+            });
+
+            it('Should convert all tests in the html body', function() {
+                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'MixedTests.md');
+                let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedMixedTests.html');
 
                 let testParameters = new Map();
                 let test = new TestStub('passingTest', 'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
 
-                let successfulTests = [testResult];
+                let secondTestParameters = new Map();
+                let secondTest = new TestStub('failingTest', 'failing', secondTestParameters);
+                let secondTestResult = new TestResultStub(false, 'actual', secondTest);
+                let testResults = [testResult, secondTestResult];
 
                 let htmlGenerator = new HTMLGenerator();
-                let resultingHtml = htmlGenerator._formatSuccessfulTests(htmlContent, successfulTests);
+                let formattedLine = htmlGenerator._generateHtmlBody(testFile, testResults);
 
-                assert(resultingHtml.includes('<span class="successful-test">passing</span>'));
+                let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8').slice(0, -1);
+
+                assert.strictEqual(formattedLine, expectedHtml);
+            });
+        });
+
+        describe('0 variables test conversion', function() {
+            it('Should not convert a testless line', function() {
+                let mdLine = 'A testless line.';
+
+                let htmlGenerator = new HTMLGenerator();
+                let formattedLine = htmlGenerator._convertTests(mdLine, null);
+
+                let expectedLine = 'A testless line.';
+                assert.strictEqual(formattedLine, expectedLine);
             });
 
-            it('Should convert passing tests to red spans with real values.', function() {
-                let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'FailingTests.html');
-                let htmlContent = fs.readFileSync(testFile, 'UTF-8');
+            it('Should convert a passing test to a span', function() {
+                let mdLine = 'A [passing](?=passingTest()) test.';
 
                 let testParameters = new Map();
-                let test = new TestStub('failingTest', 'failing', testParameters);
-                let testResult = new TestResultStub(false, 'actualValue', test);
-
-                let failedTests = [testResult];
+                let test = new TestStub('passingTest', 'passing', testParameters);
+                let testResult = new TestResultStub(true, 'passing', test);
+                let testResults = [testResult];
 
                 let htmlGenerator = new HTMLGenerator();
-                let resultingHtml = htmlGenerator._formatFailedTests(htmlContent, failedTests);
+                let formattedLine = htmlGenerator._convertTests(mdLine, testResults);
 
-                let expected = '<span class="failed-test">'
-                    + '<span class="failed-test-expected-result">failing</span> '
-                    + '<span class="failed-test-actual-result">actualValue</span>'
-                    + '</span>';
+                let expectedLine = 'A <span class="successful-test">passing</span> test.';
+                assert.strictEqual(formattedLine, expectedLine);
+            });
 
-                assert(resultingHtml.includes(expected));
+            it('Should convert multiple passing tests to spans', function() {
+                let mdLine = 'A [passing](?=passingTest()) test and [another](?=anotherTest()) one.';
+
+                let testParameters = new Map();
+                let test = new TestStub('passingTest', 'passing', testParameters);
+                let testResult = new TestResultStub(true, 'passing', test);
+
+                let secondTestParameters = new Map();
+                let secondTest = new TestStub('anotherTest', 'another', secondTestParameters);
+                let secondTestResult = new TestResultStub(true, 'another', secondTest);
+                let testResults = [testResult, secondTestResult];
+
+                let htmlGenerator = new HTMLGenerator();
+                let formattedLine = htmlGenerator._convertTests(mdLine, testResults);
+
+                let expectedLine = 'A <span class="successful-test">passing</span> test' +
+                    ' and <span class="successful-test">another</span> one.';
+
+                assert.strictEqual(formattedLine, expectedLine);
+            });
+
+            it('Should convert a failed test to a span', function() {
+                let mdLine = 'A [failed](?=failingTest()) test.';
+
+                let testParameters = new Map();
+                let test = new TestStub('failingTest', 'failed', testParameters);
+                let testResult = new TestResultStub(false, 'actual', test);
+                let testResults = [testResult];
+
+                let htmlGenerator = new HTMLGenerator();
+                let formattedLine = htmlGenerator._convertTests(mdLine, testResults);
+
+                let expectedLine = 'A <span class="failed-test">'
+                    + '<span class="failed-test-expected-result">failed</span> '
+                    + '<span class="failed-test-actual-result">actual</span>'
+                    + '</span> test.';
+                assert.strictEqual(formattedLine, expectedLine);
+            });
+
+            it('Should convert multiple failed tests to spans', function() {
+                let mdLine = 'A [failed](?=failingTest()) test and [another](?=anotherTest()) one.';
+
+                let testParameters = new Map();
+                let test = new TestStub('failingTest', 'failed', testParameters);
+                let testResult = new TestResultStub(false, 'actual', test);
+
+                let secondTestParameters = new Map();
+                let secondTest = new TestStub('anotherTest', 'another', secondTestParameters);
+                let secondTestResult = new TestResultStub(false, 'real', secondTest);
+                let testResults = [testResult, secondTestResult];
+
+                let htmlGenerator = new HTMLGenerator();
+                let formattedLine = htmlGenerator._convertTests(mdLine, testResults);
+
+                let expectedLine = 'A <span class="failed-test">'
+                    + '<span class="failed-test-expected-result">failed</span> '
+                    + '<span class="failed-test-actual-result">actual</span>'
+                    + '</span> test and <span class="failed-test">'
+                    + '<span class="failed-test-expected-result">another</span> '
+                    + '<span class="failed-test-actual-result">real</span>'
+                    + '</span> one.';
+                assert.strictEqual(formattedLine, expectedLine);
+            });
+
+            it('Should convert successful and failed tests to spans', function() {
+                let mdLine = 'A [failed](?=failingTest()) test and a [passed](?=passingTest()) one.';
+
+                let testParameters = new Map();
+                let test = new TestStub('failingTest', 'failed', testParameters);
+                let testResult = new TestResultStub(false, 'actual', test);
+
+                let secondTestParameters = new Map();
+                let secondTest = new TestStub('passingTest', 'passed', secondTestParameters);
+                let secondTestResult = new TestResultStub(true, 'passed', secondTest);
+                let testResults = [testResult, secondTestResult];
+
+                let htmlGenerator = new HTMLGenerator();
+                let formattedLine = htmlGenerator._convertTests(mdLine, testResults);
+
+                let expectedLine = 'A <span class="failed-test">'
+                    + '<span class="failed-test-expected-result">failed</span> '
+                    + '<span class="failed-test-actual-result">actual</span>'
+                    + '</span> test and a <span class="successful-test">passed</span> one.';
+                assert.strictEqual(formattedLine, expectedLine);
             });
         });
     });
