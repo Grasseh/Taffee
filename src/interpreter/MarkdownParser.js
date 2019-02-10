@@ -1,7 +1,7 @@
 const GenericParser = require('./GenericParser');
 const Test = require('../testsuite/Test');
 const TestSuiteDescriptor = require('../testsuite/TestSuiteDescriptor');
-const path = require("path");
+const path = require('path');
 
 const fs = require('fs'); // eslint-disable-line no-unused-vars
 const descriptorFlags_re = /\[\*(.*)\].*/ig;
@@ -23,7 +23,7 @@ class MarkdownParser extends GenericParser{
     _getTags(mdContent, re) {
         let tags = [];
         let matches;
-        while (matches = re.exec(mdContent)) {
+        while ((matches = re.exec(mdContent)) !== null) {
             tags[matches[1]] = inside_parenthesis_re.exec(matches[0])[1];
         }
         return tags;
