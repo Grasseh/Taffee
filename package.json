@@ -8,7 +8,7 @@
     "eslint": "eslint src test --fix",
     "eslint_prepush": "eslint src test",
     "test": "mocha test --recursive",
-    "cover" : "nyc mocha test --recursive",
+    "cover": "nyc mocha test --recursive",
     "report": "nyc report --reporter=text-lcov > coverage.lcov",
     "test_prepush": "mocha test --recursive --reporter nyan"
   },
@@ -41,6 +41,7 @@
     "husky": "^1.3.1",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
+    "showdown": "^1.9.0",
     "sinon": "^7.2.2"
   }
 }
