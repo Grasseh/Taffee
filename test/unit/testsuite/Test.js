@@ -8,8 +8,14 @@ describe('Test', function() {
 
     describe('constructor', function() {
         it('can be instanciated', function() {
-            test = new Test('Test1', 'OK', {key1: 'value1'});
+            test = new Test('Class1', 'Test1', 'OK', {key1: 'value1'});
             assert.notStrictEqual(test, null);
+        });
+    });
+
+    describe('getClassName', function() {
+        it('return its name', function() {
+            assert.strictEqual(test.getTestClass(), 'Class1');
         });
     });
 
