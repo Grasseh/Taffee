@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const showdown = require('showdown');
 
-const TEST_NAME_INDEX = 1;
+// const TEST_CLASS_INDEX = 1;
+const TEST_NAME_INDEX = 2;
 
 class HTMLGenerator {
     constructor() {
@@ -67,9 +68,10 @@ class HTMLGenerator {
     }
 
     _convertTest(mdLine, searchString, testResults) {
-        let testElementsRegex = /(?:\[(?:.*?)\])\(\?=(.*)\(\)\)/gm;
+        let testElementsRegex = /(?:\[(?:.*?)\])\(\?=(?:(.*?)\.)?(.*)\(\)\)/gm;
         let testElements = testElementsRegex.exec(searchString);
 
+        // let testClassName = testElements[TEST_CLASS_INDEX];
         let testName = testElements[TEST_NAME_INDEX];
         let testResult = testResults.find((tr) => testName === `${tr.getTest().getTestClass()}.${tr.getTest().getTestName()}`);
 
