@@ -5,14 +5,19 @@ const path = require('path');
 const HTMLGenerator = require('../../../src/output/generator');
 
 class TestStub {
-    constructor(name, expectedResult, parameters) {
+    constructor(name, testClass, expectedResult, parameters) {
         this.testName = name;
+        this.testClass = testClass;
         this.expectedResult = expectedResult;
         this.parameters = parameters;
     }
 
     getTestName() {
         return this.testName;
+    }
+
+    getTestClass() {
+        return this.testClass;
     }
 
     getExpectedResult() {
@@ -85,11 +90,11 @@ describe('Output Unit', function() {
                 let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedPassingTests.html');
 
                 let testParameters = new Map();
-                let test = new TestStub('anotherPassingTest', 'passing', testParameters);
+                let test = new TestStub('anotherPassingTest', 'a',  'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
 
                 let secondTestParameters = new Map();
-                let secondTest = new TestStub('passingTest', 'passing', secondTestParameters);
+                let secondTest = new TestStub('passingTest', 'a', 'passing', secondTestParameters);
                 let secondTestResult = new TestResultStub(true, 'passing', secondTest);
                 let testResults = [testResult, secondTestResult];
 
@@ -106,11 +111,11 @@ describe('Output Unit', function() {
                 let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedFailingTests.html');
 
                 let testParameters = new Map();
-                let test = new TestStub('failingTest', 'failing', testParameters);
+                let test = new TestStub('failingTest', 'a', 'failing', testParameters);
                 let testResult = new TestResultStub(false, 'actual1', test);
 
                 let secondTestParameters = new Map();
-                let secondTest = new TestStub('anotherFailingTest', 'failing', secondTestParameters);
+                let secondTest = new TestStub('anotherFailingTest', 'a', 'failing', secondTestParameters);
                 let secondTestResult = new TestResultStub(false, 'actual2', secondTest);
                 let testResults = [testResult, secondTestResult];
 
@@ -127,11 +132,11 @@ describe('Output Unit', function() {
                 let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedMixedTests.html');
 
                 let testParameters = new Map();
-                let test = new TestStub('passingTest', 'passing', testParameters);
+                let test = new TestStub('passingTest', 'a', 'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
 
                 let secondTestParameters = new Map();
-                let secondTest = new TestStub('failingTest', 'failing', secondTestParameters);
+                let secondTest = new TestStub('failingTest', 'a', 'failing', secondTestParameters);
                 let secondTestResult = new TestResultStub(false, 'actual', secondTest);
                 let testResults = [testResult, secondTestResult];
 
@@ -156,10 +161,10 @@ describe('Output Unit', function() {
             });
 
             it('Should convert a passing test to a span', function() {
-                let mdLine = 'A [passing](?=passingTest()) test.';
+                let mdLine = 'A [passing](?=a.passingTest()) test.';
 
                 let testParameters = new Map();
-                let test = new TestStub('passingTest', 'passing', testParameters);
+                let test = new TestStub('passingTest', 'a', 'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
                 let testResults = [testResult];
 
@@ -171,14 +176,14 @@ describe('Output Unit', function() {
             });
 
             it('Should convert multiple passing tests to spans', function() {
-                let mdLine = 'A [passing](?=passingTest()) test and [another](?=anotherTest()) one.';
+                let mdLine = 'A [passing](?=a.passingTest()) test and [another](?=a.anotherTest()) one.';
 
                 let testParameters = new Map();
-                let test = new TestStub('passingTest', 'passing', testParameters);
+                let test = new TestStub('passingTest', 'a', 'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
 
                 let secondTestParameters = new Map();
-                let secondTest = new TestStub('anotherTest', 'another', secondTestParameters);
+                let secondTest = new TestStub('anotherTest', 'a', 'another', secondTestParameters);
                 let secondTestResult = new TestResultStub(true, 'another', secondTest);
                 let testResults = [testResult, secondTestResult];
 
@@ -192,10 +197,10 @@ describe('Output Unit', function() {
             });
 
             it('Should convert a failed test to a span', function() {
-                let mdLine = 'A [failed](?=failingTest()) test.';
+                let mdLine = 'A [failed](?=a.failingTest()) test.';
 
                 let testParameters = new Map();
-                let test = new TestStub('failingTest', 'failed', testParameters);
+                let test = new TestStub('failingTest', 'a', 'failed', testParameters);
                 let testResult = new TestResultStub(false, 'actual', test);
                 let testResults = [testResult];
 
@@ -210,14 +215,14 @@ describe('Output Unit', function() {
             });
 
             it('Should convert multiple failed tests to spans', function() {
-                let mdLine = 'A [failed](?=failingTest()) test and [another](?=anotherTest()) one.';
+                let mdLine = 'A [failed](?=a.failingTest()) test and [another](?=a.anotherTest()) one.';
 
                 let testParameters = new Map();
-                let test = new TestStub('failingTest', 'failed', testParameters);
+                let test = new TestStub('failingTest', 'a', 'failed', testParameters);
                 let testResult = new TestResultStub(false, 'actual', test);
 
                 let secondTestParameters = new Map();
-                let secondTest = new TestStub('anotherTest', 'another', secondTestParameters);
+                let secondTest = new TestStub('anotherTest', 'a', 'another', secondTestParameters);
                 let secondTestResult = new TestResultStub(false, 'real', secondTest);
                 let testResults = [testResult, secondTestResult];
 
@@ -235,14 +240,14 @@ describe('Output Unit', function() {
             });
 
             it('Should convert successful and failed tests to spans', function() {
-                let mdLine = 'A [failed](?=failingTest()) test and a [passed](?=passingTest()) one.';
+                let mdLine = 'A [failed](?=a.failingTest()) test and a [passed](?=a.passingTest()) one.';
 
                 let testParameters = new Map();
-                let test = new TestStub('failingTest', 'failed', testParameters);
+                let test = new TestStub('failingTest', 'a', 'failed', testParameters);
                 let testResult = new TestResultStub(false, 'actual', test);
 
                 let secondTestParameters = new Map();
-                let secondTest = new TestStub('passingTest', 'passed', secondTestParameters);
+                let secondTest = new TestStub('passingTest', 'a', 'passed', secondTestParameters);
                 let secondTestResult = new TestResultStub(true, 'passed', secondTest);
                 let testResults = [testResult, secondTestResult];
 
