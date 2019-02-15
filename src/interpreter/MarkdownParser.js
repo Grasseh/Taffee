@@ -45,7 +45,7 @@ class MarkdownParser extends GenericParser{
         let directory = path.dirname(filepath);
         let testFileName = path.join(directory, descriptor_tags['module']);
         let invoker = descriptor_tags['invoker'];
-        let descriptor = new TestSuiteDescriptor(testFileName, invoker);
+        let descriptor = new TestSuiteDescriptor(testFileName, invoker, filepath);
         return descriptor;
     }
 }

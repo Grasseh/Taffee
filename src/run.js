@@ -1,15 +1,19 @@
 const App = require('./index');
+const path = require('path');
+const testRunner = require('./runner/TestRunner');
+const HTMLGenerator = require('./output/generator');
 
 // Lookup the argv sent to the script for the run
 // (possibly use https://www.npmjs.com/package/yargs)
-let basePath = `${__dirname}/../test/markdown`;
+let basePath = `${__dirname}/../test/integration/artifacts/markdown`;
 
 // Check the config of the project from the end user
 // (possibly use https://www.npmjs.com/package/cosmiconfig)
 // - Custom invokers
 // - Outputs
 // - ???
-let outputPath = `${__dirname}/../test/markdown/output`; // eslint-disable-line no-unused-vars
+let outputPath = `${__dirname}/../test/markdown/output`;
+let cssPath = path.join(__dirname, '..', 'artifacts', 'output', 'basic.css');
 
 // We locate the files with the specified FileLocator from the config
 let fileLocator = new App.interpreter.MarkdownFileLocator();
@@ -20,15 +24,30 @@ let files = fileLocator.locateFiles(basePath);
 let parser = new App.interpreter.MarkdownParser();
 let testSuiteDescriptors = [];
 
-files.forEach(file => {
+for(let file of files){
     let testSuiteDescriptor = parser.parseFile(file);
     testSuiteDescriptors.push(testSuiteDescriptor);
-});
+}
 
 // Create the TestRunner with each testSuiteDescriptors associated
 // and bind the Invoker
+let testRunners = [];
+for(let descriptor of testSuiteDescriptors){
+    let runner = new testRunner(descriptor);
+    testRunners.push(runner);
+}
 
 // Run each TestRunners, which generates the TestResult(s)
 // contained in the TestSuiteResult
+let testResults = [];
+for(let runner of testRunners){
+    let result = runner.run();
+    testResults.push(result);
+}
 
 // Generate the outputs of the TestSuiteResult(s) in HTML
+let htmlGenerator = new HTMLGenerator();
+for(let result of testResults){
+    let resultingHtml = htmlGenerator.generate(result, result.getMarkdown(), outputPath, cssPath);
+    console.log(resultingHtml);
+}
