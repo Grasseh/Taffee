@@ -90,7 +90,7 @@ describe('Output Unit', function() {
                 let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedPassingTests.html');
 
                 let testParameters = new Map();
-                let test = new TestStub('anotherPassingTest', 'a',  'passing', testParameters);
+                let test = new TestStub('anotherPassingTest', 'a', 'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
 
                 let secondTestParameters = new Map();

@@ -5,7 +5,7 @@ class TestRunner{
     constructor(descriptor){
         this.descriptor = descriptor;
         this.results = [];
-        this.invoker = new (require(`../invoker/${descriptor.getInvoker()}`))();
+        this.invoker = this._getInvoker(descriptor.getInvoker());
     }
 
     run(){
@@ -15,9 +15,21 @@ class TestRunner{
             };
             let actualResult = this.invoker.invoke(test.getTestName(), this.descriptor.getTestFileName(), options);
             let success = actualResult === test.getExpectedResult();
-            this.results.push(new TestResult(test, success, actualResult));
+            this.results.push(new (this._getTestResult())(test, success, actualResult));
         }
-        return new TestSuiteResult(this.results, this.descriptor.getMarkdown());
+        return new (this._getTestSuiteResult())(this.results, this.descriptor.getMarkdown());
+    }
+
+    _getTestResult(){
+        return TestResult;
+    }
+
+    _getTestSuiteResult(){
+        return TestSuiteResult;
+    }
+
+    _getInvoker(invoker){
+        return new (require(`../invoker/${invoker}`))();
     }
 }
 
