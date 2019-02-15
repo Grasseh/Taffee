@@ -51,26 +51,6 @@ class TestResultStub {
 
 describe('Output Unit', function() {
     describe('HTMLGenerator', function() {
-        describe('HTML Head generation', function() {
-            it('Should add basic tags', function() {
-                let htmlGenerator = new HTMLGenerator();
-                let header = htmlGenerator._generateHtmlHeader('', '');
-                assert(header.includes('<head>'));
-                assert(header.includes('<link'));
-                assert(header.includes('</head>'));
-            });
-
-            it('Should create a relative link to a css', function() {
-                let outputDir = path.join(__dirname);
-                let cssPath = path.join(__dirname, 'style.css');
-
-                let htmlGenerator = new HTMLGenerator();
-                let header = htmlGenerator._generateHtmlHeader(outputDir, cssPath);
-
-                assert(header.includes('<link rel="stylesheet" href="style.css">'));
-            });
-        });
-
         describe('HTML Body generation', function() {
             it('Should convert testless MD To HTML', function() {
                 let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'NoTest.md');
@@ -78,11 +58,9 @@ describe('Output Unit', function() {
                 let htmlGenerator = new HTMLGenerator();
                 let body = htmlGenerator._generateHtmlBody(testFile, null);
 
-                assert(body.includes('<body>'));
                 assert(body.includes('<p>'));
                 assert(body.includes('</p>'));
                 assert(body.includes('<br />'));
-                assert(body.includes('</body>'));
             });
 
             it('Should convert all passing tests in the html body', function() {

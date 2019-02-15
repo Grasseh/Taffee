@@ -1,9 +1,13 @@
 const fs = require('fs');
+const handlebars = require('handlebars');
 const path = require('path');
 const showdown = require('showdown');
 
 // const TEST_CLASS_INDEX = 1;
 const TEST_NAME_INDEX = 2;
+
+const DEFAULT_CSS = path.join(__dirname, '..', 'resources', 'output', 'styles.css');
+const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'templates', 'outputTemplate.html');
 
 class HTMLGenerator {
     constructor() {
@@ -11,25 +15,32 @@ class HTMLGenerator {
             true: this._formatSuccessfulTest,
             false: this._formatFailedTest
         });
+
+        this.cssFiles = [DEFAULT_CSS];
+        this.template = DEFAULT_TEMPLATE;
     }
 
-    generate(testSuiteResults, inputMdFilePath, outputDirectory, cssFilePath) {
-        let htmlContent = '<!DOCTYPE html>\n';
-        htmlContent += '<html>\n';
-        htmlContent += this._generateHtmlHeader(outputDirectory, cssFilePath);
-        htmlContent += this._generateHtmlBody(inputMdFilePath, testSuiteResults.getTestResults());
-        htmlContent += '\n</html>';
+    setCssFiles(...cssFiles) {
+        this.cssFiles = cssFiles;
+    }
+
+    setTemplate(template) {
+        this.outputTemplate = template;
+    }
+
+    generate(testSuiteResults, inputMdFilePath, outputDirectory) {
+        let relativeCssFiles = this.cssFiles.map((css) => path.relative(outputDirectory, css));
+        let body = this._generateHtmlBody(inputMdFilePath, testSuiteResults.getTestResults());
+
+        let templateParameters = {};
+        templateParameters['cssFiles'] = relativeCssFiles;
+        templateParameters['content'] = body;
+
+        let template = fs.readFileSync(this.template, 'UTF-8');
+        let compiledTemplate = handlebars.compile(template.slice(0, -1));
+        let htmlContent = compiledTemplate(templateParameters);
 
         return htmlContent;
-    }
-
-    _generateHtmlHeader(outputDirectory, cssFilePath) {
-        let relativeCssPath = path.relative(outputDirectory, cssFilePath);
-        let htmlHeader = '<head>\n';
-        htmlHeader += `<link rel="stylesheet" href="${relativeCssPath}">\n`;
-        htmlHeader += '</head>\n';
-
-        return htmlHeader;
     }
 
     _generateHtmlBody(inputMdFilePath, testResults) {
@@ -40,16 +51,11 @@ class HTMLGenerator {
             mdContent = this._formatContent(mdContent, testResults);
         }
 
-        let htmlBody = '<body>\n';
-        htmlBody += `${converter.makeHtml(mdContent)}\n`;
-        htmlBody += '</body>';
-
-        return htmlBody;
+        let body = `${converter.makeHtml(mdContent)}`;
+        return body;
     }
 
-    /**
-     * Format on a per line basis to avoid multiple test conversions in a single replace operation.
-     */
+    // Format on a per line basis to avoid multiple test conversions in a single replace operation.
     _formatContent(mdContent, testResults) {
         let mdLines = mdContent.split('\n');
         mdLines.forEach((line, i, arr) => arr[i] = this._convertTests(line, testResults));

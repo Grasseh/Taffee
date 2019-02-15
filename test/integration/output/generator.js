@@ -70,6 +70,7 @@ describe('Output Integration', function() {
             let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'OutputIntegrationTest.md');
             let outputDir = path.join(__dirname, '..', 'artifacts', 'output');
             let cssFile = path.join(__dirname, '..', 'artifacts', 'output', 'basic.css');
+            let template = path.join(__dirname, '..', 'artifacts', 'output', 'template.html');
 
             let failingTest = new TestStub('failingTest', 'a', 'failing', new Map());
             let failingTestResult = new TestResultStub(false, 'actualValue', failingTest);
@@ -81,12 +82,14 @@ describe('Output Integration', function() {
             let testSuiteResult = new TestSuiteResultStub(testFile, testResults);
 
             let htmlGenerator = new HTMLGenerator();
-            let resultingHtml = htmlGenerator.generate(testSuiteResult, testFile, outputDir, cssFile);
+            htmlGenerator.setCssFiles(cssFile);
+            htmlGenerator.setTemplate(template);
+            let resultingHtml = htmlGenerator.generate(testSuiteResult, testFile, outputDir);
 
             let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedOut.html');
             let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
 
-            assert.strictEqual(expectedHtml.slice(0, -1), resultingHtml);
+            assert.strictEqual(resultingHtml, expectedHtml.slice(0, -1));
         });
     });
 });
