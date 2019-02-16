@@ -63,3 +63,6 @@ typings/
 # Code Coverage
 coverage/
 coverage.lcov
+
+# Test Output
+test/integration/artifacts/application/output.html

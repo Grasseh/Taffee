@@ -1,19 +1,20 @@
 const App = require('./index');
+const fs = require('fs');
 const path = require('path');
 const testRunner = require('./runner/TestRunner');
 const HTMLGenerator = require('./output/generator');
 
 // Lookup the argv sent to the script for the run
 // (possibly use https://www.npmjs.com/package/yargs)
-let basePath = `${__dirname}/../test/integration/artifacts/markdown`;
+let basePath = path.join(__dirname, '..', 'test', 'integration', 'artifacts', 'markdown');
 
 // Check the config of the project from the end user
 // (possibly use https://www.npmjs.com/package/cosmiconfig)
 // - Custom invokers
 // - Outputs
 // - ???
-let outputPath = `${__dirname}/../test/markdown/output`;
-let cssPath = path.join(__dirname, '..', 'artifacts', 'output', 'basic.css');
+let outputPath = path.join(__dirname, '..', 'test', 'integration', 'artifacts', 'application');
+let cssPath = 'basic.css';
 
 // We locate the files with the specified FileLocator from the config
 let fileLocator = new App.interpreter.MarkdownFileLocator();
@@ -49,5 +50,5 @@ for(let runner of testRunners){
 let htmlGenerator = new HTMLGenerator();
 for(let result of testResults){
     let resultingHtml = htmlGenerator.generate(result, result.getMarkdown(), outputPath, cssPath);
-    console.log(resultingHtml);
+    fs.writeFileSync(`${outputPath}/output.html`, resultingHtml);
 }
