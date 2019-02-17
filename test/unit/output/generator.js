@@ -127,6 +127,84 @@ describe('Output Unit', function() {
             });
         });
 
+        describe('Variable conversion', function() {
+            it('Should not modify lines without variables', function() {
+                let mdLine = 'A variable less line.';
+
+                let htmlGenerator = new HTMLGenerator();
+                let output = htmlGenerator._convertVariables(mdLine, new Map());
+                let convertedLine = output[0];
+
+                assert.strictEqual(convertedLine, mdLine);
+            });
+
+            it('Should convert a line with a single variable to plain text', function() {
+                let mdLine = 'A line containing a [variable](#var).';
+                let expectedLine = 'A line containing a variable.';
+
+                let htmlGenerator = new HTMLGenerator();
+                let output = htmlGenerator._convertVariables(mdLine, new Map());
+                let convertedLine = output[0];
+
+                assert.strictEqual(convertedLine, expectedLine);
+            });
+
+            it('Should convert a line with multiple variables to plain text', function() {
+                let mdLine = 'A line containing a [first](#var) variable and a [second](#var2) variable.';
+                let expectedLine = 'A line containing a first variable and a second variable.';
+
+                let htmlGenerator = new HTMLGenerator();
+                let output = htmlGenerator._convertVariables(mdLine, new Map());
+                let convertedLine = output[0];
+
+                assert.strictEqual(convertedLine, expectedLine);
+            });
+
+            it('Should not update the variables map for lines without variables.', function() {
+                let mdLine = 'A variable less line.';
+                let variablesMap = new Map();
+
+                let htmlGenerator = new HTMLGenerator();
+                let output = htmlGenerator._convertVariables(mdLine, variablesMap);
+                let updatedMap = output[1];
+
+                assert.strictEqual(updatedMap.size, 0);
+            });
+
+            it('Should update the variables map for lines containing a single variable.', function() {
+                let mdLine = 'A line containing a [variable](#var).';
+                let variablesMap = new Map();
+
+                let htmlGenerator = new HTMLGenerator();
+                let output = htmlGenerator._convertVariables(mdLine, variablesMap);
+                let updatedMap = output[1];
+
+                assert.strictEqual(updatedMap.size, 1);
+                assert(updatedMap.has('var'));
+                assert.strictEqual(updatedMap.get('var'), 'variable');
+            });
+
+            it('Should update the variables map for lines containing multiple variables.', function() {
+                let mdLine = '[A](#a) [B](#b) [C](#c).';
+                let variablesMap = new Map();
+
+                let htmlGenerator = new HTMLGenerator();
+                let output = htmlGenerator._convertVariables(mdLine, variablesMap);
+                let updatedMap = output[1];
+
+                assert.strictEqual(updatedMap.size, 3);
+
+                assert(updatedMap.has('a'));
+                assert.strictEqual(updatedMap.get('a'), 'A');
+
+                assert(updatedMap.has('b'));
+                assert.strictEqual(updatedMap.get('b'), 'B');
+
+                assert(updatedMap.has('c'));
+                assert.strictEqual(updatedMap.get('c'), 'C');
+            });
+        });
+
         describe('0 variables test conversion', function() {
             it('Should not convert a testless line', function() {
                 let mdLine = 'A testless line.';
