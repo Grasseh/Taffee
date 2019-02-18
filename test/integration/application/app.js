@@ -16,6 +16,6 @@ describe('Accept Application Test', function() {
         let resultedFile = path.join(__dirname, '..', 'artifacts', 'application', 'output.html');
         let resultingHtml = fs.readFileSync(resultedFile, 'UTF-8');
 
-        assert.strictEqual(expectedHtml.slice(0, -1), resultingHtml);
+        assert.strictEqual(resultingHtml, expectedHtml.slice(0, -1));
     });
 });

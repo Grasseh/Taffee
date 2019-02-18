@@ -3,11 +3,21 @@ const handlebars = require('handlebars');
 const path = require('path');
 const showdown = require('showdown');
 
-// const TEST_CLASS_INDEX = 1;
-const TEST_NAME_INDEX = 2;
+const TEST_EXPECTED_RESULT_INDEX = 1;
+// const TEST_CLASS_INDEX = 2;
+const TEST_NAME_INDEX = 3;
+const TEST_PARAMETERS_INDEX = 4;
+
+const PARAMETER_VALUE_INDEX = 1;
+const PARAMETER_NAME_INDEX = 2;
 
 const DEFAULT_CSS = path.join(__dirname, '..', 'resources', 'output', 'styles.css');
 const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'templates', 'outputTemplate.html');
+
+const TEST_DETECTION_REGEX = /\[.*?\]\(\?=.*?\)\)/gm;
+const TEST_ELEMENTS_REGEX = /(?:\[[&]?(.*?)\])\(\?=(?:(.*?)\.)?(.*)\((.*?)\)\)/gm;
+const PARAMETER_DETECTION_REGEX = /\[.*?\]\(#.*?\)/gm;
+const PARAMETER_ELEMENTS_REGEX = /(?:.*?)\[(.*)?\]\(#(.*)?\)/gm;
 
 class HTMLGenerator {
     constructor() {
@@ -58,30 +68,91 @@ class HTMLGenerator {
     // Format on a per line basis to avoid multiple test conversions in a single replace operation.
     _formatContent(mdContent, testResults) {
         let mdLines = mdContent.split('\n');
-        mdLines.forEach((line, i, arr) => arr[i] = this._convertTests(line, testResults));
+        let paramsMap = new Map();
+
+        mdLines.forEach((line, i, arr) => {
+            [arr[i], paramsMap] = this._convertParameters(line, paramsMap);
+            arr[i] = this._convertTests(arr[i], testResults, paramsMap);
+        });
+
         return mdLines.join('\n');
     }
 
-    _convertTests(mdLine, testResults) {
-        let testDetectionRegex = /\[.*?\]\(\?=.*?\)\)/gm;
+    _convertParameters(mdLine, paramsMap) {
+        let parameterDetectionRegex = new RegExp(PARAMETER_DETECTION_REGEX);
+        let matchedParameters = mdLine.match(parameterDetectionRegex);
+
+        if(null !== matchedParameters) {
+            matchedParameters.forEach((match) => {
+                [mdLine, paramsMap] = this._convertParameter(mdLine, match, paramsMap);
+            });
+        }
+
+        return [mdLine, paramsMap];
+    }
+
+    _convertParameter(mdLine, searchString, paramsMap) {
+        let parameterElementsRegex = new RegExp(PARAMETER_ELEMENTS_REGEX);
+        let parameterElements = parameterElementsRegex.exec(searchString);
+        let value = parameterElements[PARAMETER_VALUE_INDEX];
+        let name = parameterElements[PARAMETER_NAME_INDEX];
+
+        paramsMap.set(name, value);
+        mdLine = mdLine.replace(searchString, value);
+
+        return [mdLine, paramsMap];
+    }
+
+    _convertTests(mdLine, testResults, paramsMap) {
+        let testDetectionRegex = new RegExp(TEST_DETECTION_REGEX);
         let matchedTests = mdLine.match(testDetectionRegex);
 
         if(null !== matchedTests) {
-            matchedTests.forEach((match) => mdLine = this._convertTest(mdLine, match, testResults));
+            matchedTests.forEach((match) => {
+                mdLine = this._convertTest(mdLine, match, testResults, paramsMap);
+            });
         }
 
         return mdLine;
     }
 
-    _convertTest(mdLine, searchString, testResults) {
-        let testElementsRegex = /(?:\[(?:.*?)\])\(\?=(?:(.*?)\.)?(.*)\(\)\)/gm;
+    _convertTest(mdLine, searchString, testResults, paramsMap) {
+        let testElementsRegex = new RegExp(TEST_ELEMENTS_REGEX);
         let testElements = testElementsRegex.exec(searchString);
 
-        // let testClassName = testElements[TEST_CLASS_INDEX];
+        let expectedResult = testElements[TEST_EXPECTED_RESULT_INDEX];
         let testName = testElements[TEST_NAME_INDEX];
-        let testResult = testResults.find((tr) => testName === `${tr.getTest().getTestClass()}.${tr.getTest().getTestName()}`);
+        let testParameters = testElements[TEST_PARAMETERS_INDEX];
 
-        return this.testFormatting[testResult.isSuccess()](mdLine, searchString, testResult);
+        let candidates = testResults.filter((tr) => {
+            let isTrue = testName === tr.getTest().getTestName();
+            isTrue = isTrue && expectedResult === tr.getTest().getExpectedResult();
+            return isTrue;
+        });
+
+        let testResult = candidates[0];
+
+        if(0 !== testParameters.length) {
+            testParameters = testParameters.replace(/#/g, '');
+            testParameters = testParameters.replace(/, /g, ',');
+            testParameters = testParameters.split(',');
+
+            // Find a test where all parameters match.
+            testResult = candidates.find((tr) => {
+                let isTrue = true;
+                testParameters.forEach((param) => {
+                    isTrue = isTrue && tr.getTest().getParameters().get(param) === paramsMap.get(param);
+                });
+
+                return isTrue;
+            });
+        }
+
+        if(undefined !== testResult) {
+            mdLine = this.testFormatting[testResult.isSuccess()](mdLine, searchString, testResult);
+        }
+
+        return mdLine;
     }
 
     _formatSuccessfulTest(mdLine, searchString, successfulTest) {

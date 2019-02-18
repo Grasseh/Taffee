@@ -1,8 +1,9 @@
 class TestResult {
-    constructor(test, success, actualResult) {
+    constructor(test, success, actualResult, parameters = new Map()) {
         this._test = test;
         this._success = success;
         this._actualResult = actualResult;
+        this._parameters = parameters;
     }
 
     getTest(){
@@ -15,6 +16,10 @@ class TestResult {
 
     getActualResult(){
         return this._actualResult;
+    }
+
+    getParameters() {
+        return this.parameters;
     }
 }
 
