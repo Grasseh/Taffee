@@ -71,7 +71,7 @@ class HTMLGenerator {
         let testElements = testElementsRegex.exec(searchString);
 
         let testName = testElements[TEST_NAME_INDEX];
-        let testResult = testResults.find((tr) => testName === tr.getTest().getTestName());
+        let testResult = testResults.find((tr) => testName === `${tr.getTest().getTestClass()}.${tr.getTest().getTestName()}`);
 
         return this.testFormatting[testResult.isSuccess()](mdLine, searchString, testResult);
     }

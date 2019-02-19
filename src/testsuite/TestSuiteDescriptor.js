@@ -1,8 +1,9 @@
 class TestSuiteDescriptor {
-    constructor(testFileName, invoker) {
+    constructor(testFileName, invoker, markdown) {
         this._testFileName = testFileName;
         this._invoker = invoker;
         this._tests = [];
+        this._markdown = markdown;
     }
 
     getTestFileName(){
@@ -23,6 +24,10 @@ class TestSuiteDescriptor {
 
     getInvoker(){
         return this._invoker;
+    }
+
+    getMarkdown(){
+        return this._markdown;
     }
 }
 

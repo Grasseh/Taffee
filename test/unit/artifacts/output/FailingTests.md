@@ -1,2 +1,2 @@
-This is a [failing](?=failingTest()) test.  
-This is also a [failing](?=anotherFailingTest()) test.
+This is a [failing](?=a.failingTest()) test.  
+This is also a [failing](?=a.anotherFailingTest()) test.

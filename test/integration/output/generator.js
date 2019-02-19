@@ -5,14 +5,19 @@ const path = require('path');
 const HTMLGenerator = require('../../../src/output/generator');
 
 class TestStub {
-    constructor(name, expectedResult, parameters) {
+    constructor(name, testClass, expectedResult, parameters) {
         this.testName = name;
+        this.class = testClass;
         this.expectedResult = expectedResult;
         this.parameters = parameters;
     }
 
     getTestName() {
         return this.testName;
+    }
+
+    getTestClass() {
+        return this.class;
     }
 
     getExpectedResult() {
@@ -66,10 +71,10 @@ describe('Output Integration', function() {
             let outputDir = path.join(__dirname, '..', 'artifacts', 'output');
             let cssFile = path.join(__dirname, '..', 'artifacts', 'output', 'basic.css');
 
-            let failingTest = new TestStub('failingTest', 'failing', new Map());
+            let failingTest = new TestStub('failingTest', 'a', 'failing', new Map());
             let failingTestResult = new TestResultStub(false, 'actualValue', failingTest);
 
-            let passingTest = new TestStub('passingTest', 'passing', new Map());
+            let passingTest = new TestStub('passingTest', 'a', 'passing', new Map());
             let passingTestResult = new TestResultStub(true, 'passing', passingTest);
 
             let testResults = [passingTestResult, failingTestResult];
