@@ -6,19 +6,38 @@ class Library {
         this.initializeBasicLibrary();
     }
 
-    addBook(isbn, title, description){
-        this._books.push(new Book(this.getNumberOfBook(), isbn, title, description));
+    getHighestBookId(){
+        let max = -1;
+        for (let x = 0; x < this.getNumberOfBook(); x++) {
+            if (this._books[x].getId() > max){
+                max = this._books[x].getId();
+            }
+        }
+        return max;
     }
 
-    getBookByIsbn(isbn){
-        let book = null;
+    addBook(isbn, title, description){
+        return this._books.push(new Book(this.getHighestBookId() + 1, isbn, title, description));
+    }
+
+    getBookById(id){
         for (let x = 0; x < this.getNumberOfBook(); x++) {
-            if (this._books[x].getIsbn() === isbn){
-                book = this._books[x];
+            if (this._books[x].getId() == id){
+                return this._books[x];
             }
         }
 
-        return book;
+        return null;
+    }
+
+    getBookByIsbn(isbn){
+        for (let x = 0; x < this.getNumberOfBook(); x++) {
+            if (this._books[x].getIsbn() === isbn){
+                return this._books[x];
+            }
+        }
+
+        return null;
     }
 
     getNumberOfBook(){
@@ -34,6 +53,55 @@ class Library {
             this._books[x].printBook();
         }
 
+    }
+
+    updateBookTitle(id, title){
+        let book = this.getBookById(id);
+        if (book !== null){
+            book.setTitle(title);
+            return true;
+        }
+
+        return false;
+    }
+
+    updateBookIsbn(id, isbn){
+        let book = this.getBookById(id);
+        if (book !== null && !this.doesIsbnExists(isbn)){
+            book.setIsbn(isbn);
+            return true;
+        }
+
+        return false;
+    }
+
+    updateBookDescription(id, description){
+        let book = this.getBookById(id);
+        if (book !== null){
+            book.setDescription(description);
+            return true;
+        }
+
+        return false;
+    }
+
+    deleteBookById(id){
+        for (let x = 0; x < this.getNumberOfBook(); x++) {
+            if (this._books[x].getId() == id){
+                this._books.splice(x, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    doesIsbnExists(isbn){
+        for (let x = 0; x < this.getNumberOfBook(); x++) {
+            if (this._books[x].getIsbn() === isbn){
+                return true;
+            }
+        }
+        return false;
     }
 
     initializeBasicLibrary(){

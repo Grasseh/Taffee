@@ -8,34 +8,46 @@ class TestFacade {
         return helloWorld.getHelloWorld();
     }
 
-    testGetBookFromLibrary(){
+    testGetHighestBookId(){
         let library = new Library();
+        return library.getHighestBookId();
+    }
 
-        library.addBook(2, 'isbn2', 'title2', 'description2');
-        let bookReceive = library.getBookByIsbn(0);
+    testGetBookFromLibrary(isbn){
+        let library = new Library();
+        let bookReceive = library.getBookByIsbn(isbn);
         return bookReceive;
     }
 
-    testLibraryAddBook(){
+    testLibraryAddBook(isbn, title, description){
         let library = new Library();
-        library.addBook(1, 'isbn1', 'title1', 'description1');
-        library.addBook(1, 'isbn2', 'title2', 'description2');
-        library.addBook(1, 'isbn3', 'title3', 'description3');
-        library.addBook(1, 'isbn4', 'title4', 'description4');
-        library.addBook(1, 'isbn5', 'title5', 'description5');
+        library.addBook(isbn, title, description);
+
+        return library.getBookByIsbn(isbn);
+    }
+
+    testUpdateBook(){
+        let library = new Library();
+        library.addBook('isbn1', 'title1', 'description1');
+
+        let book = library.getBookByIsbn('isbn1');
+        library.updateBookIsbn(book.getId(), 'newisbn1');
+        library.updateBookTitle(book.getId(), 'newtitle1');
+        library.updateBookDescription(book.getId(), 'newdescription1');
+
+        return library.getBookById(book.getId());
+    }
+
+    testDeleteBook(){
+        let library = new Library();
+        library.deleteBookById(library.getHighestBookId());
 
         return library.getNumberOfBook();
     }
 
-    testGetLibrary(){
+    testDoesIsbnExists(isbn){
         let library = new Library();
-        library.addBook(1, 'isbn1', 'title1', 'description1');
-        library.addBook(1, 'isbn2', 'title2', 'description2');
-        library.addBook(1, 'isbn3', 'title3', 'description3');
-        library.addBook(1, 'isbn4', 'title4', 'description4');
-        library.addBook(1, 'isbn5', 'title5', 'description5');
-
-        return library;
+        return library.doesIsbnExists(isbn);
     }
 
 }
