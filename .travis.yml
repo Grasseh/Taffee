@@ -8,3 +8,7 @@ script:
     - npm run cover
     - npm run report
     - codecov
+os:
+  - windows
+  - linux
+  - osx
