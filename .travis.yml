@@ -9,6 +9,6 @@ script:
     - npm run report
     - codecov
 os:
-  - windows
-  - linux
-  - osx
+    - windows
+    - linux
+    - osx
