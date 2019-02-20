@@ -16,6 +16,8 @@ const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'temp
 
 const TEST_DETECTION_REGEX = /\[.*?\]\(\?=.*?\)\)/gm;
 const TEST_ELEMENTS_REGEX = /(?:\[[&]?(.*?)\])\(\?=(?:(.*?)\.)?(.*)\((.*?)\)\)/gm;
+const TEST_PARAMETER_NAME_REGEX = /[\w\d]+/gm;
+
 const PARAMETER_DETECTION_REGEX = /\[.*?\]\(#.*?\)/gm;
 const PARAMETER_ELEMENTS_REGEX = /(?:.*?)\[(.*)?\]\(#(.*)?\)/gm;
 
@@ -124,29 +126,25 @@ class HTMLGenerator {
         let testName = testElements[TEST_NAME_INDEX];
         let testParameters = testElements[TEST_PARAMETERS_INDEX];
 
-        let candidates = testResults.filter((tr) => {
-            let isTrue = testName === tr.getTest().getTestName();
+        let parameterNamesRegex = new RegExp(TEST_PARAMETER_NAME_REGEX);
+        let parameterNames = testParameters.match(parameterNamesRegex);
+
+        // Avoid null pointer exceptions. Regex returns null if there is no match.
+        if(null === parameterNames) {
+            parameterNames = [];
+        }
+
+        let testResult = testResults.find((tr) => {
+            let isTrue = true;
+            isTrue = isTrue && testName === tr.getTest().getTestName();
             isTrue = isTrue && expectedResult === tr.getTest().getExpectedResult();
+
+            parameterNames.forEach((param) => {
+                isTrue = isTrue && paramsMap.get(param) === tr.getTest().getParameters().get(param);
+            });
+
             return isTrue;
         });
-
-        let testResult = candidates[0];
-
-        if(0 !== testParameters.length) {
-            testParameters = testParameters.replace(/#/g, '');
-            testParameters = testParameters.replace(/, /g, ',');
-            testParameters = testParameters.split(',');
-
-            // Find a test where all parameters match.
-            testResult = candidates.find((tr) => {
-                let isTrue = true;
-                testParameters.forEach((param) => {
-                    isTrue = isTrue && tr.getTest().getParameters().get(param) === paramsMap.get(param);
-                });
-
-                return isTrue;
-            });
-        }
 
         if(undefined !== testResult) {
             mdLine = this.testFormatting[testResult.isSuccess()](mdLine, searchString, testResult);

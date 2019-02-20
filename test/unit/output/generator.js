@@ -393,14 +393,16 @@ describe('Output Unit', function() {
 
         describe('Multi parameter test conversion', function() {
             it('Should convert a passing test with all matching parameters', function() {
-                let mdLine = 'A [passing](?=a.passingTest(#var, #var2)) test.';
+                let mdLine = 'A [passing](?=a.passingTest(#var, #var2, #var3)) test.';
                 let parameters = new Map();
                 parameters.set('var', 'A');
                 parameters.set('var2', 'B');
+                parameters.set('var3', 'C');
 
                 let testParameters = new Map();
                 testParameters.set('var', 'A');
                 testParameters.set('var2', 'B');
+                testParameters.set('var3', 'C');
                 let test = new TestStub('passingTest', 'a', 'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
                 let testResults = [testResult];
