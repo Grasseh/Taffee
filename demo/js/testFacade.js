@@ -8,6 +8,10 @@ class TestFacade {
         return helloWorld.getHelloWorld();
     }
 
+    testPlusOne(number) {
+        return number + 1;
+    }
+
     testGetHighestBookId(){
         let library = new Library();
         return library.getHighestBookId();

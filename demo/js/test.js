@@ -7,6 +7,8 @@ class Test {
         let book = null;
 
         console.log('Hello World is good : ', testFacade.testHelloWorld() === 'Hello World');
+        console.log('Plus one is good : ', testFacade.testPlusOne(1) === 2);
+
         console.log('Get highest book Id is good : ', testFacade.testGetHighestBookId() === 3);
 
         console.log('Get book is good : ', testFacade.testGetBookFromLibrary('9781421599465').getId() === 1);
