@@ -13,6 +13,15 @@ describe('NodeInvoker Integration', function() {
             let testResult = nodeInvoker.invoke(testName, projectName, params);
             assert.strictEqual(testResult, 'Hello World');
         });
+
+        it('Should load the test module and invoke its test function with two parameters', function() {
+            let nodeInvoker = new NodeInvoker();
+            let testName = 'otherFun';
+            let options = {params : {a : 1, b : 2}};
+            let projectName = path.join(process.cwd(), 'test', 'integration', 'my artifacts', 'testModule');
+            let testResult = nodeInvoker.invoke(testName, projectName, options);
+            assert.strictEqual(testResult, 3);
+        });
     });
 });
 
