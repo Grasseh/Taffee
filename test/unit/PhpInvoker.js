@@ -23,7 +23,7 @@ describe('PhpInvoker', function() {
             let testName = 'myTest';
             let projectName = '~/myProject/test.js';
             let paramsFile = path.join('myPath', 'tmp', 'params.json');
-            let params = {className : 'abc'};
+            let params = {className : 'abc', params : {}};
             let testResult = phpInvoker.invoke(testName, projectName, params);
             assert(getCwdStub.called);
             assert(execStub.calledWith(`php "myPath/src/invoker/PhpInvoker.php" ${testName} ${params.className} "${projectName}" "${paramsFile}"`, {}));

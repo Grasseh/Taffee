@@ -14,7 +14,7 @@ class PhpInvoker extends GenericInvoker{
         if(!this._getFs().existsSync(paramsLocation))
             this._getFs().mkdirSync(paramsLocation);
         let paramsFile = path.join(paramsLocation, 'params.json');
-        this._getFs().writeFileSync(paramsFile, options.params);
+        this._getFs().writeFileSync(paramsFile, JSON.stringify(options.params));
         let command = `php "${scriptPath}" ${testName} ${options.className} "${project}" "${paramsFile}"`;
         let execOptions = {};
         let stdout = this._exec(command, execOptions);

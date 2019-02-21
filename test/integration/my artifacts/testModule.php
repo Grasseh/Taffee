@@ -6,8 +6,8 @@ class Test{
         return 'Hello World';
     }
 
-    public function otherFun(){
-
+    public function add($params){
+        return $params['a'] + $params['b'];
     }
 }
 
