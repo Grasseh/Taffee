@@ -9,6 +9,10 @@ class Test{
     public function add($params){
         return $params['a'] + $params['b'];
     }
+
+    public function withParams($a, $b){
+        return ($a + $b);
+    }
 }
 
 ?>
