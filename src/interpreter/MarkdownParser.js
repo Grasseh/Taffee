@@ -5,14 +5,11 @@ const path = require('path');
 
 const fs = require('fs'); // eslint-disable-line no-unused-vars
 const DESCRIPTOR_FLAGS_REGEX = /\[\*(.*)\].*/ig;
-const resultFlags_re = /\[&(.*)\].*/ig;
 const INSIDE_PARENTHESIS_REGEX = /\((.*)\)/;
 const TEST_DETECTION_REGEX = /\[.*?\]\(\?=.*?\)\)/gm;
-const TEST_ELEMENTS_REGEX = /(?:\[(.*?)\])\(\?=(?:(.*?)\.)?(.*?)\((.*)\)\)/gm;
 const TEST_PARAMETER_NAME_REGEX = /[\w\d]+/gm;
 
 const PARAMETER_DETECTION_REGEX = /\[.*?\]\(#.*?\)/gm;
-const PARAMETER_ELEMENTS_REGEX = /(?:.*?)\[(.*)?\]\(#(.*)?\)/gm;
 
 const TEST_EXPECTED_RESULT_INDEX = 1;
 const TEST_CLASS_INDEX = 2;
@@ -61,28 +58,21 @@ class MarkdownParser extends GenericParser{
         let matches;
         let match;
         if(null !== line){
-            console.log(line);
             do {
                 match = PARAMETER_DETECTION_REGEX.exec(line);
                 if (match){
                     this._addParameter(match[0], params);
                 }
             } while (match);
-            // while ((matches = PARAMETER_DETECTION_REGEX.exec(line)) !== null) {
-            //     this._addParameter(matches[0], params);
-            // }
         }
     }
 
     _addParameter(line, params){
-        console.log(`add parameter from line "${line}":`);
+        const PARAMETER_ELEMENTS_REGEX = /(?:.*?)\[(.*)?\]\(#(.*)?\)/gm;
         let parameterElements = PARAMETER_ELEMENTS_REGEX.exec(line);
-        console.log(parameterElements);
         if(null !== parameterElements){
             let value = parameterElements[PARAMETER_VALUE_INDEX];
-            console.log(value);
             let name = parameterElements[PARAMETER_NAME_INDEX];
-            console.log(name);
             params[name] = value;
         }
     }
@@ -97,10 +87,9 @@ class MarkdownParser extends GenericParser{
     }
 
     _addTest(line, params, tests){
-        console.log(`found test in line "${line}"`);
+        const TEST_ELEMENTS_REGEX = /(?:\[(.*?)\])\(\?=(?:(.*?)\.)?(.*?)\((.*)\)\)/gm;
         let testElements = TEST_ELEMENTS_REGEX.exec(line);
         if(null !== testElements){
-            8;
             let testName = testElements[TEST_NAME_INDEX];
             let testClass = testElements[TEST_CLASS_INDEX];
             let testExpectedResult = testElements[TEST_EXPECTED_RESULT_INDEX];
@@ -116,7 +105,6 @@ class MarkdownParser extends GenericParser{
         let parameters = [];
         let matches;
         while ((matches = TEST_PARAMETER_NAME_REGEX.exec(testParametersNames)) !== null) {
-            console.log(`adding param ${matches[0]} with value ${params[matches[0]]}`);
             parameters.push(params[matches[0]]);
         }
 
@@ -134,8 +122,6 @@ class MarkdownParser extends GenericParser{
         let descriptor = new TestSuiteDescriptor(testFileName, invoker, filepath);
 
         descriptor.setTests(tests);
-
-        console.log(tests);
 
         return descriptor;
     }
