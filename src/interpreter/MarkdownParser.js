@@ -55,7 +55,6 @@ class MarkdownParser extends GenericParser{
     }
 
     _parseParameters(line, params){
-        let matches;
         let match;
         if(null !== line){
             do {
