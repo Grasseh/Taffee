@@ -44,7 +44,7 @@ class MarkdownParser extends GenericParser{
 
     _generateTests(mdContent){
         let tests = [];
-        let params = new Map();
+        let params = {};
 
         let mdLines = mdContent.split('\n');
         mdLines.forEach((line) => {
@@ -59,7 +59,7 @@ class MarkdownParser extends GenericParser{
 
     _parseParameters(line, params){
         let matches;
-        var match;
+        let match;
         if(null !== line){
             console.log(line);
             do {
@@ -83,7 +83,7 @@ class MarkdownParser extends GenericParser{
             console.log(value);
             let name = parameterElements[PARAMETER_NAME_INDEX];
             console.log(name);
-            params.set(name, value);
+            params[name] = value;
         }
     }
 
@@ -97,9 +97,10 @@ class MarkdownParser extends GenericParser{
     }
 
     _addTest(line, params, tests){
-        console.log(`found test in line "${line}"`)
+        console.log(`found test in line "${line}"`);
         let testElements = TEST_ELEMENTS_REGEX.exec(line);
-        if(null !== testElements){8
+        if(null !== testElements){
+            8;
             let testName = testElements[TEST_NAME_INDEX];
             let testClass = testElements[TEST_CLASS_INDEX];
             let testExpectedResult = testElements[TEST_EXPECTED_RESULT_INDEX];
@@ -115,7 +116,7 @@ class MarkdownParser extends GenericParser{
         let parameters = [];
         let matches;
         while ((matches = TEST_PARAMETER_NAME_REGEX.exec(testParametersNames)) !== null) {
-            console.log(`adding param ${matches[0]} with value ${params[matches[0]]}`)
+            console.log(`adding param ${matches[0]} with value ${params[matches[0]]}`);
             parameters.push(params[matches[0]]);
         }
 
