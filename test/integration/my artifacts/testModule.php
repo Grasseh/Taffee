@@ -9,6 +9,10 @@ class Test{
     public function otherFun(){
 
     }
+
+    public function withParams($a, $b){
+        return ($a + $b);
+    }
 }
 
 ?>
