@@ -7,13 +7,9 @@ class Library {
     }
 
     getHighestBookId(){
-        let max = -1;
-        for (let x = 0; x < this.getNumberOfBook(); x++) {
-            if (this._books[x].getId() > max){
-                max = this._books[x].getId();
-            }
-        }
-        return max;
+        if (this._books.length > 0)
+            return Math.max.apply(Math, this._books.map(function(book) { return book.getId(); }), -1);
+        return -1;
     }
 
     addBook(isbn, title, description){
@@ -21,23 +17,20 @@ class Library {
     }
 
     getBookById(id){
-        for (let x = 0; x < this.getNumberOfBook(); x++) {
-            if (this._books[x].getId() == id){
-                return this._books[x];
-            }
-        }
+        let book = this._books.filter(x => x.getId() == id)[0];
+        if (book === undefined)
+            return null;
 
-        return null;
+        return book;
+
     }
 
     getBookByIsbn(isbn){
-        for (let x = 0; x < this.getNumberOfBook(); x++) {
-            if (this._books[x].getIsbn() === isbn){
-                return this._books[x];
-            }
-        }
+        let book = this._books.filter(x => x.getIsbn() === isbn)[0];
+        if (book === undefined)
+            return null;
 
-        return null;
+        return book;
     }
 
     getNumberOfBook(){

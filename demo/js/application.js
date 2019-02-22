@@ -19,31 +19,25 @@ class Application {
         this._printer.basicMessage('A - Add a book to the library.');
         this._printer.basicMessage('U - Update a book of the library.');
         this._printer.basicMessage('D - Delete a book of the library.');
-        this._printer.basicMessage('exit - Leave de application');
+        this._printer.basicMessage('exit - Leave the application');
 
         let response = '';
         response = readline.question('');
 
-        switch(response){
-        case 'L':
-            this._library.listBookOfLibrary();
-            break;
-        case 'A':
-            this.addBookChoice();
-            break;
-        case 'U':
-            this.updateBookChoice();
-            break;
-        case 'D':
-            this.deleteBookChoice();
-            break;
-        case 'exit':
-            process.exit(0);
-            break;
-        default:
+
+        let optionsMap = {
+            'L': this._library.listBookOfLibrary.bind(this._library),
+            'A': this.addBookChoice.bind(this),
+            'U': this.updateBookChoice.bind(this),
+            'D': this.deleteBookChoice.bind(this),
+            'exit': process.exit
+        };
+
+        if(!optionsMap.hasOwnProperty(response)){
             this._printer.warningMessage('your choice is not an option');
             return false;
         }
+        optionsMap[response]();
         return true;
     }
 
@@ -64,12 +58,11 @@ class Application {
         this._printer.paragrapheStartMessage('Description : ');
         description = readline.question('');
 
-        if (!this._library.doesIsbnExists(isbn)){
-            this._library.addBook(isbn, title, description);
-        }
-        else{
+        if (this._library.doesIsbnExists(isbn)){
             this._printer.warningMessage('A book with this isbn is already in the library');
+            return;
         }
+        this._library.addBook(isbn, title, description);
     }
 
     updateBookChoice(){
@@ -103,35 +96,17 @@ class Application {
 
             response = readline.question('');
 
-            switch(response){
-            case 'I':
-                this._printer.paragrapheStartMessage('Please type the book\'s new isbn : ');
-                isbn = readline.question('');
-
-                if (!this._library.updateBookIsbn(id, isbn)){
-                    this._printer.paragrapheStartMessage('This isbn already exists.');
-                }
+            let optionsMap = {
+                'I': this.updateIsbn.bind(this, id),
+                'T': this.updateTitle.bind(this, id),
+                'D': this.updateDescription.bind(this, id),
+                'return': function(){return true;}
+            };
+            if(optionsMap.hasOwnProperty(response)){
+                optionsMap[response]();
                 return true;
-            case 'T':
-                this._printer.paragrapheStartMessage('Please type the book\'s new title : ');
-                title = readline.question('');
-
-                if (!this._library.updateBookTitle(id, title)){
-                    this._printer.paragrapheStartMessage('This title already exists.');
-                }
-                return true;
-            case 'D':
-                this._printer.paragrapheStartMessage('Please type the book\'s new description : ');
-                description = readline.question('');
-
-                this._library.updateBookDescription(id, description);
-                return true;
-            case 'return':
-                return true;
-            default :
-                this._printer.warningMessage('Your choice is not an option');
-                break;
             }
+            this._printer.warningMessage('Your choice is not an option');
         }
     }
 
@@ -153,13 +128,41 @@ class Application {
             }
         }
 
-        if (this._library.deleteBookById(id)){
-            this._printer.paragrapheStartMessage('The book has been deleted.');
-        }
-        else {
+        if (!this._library.deleteBookById(id)){
             this._printer.warningMessage('An error occurred while trying to delete.');
             return false;
         }
+        this._printer.paragrapheStartMessage('The book has been deleted.');
+        return true;
+    }
+
+    updateIsbn(id){
+        this._printer.paragrapheStartMessage('Please type the book\'s new isbn : ');
+        let isbn = readline.question('');
+
+        if (!this._library.updateBookIsbn(id, isbn)){
+            this._printer.paragrapheStartMessage('This isbn already exists.');
+            return false;
+        }
+        return true;
+    }
+
+    updateTitle(id){
+        this._printer.paragrapheStartMessage('Please type the book\'s new title : ');
+        let title = readline.question('');
+
+        if (!this._library.updateBookTitle(id, title)){
+            this._printer.paragrapheStartMessage('This title already exists.');
+            return false;
+        }
+        return true;
+    }
+
+    updateDescription(id){
+        this._printer.paragrapheStartMessage('Please type the book\'s new description : ');
+        let description = readline.question('');
+
+        this._library.updateBookDescription(id, description);
         return true;
     }
 
