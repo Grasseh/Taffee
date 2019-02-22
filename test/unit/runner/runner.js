@@ -29,10 +29,11 @@ class TestDescriptorStub {
 }
 
 class TestStub {
-    constructor(name, testClass, expectedResult){
+    constructor(name, testClass, expectedResult, parameters){
         this.name = name;
         this.testClass = testClass;
         this.expectedResult = expectedResult;
+        this.parameters = parameters;
     }
 
     getTestName(){
@@ -45,6 +46,10 @@ class TestStub {
 
     getExpectedResult(){
         return this.expectedResult;
+    }
+
+    getParameters(){
+        return this.parameters;
     }
 }
 
@@ -88,7 +93,8 @@ describe('Runner Unit', function() {
         it('Can handle a passing and a failing test!', function() {
             let testA = new TestStub('test A', 'a', 'Hello World');
             let testB = new TestStub('test B', 'b', 'Hello Wool');
-            let tests = [testA, testB];
+            let testParams = new TestStub('test params', 'c', '2', ['1', '1']);
+            let tests = [testA, testB, testParams];
             let descriptor = new TestDescriptorStub('invoker', tests);
             let TestRunnerStub = TestRunner;
             let invokerStub = {
