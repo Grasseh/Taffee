@@ -1,5 +1,4 @@
 <?php
-require_once('printer.php');
 require_once('book.php');
 
 class Library {
@@ -9,6 +8,13 @@ class Library {
     public function __construct() {
         $this->initializeBasicLibrary();
     } 
+
+    public function getHighestBookId(){
+        if (count($this->books) > 0)
+            return max(array_map( function ($book){return $book->getId();}, $this->books));
+            //return Math.max.apply(Math, this._books.map(function(book) { return book.getId(); }), -1);
+        return -1;
+    }
     
     public function addBook($isbn, $title, $description){
         $this->books[] = new Book($this->getNumberOfBook(),$isbn, $title, $description);
