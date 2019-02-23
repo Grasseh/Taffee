@@ -9,7 +9,7 @@
     "eslint_prepush": "eslint src test",
     "test": "mocha test --recursive",
     "cover": "nyc mocha test --recursive",
-    "report": "nyc report --reporter=text-lcov > coverage.lcov",
+    "report": "nyc report --reporter=text-lcov >coverage.lcov",
     "test_prepush": "mocha test --recursive --reporter nyan"
   },
   "repository": {
