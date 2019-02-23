@@ -3,6 +3,8 @@ const handlebars = require('handlebars');
 const path = require('path');
 const showdown = require('showdown');
 
+const RegexConstants = require('../util/regex_constants');
+
 const TEST_EXPECTED_RESULT_INDEX = 1;
 // const TEST_CLASS_INDEX = 2;
 const TEST_NAME_INDEX = 3;
@@ -13,13 +15,6 @@ const PARAMETER_NAME_INDEX = 2;
 
 const DEFAULT_CSS = path.join(__dirname, '..', 'resources', 'output', 'styles.css');
 const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'templates', 'outputTemplate.html');
-
-const TEST_DETECTION_REGEX = /\[.*?\]\(\?=.*?\)\)/gm;
-const TEST_ELEMENTS_REGEX = /(?:\[[&]?(.*?)\])\(\?=(?:(.*?)\.)?(.*)\((.*?)\)\)/gm;
-const TEST_PARAMETER_NAME_REGEX = /[\w\d]+/gm;
-
-const PARAMETER_DETECTION_REGEX = /\[.*?\]\(#.*?\)/gm;
-const PARAMETER_ELEMENTS_REGEX = /(?:.*?)\[(.*)?\]\(#(.*)?\)/gm;
 
 class HTMLGenerator {
     constructor() {
@@ -81,7 +76,7 @@ class HTMLGenerator {
     }
 
     _convertParameters(mdLine, paramsMap) {
-        let parameterDetectionRegex = new RegExp(PARAMETER_DETECTION_REGEX);
+        let parameterDetectionRegex = new RegExp(RegexConstants.PARAMETER_DETECTION_REGEX);
         let matchedParameters = mdLine.match(parameterDetectionRegex);
 
         if(null !== matchedParameters) {
@@ -94,7 +89,7 @@ class HTMLGenerator {
     }
 
     _convertParameter(mdLine, searchString, paramsMap) {
-        let parameterElementsRegex = new RegExp(PARAMETER_ELEMENTS_REGEX);
+        let parameterElementsRegex = new RegExp(RegexConstants.PARAMETER_ELEMENTS_REGEX);
         let parameterElements = parameterElementsRegex.exec(searchString);
         let value = parameterElements[PARAMETER_VALUE_INDEX];
         let name = parameterElements[PARAMETER_NAME_INDEX];
@@ -106,7 +101,7 @@ class HTMLGenerator {
     }
 
     _convertTests(mdLine, testResults, paramsMap) {
-        let testDetectionRegex = new RegExp(TEST_DETECTION_REGEX);
+        let testDetectionRegex = new RegExp(RegexConstants.TEST_DETECTION_REGEX);
         let matchedTests = mdLine.match(testDetectionRegex);
 
         if(null !== matchedTests) {
@@ -119,14 +114,14 @@ class HTMLGenerator {
     }
 
     _convertTest(mdLine, searchString, testResults, paramsMap) {
-        let testElementsRegex = new RegExp(TEST_ELEMENTS_REGEX);
+        let testElementsRegex = new RegExp(RegexConstants.TEST_ELEMENTS_REGEX);
         let testElements = testElementsRegex.exec(searchString);
 
         let expectedResult = testElements[TEST_EXPECTED_RESULT_INDEX];
         let testName = testElements[TEST_NAME_INDEX];
         let testParameters = testElements[TEST_PARAMETERS_INDEX];
 
-        let parameterNamesRegex = new RegExp(TEST_PARAMETER_NAME_REGEX);
+        let parameterNamesRegex = new RegExp(RegexConstants.TEST_PARAMETER_NAME_REGEX);
         let parameterNames = testParameters.match(parameterNamesRegex);
 
         // Avoid null pointer exceptions. Regex returns null if there is no match.
