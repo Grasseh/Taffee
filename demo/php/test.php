@@ -20,17 +20,17 @@ class Test {
         $printer->basicMessage('Add book isbn is good: ' . ($book->getIsbn() === 'isbn5'));
         $printer->basicMessage('Add book title is good: ' . ($book->getTitle() === 'title5'));
         $printer->basicMessage('Add book description is good: ' . ($book->getDescription() === 'description5'));
-/*
+
         $book = $testFacade->testUpdateBook();
-        echo('Update isbn is good : ' . $book->getIsbn() === 'newisbn1');
-        echo('Update title is good : ' . $book->getTitle() === 'newtitle1');
-        echo('Update description is good : ' . $book->getDescription() === 'newdescription1');
+        $printer->basicMessage('Update isbn is good : ' . ($book->getIsbn() === 'newisbn1'));
+        $printer->basicMessage('Update title is good : ' . ($book->getTitle() === 'newtitle1'));
+        $printer->basicMessage('Update description is good : ' . ($book->getDescription() === 'newdescription1'));
 
-        echo('Delete book is good : ' . $testFacade->testDeleteBook() === 3);
+        $printer->basicMessage('Delete book is good : ' . ($testFacade->testDeleteBook() === 3));
 
-        echo('Does isbn exists true is good : ' . $testFacade->testDoesIsbnExists('9781976519857') === true);
-        echo('Does isbn exists false is good : ' . $testFacade->testDoesIsbnExists('9781976888887') === false);
-*/
+        $printer->basicMessage('Does isbn exists true is good : ' . ($testFacade->testDoesIsbnExists('9781976519857') === true));
+        $printer->basicMessage('Does isbn exists false is good : ' . ($testFacade->testDoesIsbnExists('9781976888887') === false));
+
     }
 }
 

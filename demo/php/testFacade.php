@@ -41,7 +41,29 @@ class TestFacade {
 
 		return $library;
 	}
-	
-} 
+    
+    public function testUpdateBook(){
+        $library = new Library();
+        $library->addBook('isbn1', 'title1', 'description1');
 
+        $book = $library->getBookByIsbn('isbn1');
+        $library->updateBookIsbn($book->getId(), 'newisbn1');
+        $library->updateBookTitle($book->getId(), 'newtitle1');
+        $library->updateBookDescription($book->getId(), 'newdescription1');
+
+        return $library->getBookById($book->getId());
+    }
+
+    public function testDeleteBook(){
+        $library = new Library();
+        $library->deleteBookById($library->getHighestBookId());
+
+        return $library->getNumberOfBook();
+    }
+
+    public function testDoesIsbnExists($isbn){
+        $library = new Library();
+        return $library->doesIsbnExists($isbn);
+    }
+} 
 ?>

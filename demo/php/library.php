@@ -12,7 +12,6 @@ class Library {
     public function getHighestBookId(){
         if (count($this->books) > 0)
             return max(array_map( function ($book){return $book->getId();}, $this->books));
-            //return Math.max.apply(Math, this._books.map(function(book) { return book.getId(); }), -1);
         return -1;
     }
     
@@ -20,14 +19,20 @@ class Library {
         $this->books[] = new Book($this->getNumberOfBook(),$isbn, $title, $description);
     }
     
+    public function getBookById($id){
+        $book = array_pop(array_filter($this->books,function($book) use ($id) {return $book->getId() == $id;}));
+        if ($book == 'undefined')
+            return null;
+
+        return $book;
+
+    }
+    
     public function getBookByIsbn($isbn){
-        $book = null;
-        for ($x = 0; $x < $this->getNumberOfBook(); $x++) {
-            if ($this->books[$x]->getIsbn() == $isbn){
-                $book = $this->books[$x];
-            }
-        } 
-        
+        $book = array_pop(array_filter($this->books,function($book) use ($isbn) {return $book->getIsbn() == $isbn;}));
+        if ($book == 'undefined')
+            return null;
+
         return $book;
     }
     
@@ -44,6 +49,55 @@ class Library {
             $this->books[$x]->printBook();
         } 
         
+    }
+    
+    public function updateBookTitle($id, $title){
+        $book = $this->getBookById($id);
+        if ($book != null){
+            $book->setTitle($title);
+            return true;
+        }
+
+        return false;
+    }
+    
+    public function updateBookIsbn($id, $isbn){
+        $book = $this->getBookById($id);
+        if ($book != null && !$this->doesIsbnExists($isbn)){
+            $book->setIsbn($isbn);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function updateBookDescription($id, $description){
+        $book = $this->getBookById($id);
+        if ($book != null){
+            $book->setDescription($description);
+            return true;
+        }
+
+        return false;
+    }
+    
+    public function deleteBookById($id){
+        for ($x = 0; $x < $this->getNumberOfBook(); $x++) {
+            if ($this->books[$x]->getId() == $id){
+                array_splice($this->books, $x, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function doesIsbnExists($isbn){
+        for ($x = 0; $x < $this->getNumberOfBook(); $x++) {
+            if ($this->books[$x]->getIsbn() == $isbn){
+                return true;
+            }
+        }
+        return false;
     }
     
     private function initializeBasicLibrary(){
