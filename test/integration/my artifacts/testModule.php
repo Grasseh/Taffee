@@ -6,12 +6,8 @@ class Test{
         return 'Hello World';
     }
 
-    public function otherFun(){
-
-    }
-
-    public function withParams($a, $b){
-        return ($a + $b);
+    public function add($params){
+        return $params['a'] + $params['b'];
     }
 }
 
