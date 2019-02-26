@@ -1,5 +1,5 @@
 class TestResult {
-    constructor(test, success, actualResult, parameters = new Map()) {
+    constructor(test, success, actualResult, parameters = {}) {
         this._test = test;
         this._success = success;
         this._actualResult = actualResult;

@@ -68,25 +68,25 @@ describe('Output Unit', function() {
                 let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedPassingTests.html');
                 let testResults = [];
 
-                let testParameters = new Map();
+                let testParameters = {};
                 let test = new TestStub('pass', 'a', 'T1', testParameters);
                 let testResult = new TestResultStub(true, 'T1', test);
                 testResults.push(testResult);
 
-                let secondTestParameters = new Map();
+                let secondTestParameters = {};
                 let secondTest = new TestStub('pass', 'a', 'T2', secondTestParameters);
                 let secondTestResult = new TestResultStub(true, 'T2', secondTest);
                 testResults.push(secondTestResult);
 
-                let thirdTestParameters = new Map();
-                thirdTestParameters.set('v', 'A');
+                let thirdTestParameters = {};
+                thirdTestParameters['v'] = 'A';
                 let thirdTest = new TestStub('pass', 'a', 'T3', thirdTestParameters);
                 let thirdTestResult = new TestResultStub(true, 'T3', thirdTest);
                 testResults.push(thirdTestResult);
 
-                let fourthTestParameters = new Map();
-                fourthTestParameters.set('v', 'B');
-                fourthTestParameters.set('v2', 'C');
+                let fourthTestParameters = {};
+                fourthTestParameters['v'] = 'B';
+                fourthTestParameters['v2'] = 'C';
                 let fourthTest = new TestStub('pass', 'a', 'T4', fourthTestParameters);
                 let fourthTestResult = new TestResultStub(true, 'T4', fourthTest);
                 testResults.push(fourthTestResult);
@@ -102,11 +102,11 @@ describe('Output Unit', function() {
                 let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'FailingTests.md');
                 let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedFailingTests.html');
 
-                let testParameters = new Map();
+                let testParameters = {};
                 let test = new TestStub('failingTest', 'a', 'failing', testParameters);
                 let testResult = new TestResultStub(false, 'actual1', test);
 
-                let secondTestParameters = new Map();
+                let secondTestParameters = {};
                 let secondTest = new TestStub('anotherFailingTest', 'a', 'failing', secondTestParameters);
                 let secondTestResult = new TestResultStub(false, 'actual2', secondTest);
                 let testResults = [testResult, secondTestResult];
@@ -122,11 +122,11 @@ describe('Output Unit', function() {
                 let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'MixedTests.md');
                 let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedMixedTests.html');
 
-                let testParameters = new Map();
+                let testParameters = {};
                 let test = new TestStub('passingTest', 'a', 'passing', testParameters);
                 let testResult = new TestResultStub(true, 'passing', test);
 
-                let secondTestParameters = new Map();
+                let secondTestParameters = {};
                 let secondTest = new TestStub('failingTest', 'a', 'failing', secondTestParameters);
                 let secondTestResult = new TestResultStub(false, 'actual', secondTest);
                 let testResults = [testResult, secondTestResult];
@@ -145,7 +145,7 @@ describe('Output Unit', function() {
                 let expectedLine = 'A line containing a parameter.';
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatParameter(mdLine, '[parameter](#v)', new Map());
+                let res = gen._formatParameter(mdLine, '[parameter](#v)', {});
                 let formatedLine = res[0];
 
                 assert.strictEqual(formatedLine, expectedLine);
@@ -156,7 +156,7 @@ describe('Output Unit', function() {
                 let expectedLine = 'A line containing a first parameter and a [first](#v) parameter.';
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatParameter(mdLine, '[first](#v)', new Map());
+                let res = gen._formatParameter(mdLine, '[first](#v)', {});
                 let formatedLine = res[0];
 
                 assert.strictEqual(formatedLine, expectedLine);
@@ -164,15 +164,14 @@ describe('Output Unit', function() {
 
             it('Should update the parameters map', function() {
                 let mdLine = 'A line containing a [p](#v).';
-                let parametersMap = new Map();
+                let parametersMap = {};
 
                 let gen = new HTMLGenerator();
                 let res = gen._formatParameter(mdLine, '[p](#v)', parametersMap);
                 let updatedMap = res[1];
 
-                assert.strictEqual(updatedMap.size, 1);
-                assert(updatedMap.has('v'));
-                assert.strictEqual(updatedMap.get('v'), 'p');
+                assert.strictEqual(Object.keys(updatedMap).length, 1);
+                assert.strictEqual(updatedMap['v'], 'p');
             });
         });
 
@@ -180,13 +179,13 @@ describe('Output Unit', function() {
             it('Should format a passing test', function() {
                 let mdLine = 'A [p](?=a.pass()) test.';
 
-                let testParameters = new Map();
+                let testParameters = {};
                 let test = new TestStub('pass', 'a', 'p', testParameters);
                 let testResult = new TestResultStub(true, 'p', test);
                 let testResults = [testResult];
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatTest(mdLine, '[p](?=a.pass())', new Map(), testResults);
+                let res = gen._formatTest(mdLine, '[p](?=a.pass())', {}, testResults);
 
                 let expectedLine = 'A <span class="successful-test">p</span> test.';
                 assert.strictEqual(res[0], expectedLine);
@@ -195,13 +194,13 @@ describe('Output Unit', function() {
             it('Should format a failed test', function() {
                 let mdLine = 'A [f](?=a.fail()) test.';
 
-                let testParameters = new Map();
+                let testParameters = {};
                 let test = new TestStub('fail', 'a', 'f', testParameters);
                 let testResult = new TestResultStub(false, 'actual', test);
                 let testResults = [testResult];
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatTest(mdLine, '[f](?=a.fail())', new Map(), testResults);
+                let res = gen._formatTest(mdLine, '[f](?=a.fail())', {}, testResults);
 
                 let expectedLine = 'A <span class="failed-test">'
                     + '<span class="failed-test-expected-result">f</span> '
@@ -214,11 +213,11 @@ describe('Output Unit', function() {
         describe('1 parameter test formatting', function() {
             it('Should format a passing test with a matching parameter', function() {
                 let mdLine = 'A [p](?=a.pass(#v)) test.';
-                let parameters = new Map();
-                parameters.set('v', 'A');
+                let parameters = {};
+                parameters['v'] = 'A';
 
-                let testParameters = new Map();
-                testParameters.set('v', 'A');
+                let testParameters = {};
+                testParameters['v'] = 'A';
                 let test = new TestStub('pass', 'a', 'p', testParameters);
                 let testResult = new TestResultStub(true, 'p', test);
                 let testResults = [testResult];
@@ -232,11 +231,11 @@ describe('Output Unit', function() {
 
             it('Should not format a passing test without a matching parameter', function() {
                 let mdLine = 'A [p](?=a.pass(#v)) test.';
-                let parameters = new Map();
-                parameters.set('v', 'B');
+                let parameters = {};
+                parameters['v'] = 'B';
 
-                let testParameters = new Map();
-                testParameters.set('v', 'A');
+                let testParameters = {};
+                testParameters['v'] = 'A';
                 let test = new TestStub('pass', 'a', 'p', testParameters);
                 let testResult = new TestResultStub(true, 'p', test);
                 let testResults = [testResult];
@@ -252,15 +251,15 @@ describe('Output Unit', function() {
         describe('Multi parameter test formatting', function() {
             it('Should format a passing test with all matching parameters', function() {
                 let mdLine = 'A [p](?=a.pass(#v, #v2, #v3)) test.';
-                let parameters = new Map();
-                parameters.set('v', 'A');
-                parameters.set('v2', 'B');
-                parameters.set('v3', 'C');
+                let parameters = {};
+                parameters['v'] = 'A';
+                parameters['v2'] = 'B';
+                parameters['v3'] = 'C';
 
-                let testParameters = new Map();
-                testParameters.set('v', 'A');
-                testParameters.set('v2', 'B');
-                testParameters.set('v3', 'C');
+                let testParameters = {};
+                testParameters['v'] = 'A';
+                testParameters['v2'] = 'B';
+                testParameters['v3'] = 'C';
                 let test = new TestStub('pass', 'a', 'p', testParameters);
                 let testResult = new TestResultStub(true, 'p', test);
                 let testResults = [testResult];
@@ -274,15 +273,15 @@ describe('Output Unit', function() {
 
             it('Should not format a passing test without all matching parameters', function() {
                 let mdLine = 'A [p](?=a.pass(#v, #v2, #v3)) test.';
-                let parameters = new Map();
-                parameters.set('v', 'A');
-                parameters.set('v2', 'B');
-                parameters.set('v3', 'C');
+                let parameters = {};
+                parameters['v'] = 'A';
+                parameters['v2'] = 'B';
+                parameters['v3'] = 'C';
 
-                let testParameters = new Map();
-                testParameters.set('v', 'A');
-                testParameters.set('v2', 'C');
-                testParameters.set('v3', 'C');
+                let testParameters = {};
+                testParameters['v'] = 'A';
+                testParameters['v2'] = 'C';
+                testParameters['v3'] = 'C';
                 let test = new TestStub('pass', 'a', 'p', testParameters);
                 let testResult = new TestResultStub(true, 'p', test);
                 let testResults = [testResult];
