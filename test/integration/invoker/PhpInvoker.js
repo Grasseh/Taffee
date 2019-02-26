@@ -1,7 +1,7 @@
 /* global describe, it */
 const assert = require('assert');
 const path = require('path');
-const PhpInvoker = require('../../src/invoker/PhpInvoker');
+const PhpInvoker = require('../../../src/invoker/PhpInvoker');
 
 describe('PhpInvoker Integration', function() {
     describe('invoke', function() {
