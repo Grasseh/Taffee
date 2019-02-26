@@ -6,15 +6,15 @@ const HTMLGenerator = require('./output/generator');
 
 // Lookup the argv sent to the script for the run
 // (possibly use https://www.npmjs.com/package/yargs)
-let basePath = path.join(__dirname, '..', 'test', 'integration', 'artifacts', 'markdown');
+let basePath = path.join(__dirname, '..', 'demo', 'js', 'markdown');
 
 // Check the config of the project from the end user
 // (possibly use https://www.npmjs.com/package/cosmiconfig)
 // - Custom invokers
 // - Outputs
 // - ???
-let outputPath = path.join(__dirname, '..', 'test', 'integration', 'artifacts', 'application');
-let cssPath = 'basic.css';
+let outputPath = path.join(__dirname, '..', 'demo', 'js', 'markdown', 'output');
+let cssPath = path.join(__dirname, '..', 'demo', 'js', 'markdown', 'output', 'basic.css');
 
 // We locate the files with the specified FileLocator from the config
 let fileLocator = new App.interpreter.MarkdownFileLocator();
