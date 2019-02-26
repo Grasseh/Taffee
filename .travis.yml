@@ -2,9 +2,15 @@ language:
     - node_js
 node_js:
     - 10
+matrix:
+    include:
+        - os: linux
+        - os: osx
+        - os: windows
+          install:
+              - choco install php
+              - & call RefreshEnv.cmd
 install:
-    - choco install php
-    - refreshenv
     - npm install
     - npm install -g codecov
 script:
@@ -12,7 +18,3 @@ script:
     - npm run cover
     - npm run report
     - codecov
-os:
-    - windows
-    - linux
-    - osx
