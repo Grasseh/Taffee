@@ -1,7 +1,7 @@
 /* global describe, it */
 const assert = require('assert');
 const sinon = require('sinon');
-const NodeInvoker = require('../../src/invoker/NodeInvoker');
+const NodeInvoker = require('../../../src/invoker/NodeInvoker');
 
 describe('NodeInvoker', function() {
     describe('invoke', function() {

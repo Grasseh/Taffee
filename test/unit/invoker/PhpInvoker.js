@@ -2,7 +2,7 @@
 const assert = require('assert');
 const path = require('path');
 const sinon = require('sinon');
-const PhpInvoker = require('../../src/invoker/PhpInvoker');
+const PhpInvoker = require('../../../src/invoker/PhpInvoker');
 
 describe('PhpInvoker', function() {
     describe('invoke', function() {
@@ -25,8 +25,9 @@ describe('PhpInvoker', function() {
             let paramsFile = path.join('myPath', 'tmp', 'params.json');
             let params = {className : 'abc', params : {}};
             let testResult = phpInvoker.invoke(testName, projectName, params);
+            let invokerPathName = path.join('myPath', 'src', 'invoker', 'PhpInvoker.php');
             assert(getCwdStub.called);
-            assert(execStub.calledWith(`php "myPath/src/invoker/PhpInvoker.php" ${testName} ${params.className} "${projectName}" "${paramsFile}"`, {}));
+            assert(execStub.calledWith(`php "${invokerPathName}" ${testName} ${params.className} "${projectName}" "${paramsFile}"`, {}));
             assert.strictEqual(testResult, endVal);
         });
     });
