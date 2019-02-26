@@ -16,12 +16,18 @@ const PARAMETER_NAME_INDEX = 2;
 const DEFAULT_CSS = path.join(__dirname, '..', 'resources', 'output', 'styles.css');
 const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'templates', 'outputTemplate.html');
 
+const PARAMETER_REGEX = '\\[.+?\\]\\(#[\\w\\d]+\\)';
+const TEST_REGEX = '\\[&?.+?\\]\\(\\?=[\\w\\d]+\\.[\\w\\d]+\\(.*?\\)\\)';
+const ELEMENT_DISCRIMINANT_REGEX = '\\?=';
+
 class HTMLGenerator {
     constructor() {
-        this.testFormatting = Object.freeze({
-            true: this._formatSuccessfulTest,
-            false: this._formatFailedTest
-        });
+        this.elementFormattingFunctions = new Map();
+        this.elementFormattingFunctions.set('?=', this._formatTest);
+
+        this.testFormattingFunctions = new Map();
+        this.testFormattingFunctions.set(true, this._formatSuccessfulTest);
+        this.testFormattingFunctions.set(false, this._formatFailedTest);
 
         this.cssFiles = [DEFAULT_CSS];
         this.template = DEFAULT_TEMPLATE;
@@ -54,68 +60,58 @@ class HTMLGenerator {
         let converter = new showdown.Converter();
         let mdContent = fs.readFileSync(inputMdFilePath, 'UTF-8');
 
-        if (null !== testResults) {
-            mdContent = this._formatContent(mdContent, testResults);
+        let reg = `${PARAMETER_REGEX}|${TEST_REGEX}`;
+        let regex = new RegExp(reg, 'g');
+
+        let matches = mdContent.match(regex);
+        if (null !== matches) {
+            mdContent = this._formatMatches(mdContent, matches, testResults);
         }
 
         let body = `${converter.makeHtml(mdContent)}`;
         return body;
     }
 
-    // Format on a per line basis to avoid multiple test conversions in a single replace operation.
-    _formatContent(mdContent, testResults) {
-        let mdLines = mdContent.split('\n');
-        let paramsMap = new Map();
+    // Get or default since maps do not implement it.
+    _getElementFormattingFunction(element, defaultFn = this._formatParameter) {
+        let regex = new RegExp(ELEMENT_DISCRIMINANT_REGEX);
+        let discriminant = element.match(regex);
 
-        mdLines.forEach((line, i, arr) => {
-            [arr[i], paramsMap] = this._convertParameters(line, paramsMap);
-            arr[i] = this._convertTests(arr[i], testResults, paramsMap);
-        });
-
-        return mdLines.join('\n');
-    }
-
-    _convertParameters(mdLine, paramsMap) {
-        let parameterDetectionRegex = new RegExp(RegexConstants.PARAMETER_DETECTION_REGEX);
-        let matchedParameters = mdLine.match(parameterDetectionRegex);
-
-        if(null !== matchedParameters) {
-            matchedParameters.forEach((match) => {
-                [mdLine, paramsMap] = this._convertParameter(mdLine, match, paramsMap);
-            });
+        let fn = defaultFn.bind(this);
+        if(null !== discriminant) {
+            fn = this.elementFormattingFunctions.get(discriminant[0]).bind(this);
         }
 
-        return [mdLine, paramsMap];
+        return fn;
     }
 
-    _convertParameter(mdLine, searchString, paramsMap) {
+    _formatMatches(mdContent, matches, testResults) {
+        let formatElement;
+        let paramsMap = new Map();
+
+        matches.forEach((match) => {
+            formatElement = this._getElementFormattingFunction(match);
+            [mdContent, paramsMap] = formatElement(mdContent, match, paramsMap, testResults);
+        });
+
+        return mdContent;
+    }
+
+    _formatParameter(mdContent, match, paramsMap) {
         let parameterElementsRegex = new RegExp(RegexConstants.PARAMETER_ELEMENTS_REGEX);
-        let parameterElements = parameterElementsRegex.exec(searchString);
+        let parameterElements = parameterElementsRegex.exec(match);
         let value = parameterElements[PARAMETER_VALUE_INDEX];
         let name = parameterElements[PARAMETER_NAME_INDEX];
 
         paramsMap.set(name, value);
-        mdLine = mdLine.replace(searchString, value);
+        mdContent = mdContent.replace(match, value);
 
-        return [mdLine, paramsMap];
+        return [mdContent, paramsMap];
     }
 
-    _convertTests(mdLine, testResults, paramsMap) {
-        let testDetectionRegex = new RegExp(RegexConstants.TEST_DETECTION_REGEX);
-        let matchedTests = mdLine.match(testDetectionRegex);
-
-        if(null !== matchedTests) {
-            matchedTests.forEach((match) => {
-                mdLine = this._convertTest(mdLine, match, testResults, paramsMap);
-            });
-        }
-
-        return mdLine;
-    }
-
-    _convertTest(mdLine, searchString, testResults, paramsMap) {
+    _formatTest(mdContent, match, paramsMap, testResults) {
         let testElementsRegex = new RegExp(RegexConstants.TEST_ELEMENTS_REGEX);
-        let testElements = testElementsRegex.exec(searchString);
+        let testElements = testElementsRegex.exec(match);
 
         let expectedResult = testElements[TEST_EXPECTED_RESULT_INDEX];
         let testName = testElements[TEST_NAME_INDEX];
@@ -142,19 +138,20 @@ class HTMLGenerator {
         });
 
         if(undefined !== testResult) {
-            mdLine = this.testFormatting[testResult.isSuccess()](mdLine, searchString, testResult);
+            let formatTest = this.testFormattingFunctions.get(testResult.isSuccess());
+            mdContent = formatTest(mdContent, match, testResult);
         }
 
-        return mdLine;
+        return [mdContent, paramsMap];
     }
 
-    _formatSuccessfulTest(mdLine, searchString, successfulTest) {
+    _formatSuccessfulTest(mdContent, match, successfulTest) {
         let actualResult = successfulTest.getActualResult();
         let replaceString = `<span class="successful-test">${actualResult}</span>`;
-        return mdLine.replace(searchString, replaceString);
+        return mdContent.replace(match, replaceString);
     }
 
-    _formatFailedTest(mdLine, searchString, failedTest) {
+    _formatFailedTest(mdContent, match, failedTest) {
         let expectedResult = failedTest.getTest().getExpectedResult();
         let actualResult = failedTest.getActualResult();
 
@@ -163,7 +160,7 @@ class HTMLGenerator {
             + `<span class="failed-test-actual-result">${actualResult}</span>`
             + '</span>';
 
-        return mdLine.replace(searchString, replaceString);
+        return mdContent.replace(match, replaceString);
     }
 }
 

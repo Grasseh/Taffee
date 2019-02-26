@@ -9,7 +9,8 @@ describe('Accept Application Test', function() {
         let command = 'npm start';
         let options = {
         };
-        execSync(command, options);
+        let out = execSync(command, options);
+        console.log(out.toString());
         let expectedFile = path.join(__dirname, '..', 'artifacts', 'application', 'ExpectedOut.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
 

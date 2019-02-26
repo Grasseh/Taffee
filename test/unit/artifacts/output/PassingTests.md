@@ -3,7 +3,7 @@
 [T2](?=a.pass())
 
 # SINGLE PARAMETER
-[A](#var) [T3](?=a.pass(#var))
+[A](#v) [T3](?=a.pass(#v))
 
 # MULTI PARAMETER
-[B](#var) [C](#var2) [T4](?=a.pass(#var, #var2))
+[B](#v) [C](#v2) [T4](?=a.pass(#v, #v2))
