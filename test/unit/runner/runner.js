@@ -93,7 +93,7 @@ describe('Runner Unit', function() {
         it('Can handle a passing and a failing test!', function() {
             let testA = new TestStub('test A', 'a', 'Hello World');
             let testB = new TestStub('test B', 'b', 'Hello Wool');
-            let testParams = new TestStub('test params', 'c', '2', { a:'1', b:'1'});
+            let testParams = new TestStub('test params', 'c', '2', {a:'1', b:'1'});
             let tests = [testA, testB, testParams];
             let descriptor = new TestDescriptorStub('invoker', tests);
             let TestRunnerStub = TestRunner;
