@@ -1,0 +1,47 @@
+{
+  "name": "pfe",
+  "version": "0.0.1",
+  "description": "Behavior Driven Development Test Report Framework",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/run.js",
+    "eslint": "eslint src test --fix",
+    "eslint_prepush": "eslint src test",
+    "test": "mocha test --recursive",
+    "cover": "nyc mocha test --recursive",
+    "report": "nyc report --reporter=text-lcov > coverage.lcov",
+    "test_prepush": "mocha test --recursive --reporter nyan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Grasseh/PFE_H_2019.git"
+  },
+  "keywords": [
+    "BDD",
+    "Behavior",
+    "Driven",
+    "Development",
+    "Test",
+    "Report",
+    "Framework"
+  ],
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Grasseh/PFE_H_2019/issues"
+  },
+  "homepage": "https://github.com/Grasseh/PFE_H_2019#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run-script eslint && npm test",
+      "pre-push": "npm run-script test_prepush && npm run-script eslint_prepush"
+    }
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "husky": "^1.3.1",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "showdown": "^1.9.0",
+    "sinon": "^7.2.2"
+  }
+}
