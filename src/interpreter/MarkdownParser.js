@@ -32,8 +32,10 @@ class MarkdownParser extends GenericParser{
     _getDescriptorTags(mdContent) {
         let tags = [];
         let matches;
-        while ((matches = DESCRIPTOR_FLAGS_REGEX.exec(mdContent)) !== null) {
-            tags[matches[1]] = INSIDE_PARENTHESIS_REGEX.exec(matches[0])[1];
+        let descriptorFlagsRegex = new RegExp(DESCRIPTOR_FLAGS_REGEX);
+        while ((matches = descriptorFlagsRegex.exec(mdContent)) !== null) {
+            let insideParenthesisRegex = new RegExp(INSIDE_PARENTHESIS_REGEX);
+            tags[matches[1]] = insideParenthesisRegex.exec(matches[0])[1];
         }
         return tags;
     }
