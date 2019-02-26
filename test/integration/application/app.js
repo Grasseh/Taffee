@@ -6,6 +6,7 @@ const path = require('path');
 
 describe('Accept Application Test', function() {
     it('Should work from A to Z', function() {
+        this.timeout(4000);
         let command = 'npm start';
         let options = {
         };
