@@ -1,11 +1,9 @@
 language:
     - node_js
-    - php
 node_js:
     - 10
-php:
-    - "7.0"
 install:
+    - choco install php
     - npm install
     - npm install -g codecov
 script:
