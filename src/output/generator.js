@@ -22,12 +22,12 @@ const ELEMENT_DISCRIMINANT_REGEX = '\\?=';
 
 class HTMLGenerator {
     constructor() {
-        this.elementFormattingFunctions = new Map();
-        this.elementFormattingFunctions.set('?=', this._formatTest);
+        this.elementFormattingFunctions = {};
+        this.elementFormattingFunctions['?='] = this._formatTest.bind(this);
 
-        this.testFormattingFunctions = new Map();
-        this.testFormattingFunctions.set(true, this._formatSuccessfulTest);
-        this.testFormattingFunctions.set(false, this._formatFailedTest);
+        this.testFormattingFunctions = {};
+        this.testFormattingFunctions[true] = this._formatSuccessfulTest.bind(this);
+        this.testFormattingFunctions[false] = this._formatFailedTest.bind(this);
 
         this.cssFiles = [DEFAULT_CSS];
         this.template = DEFAULT_TEMPLATE;
@@ -79,7 +79,7 @@ class HTMLGenerator {
 
         let fn = defaultFn.bind(this);
         if(null !== discriminant) {
-            fn = this.elementFormattingFunctions.get(discriminant[0]).bind(this);
+            fn = this.elementFormattingFunctions[discriminant[0]].bind(this);
         }
 
         return fn;
@@ -87,7 +87,7 @@ class HTMLGenerator {
 
     _formatMatches(mdContent, matches, testResults) {
         let formatElement;
-        let paramsMap = new Map();
+        let paramsMap = {};
 
         matches.forEach((match) => {
             formatElement = this._getElementFormattingFunction(match);
@@ -103,7 +103,7 @@ class HTMLGenerator {
         let value = parameterElements[PARAMETER_VALUE_INDEX];
         let name = parameterElements[PARAMETER_NAME_INDEX];
 
-        paramsMap.set(name, value);
+        paramsMap[name] = value;
         mdContent = mdContent.replace(match, value);
 
         return [mdContent, paramsMap];
@@ -131,14 +131,14 @@ class HTMLGenerator {
             isTrue = isTrue && expectedResult === tr.getTest().getExpectedResult();
 
             parameterNames.forEach((param) => {
-                isTrue = isTrue && paramsMap.get(param) === tr.getTest().getParameters().get(param);
+                isTrue = isTrue && paramsMap[param] === tr.getTest().getParameters()[param];
             });
 
             return isTrue;
         });
 
         if(undefined !== testResult) {
-            let formatTest = this.testFormattingFunctions.get(testResult.isSuccess());
+            let formatTest = this.testFormattingFunctions[testResult.isSuccess()];
             mdContent = formatTest(mdContent, match, testResult);
         }
 
