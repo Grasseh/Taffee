@@ -10,4 +10,4 @@ When the project function is called then we see the output [Hello World](?=Test.
 ## Example with parameters
 Given A = [1](#A) and B = [1](#B)
 When the project function withParams is called 
-then we see the output [2](?=Test.withParams(#A,#B)).
+then we see the output [2](?=Test.add(#A,#B)).
