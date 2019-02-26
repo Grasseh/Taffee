@@ -13,8 +13,7 @@ install:
     - npm install
     - npm install -g codecov
 script:
-    - php73 --version
-    - php --version
+    - set
     - npm run eslint_prepush
     - npm run cover
     - npm run report
