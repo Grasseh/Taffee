@@ -3,7 +3,9 @@ const handlebars = require('handlebars');
 const path = require('path');
 const showdown = require('showdown');
 
-const RegexConstants = require('../util/regex_constants');
+// const RegexConstants = require('../util/regex_constants');
+
+const DISCRIMINANT_VALUE_INDEX = 1;
 
 const TEST_EXPECTED_RESULT_INDEX = 1;
 // const TEST_CLASS_INDEX = 2;
@@ -16,14 +18,30 @@ const PARAMETER_NAME_INDEX = 2;
 const DEFAULT_CSS = path.join(__dirname, '..', 'resources', 'output', 'styles.css');
 const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'templates', 'outputTemplate.html');
 
-const PARAMETER_REGEX = '\\[.+?\\]\\(#[\\w\\d]+\\)';
-const TEST_REGEX = '\\[&?.+?\\]\\(\\?=[\\w\\d]+\\.[\\w\\d]+\\(.*?\\)\\)';
-const ELEMENT_DISCRIMINANT_REGEX = '\\?=';
+// t | test | v | var | variable | i | inv | invoker | m | mod | module
+// [](invoker: PHPInvoker)
+// [](module: LeModule)
+// [valeur](variable: nomDeLaVariable)
+// [valeurAttendue](test: Class.NomDuTest(parametre1, parametre2, parametre3))
+
+const TEST_DISCRIMINANTS_REGEX = '\\?=|t|test';
+const TEST_ELEMENTS_REGEX = `(?:\\[[&]?(.*?)\\])\\([${TEST_DISCRIMINANTS_REGEX}]{1}[:\\s]?(?:(.*?)\\.)?(.*?)\\((.*)\\)\\)`;
+const TEST_PARAMETER_NAME_REGEX = /[\w\d]+/gm;
+
+const PARAMETER_ELEMENTS_REGEX = /(?:.*?)\[(.*)?\]\(#(.*)?\)/gm;
+
+const ELEMENT_DISCRIMINANTS_REGEX = `#|${TEST_DISCRIMINANTS_REGEX}`;
+const ELEMENT_DETECTION_REGEX = `\\[.+?\\]\\([${ELEMENT_DISCRIMINANTS_REGEX}]{1}[:\\s]?.*?[\\)]?\\)`;
+
+const DISCRIMINANT_DETECTION_REGEX = `\\]\\((${ELEMENT_DISCRIMINANTS_REGEX})`;
 
 class HTMLGenerator {
     constructor() {
         this.elementFormattingFunctions = {};
+        this.elementFormattingFunctions['#'] = this._formatParameter.bind(this);
         this.elementFormattingFunctions['?='] = this._formatTest.bind(this);
+        this.elementFormattingFunctions['t'] = this._formatTest.bind(this);
+        this.elementFormattingFunctions['test'] = this._formatTest.bind(this);
 
         this.testFormattingFunctions = {};
         this.testFormattingFunctions[true] = this._formatSuccessfulTest.bind(this);
@@ -60,9 +78,7 @@ class HTMLGenerator {
         let converter = new showdown.Converter();
         let mdContent = fs.readFileSync(inputMdFilePath, 'UTF-8');
 
-        let reg = `${PARAMETER_REGEX}|${TEST_REGEX}`;
-        let regex = new RegExp(reg, 'g');
-
+        let regex = new RegExp(ELEMENT_DETECTION_REGEX, 'g');
         let matches = mdContent.match(regex);
         if (null !== matches) {
             mdContent = this._formatMatches(mdContent, matches, testResults);
@@ -74,12 +90,13 @@ class HTMLGenerator {
 
     // Get or default since maps do not implement it.
     _getElementFormattingFunction(element, defaultFn = this._formatParameter) {
-        let regex = new RegExp(ELEMENT_DISCRIMINANT_REGEX);
-        let discriminant = element.match(regex);
+        let regex = new RegExp(DISCRIMINANT_DETECTION_REGEX, 'g');
+        let match = regex.exec(element);
 
         let fn = defaultFn.bind(this);
-        if(null !== discriminant) {
-            fn = this.elementFormattingFunctions[discriminant[0]].bind(this);
+        if(null !== match) {
+            let discriminant = match[DISCRIMINANT_VALUE_INDEX];
+            fn = this.elementFormattingFunctions[discriminant].bind(this);
         }
 
         return fn;
@@ -98,7 +115,7 @@ class HTMLGenerator {
     }
 
     _formatParameter(mdContent, match, paramsMap) {
-        let parameterElementsRegex = new RegExp(RegexConstants.PARAMETER_ELEMENTS_REGEX);
+        let parameterElementsRegex = new RegExp(PARAMETER_ELEMENTS_REGEX);
         let parameterElements = parameterElementsRegex.exec(match);
         let value = parameterElements[PARAMETER_VALUE_INDEX];
         let name = parameterElements[PARAMETER_NAME_INDEX];
@@ -110,14 +127,14 @@ class HTMLGenerator {
     }
 
     _formatTest(mdContent, match, paramsMap, testResults) {
-        let testElementsRegex = new RegExp(RegexConstants.TEST_ELEMENTS_REGEX);
+        let testElementsRegex = new RegExp(TEST_ELEMENTS_REGEX);
         let testElements = testElementsRegex.exec(match);
 
         let expectedResult = testElements[TEST_EXPECTED_RESULT_INDEX];
         let testName = testElements[TEST_NAME_INDEX];
         let testParameters = testElements[TEST_PARAMETERS_INDEX];
 
-        let parameterNamesRegex = new RegExp(RegexConstants.TEST_PARAMETER_NAME_REGEX);
+        let parameterNamesRegex = new RegExp(TEST_PARAMETER_NAME_REGEX);
         let parameterNames = testParameters.match(parameterNamesRegex);
 
         // Avoid null pointer exceptions. Regex returns null if there is no match.
