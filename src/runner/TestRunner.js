@@ -11,7 +11,8 @@ class TestRunner{
     run(){
         for(let test of this.descriptor.getTests()){
             let options = {
-                className : test.getTestClass()
+                className : test.getTestClass(),
+                params : test.getParameters()
             };
             let actualResult = this.invoker.invoke(test.getTestName(), this.descriptor.getTestFileName(), options);
             let success = actualResult === test.getExpectedResult();
