@@ -25,14 +25,14 @@ const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'temp
 // [valeurAttendue](test: Class.NomDuTest(parametre1, parametre2, parametre3))
 
 const TEST_DISCRIMINANTS_REGEX = '\\?=|t|test';
-const TEST_ELEMENTS_REGEX = `(?:\\[[&]?(.*?)\\])\\([${TEST_DISCRIMINANTS_REGEX}]{1}[:\\s]?(?:(.*?)\\.)?(.*?)\\((.*)\\)\\)`;
+const TEST_ELEMENTS_REGEX = `(?:\\[[&]?(.*?)\\])\\((?:${TEST_DISCRIMINANTS_REGEX})\\:?\\s?(?:(.*?)\\.)?(.*?)\\((.*)\\)\\)`;
 const TEST_PARAMETER_NAME_REGEX = '[\\w\\d]+';
 
 const PARAMETER_DISCRIMINANTS_REGEX = '#|variable|var|v';
 const PARAMETER_ELEMENTS_REGEX = `\\[(.*)?\\]\\((?:${PARAMETER_DISCRIMINANTS_REGEX})\\:?\\s?([\\w\\d]+)\\)`;
 
 const ELEMENT_DISCRIMINANTS_REGEX = `${PARAMETER_DISCRIMINANTS_REGEX}|${TEST_DISCRIMINANTS_REGEX}`;
-const ELEMENT_DETECTION_REGEX = `\\[.+?\\]\\((?:${ELEMENT_DISCRIMINANTS_REGEX})\\:?\\s?.*?[\\)]?\\)`;
+const ELEMENT_DETECTION_REGEX = `\\[.*?\\]\\((?:${ELEMENT_DISCRIMINANTS_REGEX})\\:?\\s?.*?\\)+`;
 
 const DISCRIMINANT_DETECTION_REGEX = `\\]\\((${ELEMENT_DISCRIMINANTS_REGEX})`;
 
@@ -85,6 +85,7 @@ class HTMLGenerator {
         let regex = new RegExp(ELEMENT_DETECTION_REGEX, 'g');
         let matches = mdContent.match(regex);
         if (null !== matches) {
+            console.log(matches);
             mdContent = this._formatMatches(mdContent, matches, testResults);
         }
 
