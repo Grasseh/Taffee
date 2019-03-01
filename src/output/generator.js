@@ -103,15 +103,11 @@ class HTMLGenerator {
     }
 
     // Get or default since maps do not implement it.
-    _getElementFormattingFunction(element, defaultFn = this._formatParameter) {
+    _getElementFormattingFunction(element) {
         let regex = new RegExp(DISCRIMINANT_DETECTION_REGEX, 'g');
         let match = regex.exec(element);
-
-        let fn = defaultFn.bind(this);
-        if(null !== match) {
-            let discriminant = match[DISCRIMINANT_VALUE_INDEX];
-            fn = this.elementFormattingFunctions[discriminant].bind(this);
-        }
+        let discriminant = match[DISCRIMINANT_VALUE_INDEX];
+        let fn = this.elementFormattingFunctions[discriminant];
 
         return fn;
     }
