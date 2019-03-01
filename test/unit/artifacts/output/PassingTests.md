@@ -1,3 +1,4 @@
+[](invoker: OUTPUTInvoker)
 # PARAMETERLESS
 [T1](t: a.pass())  
 [T2](t: a.pass())

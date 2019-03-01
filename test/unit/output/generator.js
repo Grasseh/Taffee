@@ -139,6 +139,19 @@ describe('Output Unit', function() {
             });
         });
 
+        describe('Invoker formatting', function() {
+            it('Should delete an invoker declaration', function() {
+                let mdLine = '[](invoker: PHPInvoker)';
+                let expectedLine = '';
+
+                let gen = new HTMLGenerator();
+                let res = gen._formatInvoker(mdLine, '[](invoker: PHPInvoker)', {});
+                let formatedLine = res[0];
+
+                assert.strictEqual(formatedLine, expectedLine);
+            });
+        });
+
         describe('Parameter formatting', function() {
             it('Should format a line with a single parameter', function() {
                 let mdLine = 'A line containing a [parameter](var: v).';

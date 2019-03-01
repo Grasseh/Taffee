@@ -1,3 +1,5 @@
+[](inv: OUTPUTInvoker)
+
 # OUTPUT INTEGRATION TEST
 This is the output integration test file.<br />
 <br />
