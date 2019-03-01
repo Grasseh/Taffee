@@ -152,6 +152,19 @@ describe('Output Unit', function() {
             });
         });
 
+        describe('Module formatting', function() {
+            it('Should delete a module declaration', function() {
+                let mdLine = '[](module: MODULE)';
+                let expectedLine = '';
+
+                let gen = new HTMLGenerator();
+                let res = gen._formatInvoker(mdLine, '[](module: MODULE)', {});
+                let formatedLine = res[0];
+
+                assert.strictEqual(formatedLine, expectedLine);
+            });
+        });
+
         describe('Parameter formatting', function() {
             it('Should format a line with a single parameter', function() {
                 let mdLine = 'A line containing a [parameter](var: v).';
