@@ -6,14 +6,10 @@ matrix:
     include:
         - os: linux
         - os: osx
-        - os: windows
-          install:
-              - choco install php
 install:
     - npm install
     - npm install -g codecov
 script:
-    - set
     - npm run eslint_prepush
     - npm run cover
     - npm run report
