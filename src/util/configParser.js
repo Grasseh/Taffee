@@ -8,7 +8,7 @@ class ConfigParser{
     }
 
     parseArgs(){
-        var parser = new (this._getArgParser())({
+        let parser = new (this._getArgParser())({
             version: '0.2',
             addHelp: true,
             description: 'Behavior Driven Development Test Framework'
@@ -19,7 +19,7 @@ class ConfigParser{
                 help: 'path to the config file'
             }
         );
-        var args = parser.parseArgs();
+        let args = parser.parseArgs();
         return args.config;
     }
 
@@ -30,7 +30,7 @@ class ConfigParser{
             configs = explorer.loadSync(configPath);
         }
         if(!configs){
-            console.error("No config file found!");
+            console.error('No config file found!');
             return this._getProcess().exit(1);
         }
         let basePath = configs.config.basePath;
