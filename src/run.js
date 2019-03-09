@@ -1,18 +1,13 @@
 const App = require('./index');
 const fs = require('fs');
-const path = require('path');
-const cosmiconfig = require('cosmiconfig');
+const configParser = require('./util/configParser');
 const testRunner = require('./runner/TestRunner');
 const HTMLGenerator = require('./output/generator');
 
 // Load the user configs
 // TODO : Search in arg for path
-const explorer = cosmiconfig('pfe');
-const configs = explorer.searchSync();
-let basePath = configs.config.basePath;
-let outputPath = configs.config.outputPath;
-let cssPath = configs.config.cssPath;
-
+const confParser = new configParser();
+let {basePath, outputPath} = confParser.parseConfig();
 // We locate the files with the specified FileLocator from the config
 let fileLocator = new App.interpreter.MarkdownFileLocator();
 let files = fileLocator.locateFiles(basePath);
