@@ -69,3 +69,5 @@ test/integration/artifacts/application/output.html
 
 # Mac OS
 .DS_Store
+# Config File
+.pferc

@@ -1,20 +1,17 @@
 const App = require('./index');
 const fs = require('fs');
 const path = require('path');
+const cosmiconfig = require('cosmiconfig');
 const testRunner = require('./runner/TestRunner');
 const HTMLGenerator = require('./output/generator');
 
-// Lookup the argv sent to the script for the run
-// (possibly use https://www.npmjs.com/package/yargs)
-let basePath = path.join(__dirname, '..', 'test', 'integration', 'artifacts', 'markdown');
-
-// Check the config of the project from the end user
-// (possibly use https://www.npmjs.com/package/cosmiconfig)
-// - Custom invokers
-// - Outputs
-// - ???
-let outputPath = path.join(__dirname, '..', 'test', 'integration', 'artifacts', 'application');
-let cssPath = 'basic.css';
+// Load the user configs
+// TODO : Search in arg for path
+const explorer = cosmiconfig('pfe');
+const configs = explorer.searchSync();
+let basePath = configs.config.basePath;
+let outputPath = configs.config.outputPath;
+let cssPath = configs.config.cssPath;
 
 // We locate the files with the specified FileLocator from the config
 let fileLocator = new App.interpreter.MarkdownFileLocator();
@@ -49,6 +46,6 @@ for(let runner of testRunners){
 // Generate the outputs of the TestSuiteResult(s) in HTML
 let htmlGenerator = new HTMLGenerator();
 for(let result of testResults){
-    let resultingHtml = htmlGenerator.generate(result, result.getMarkdown(), outputPath, cssPath);
+    let resultingHtml = htmlGenerator.generate(result, result.getMarkdown(), outputPath);
     fs.writeFileSync(`${outputPath}/output.html`, resultingHtml);
 }
