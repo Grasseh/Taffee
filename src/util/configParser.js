@@ -20,6 +20,7 @@ class ConfigParser{
             }
         );
         var args = parser.parseArgs();
+        console.error(args);
         return args.config;
     }
 
@@ -28,6 +29,10 @@ class ConfigParser{
         let configs = explorer.searchSync();
         if(configPath){
             configs = explorer.loadSync(configPath);
+        }
+        if(!configs){
+            console.error("No config file found!");
+            return process.exit(1);
         }
         let basePath = configs.config.basePath;
         let outputPath = configs.config.outputPath;

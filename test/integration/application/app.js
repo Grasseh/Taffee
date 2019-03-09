@@ -7,10 +7,12 @@ const path = require('path');
 describe('Accept Application Test', function() {
     it('Should work from A to Z', function() {
         this.timeout(4000);
-        let command = 'npm start';
+        let configPath = path.join(__dirname, '..', 'artifacts', 'application', '.pferc');
+        let command = `node src/run.js --config "${configPath}"`;
         let options = {
         };
-        execSync(command, options);
+        let output = execSync(command, options);
+        console.log(output.toString());
         let expectedFile = path.join(__dirname, '..', 'artifacts', 'application', 'ExpectedOut.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
 
