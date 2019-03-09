@@ -8,7 +8,7 @@ class ConfigParser{
     }
 
     parseArgs(){
-        var parser = new ArgumentParser({
+        var parser = new (this._getArgParser())({
             version: '0.2',
             addHelp: true,
             description: 'Behavior Driven Development Test Framework'
@@ -20,23 +20,34 @@ class ConfigParser{
             }
         );
         var args = parser.parseArgs();
-        console.error(args);
         return args.config;
     }
 
     parsePaths(configPath){
-        const explorer = cosmiconfig('pfe');
+        const explorer = this._getCosmiconfig()('pfe');
         let configs = explorer.searchSync();
         if(configPath){
             configs = explorer.loadSync(configPath);
         }
         if(!configs){
             console.error("No config file found!");
-            return process.exit(1);
+            return this._getProcess().exit(1);
         }
         let basePath = configs.config.basePath;
         let outputPath = configs.config.outputPath;
         return {basePath, outputPath};
+    }
+
+    _getArgParser(){
+        return ArgumentParser;
+    }
+
+    _getCosmiconfig(){
+        return cosmiconfig;
+    }
+
+    _getProcess(){
+        return process;
     }
 }
 
