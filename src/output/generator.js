@@ -42,24 +42,26 @@ const DISCRIMINANT_DETECTION_REGEX = `\\]\\((${ELEMENT_DISCRIMINANTS_REGEX})`;
 
 class HTMLGenerator {
     constructor() {
-        this.elementFormattingFunctions = {};
-        this.elementFormattingFunctions['i'] = this._formatInvoker.bind(this);
-        this.elementFormattingFunctions['inv'] = this._formatInvoker.bind(this);
-        this.elementFormattingFunctions['invoker'] = this._formatInvoker.bind(this);
-        this.elementFormattingFunctions['m'] = this._formatModule.bind(this);
-        this.elementFormattingFunctions['mod'] = this._formatModule.bind(this);
-        this.elementFormattingFunctions['module'] = this._formatModule.bind(this);
-        this.elementFormattingFunctions['#'] = this._formatParameter.bind(this);
-        this.elementFormattingFunctions['v'] = this._formatParameter.bind(this);
-        this.elementFormattingFunctions['var'] = this._formatParameter.bind(this);
-        this.elementFormattingFunctions['variable'] = this._formatParameter.bind(this);
-        this.elementFormattingFunctions['?='] = this._formatTest.bind(this);
-        this.elementFormattingFunctions['t'] = this._formatTest.bind(this);
-        this.elementFormattingFunctions['test'] = this._formatTest.bind(this);
+        this.elementFormattingFunctions = {
+            'i': this._formatInvoker.bind(this),
+            'inv': this._formatInvoker.bind(this),
+            'invoker': this._formatInvoker.bind(this),
+            'm': this._formatModule.bind(this),
+            'mod': this._formatModule.bind(this),
+            'module': this._formatModule.bind(this),
+            '#': this._formatParameter.bind(this),
+            'v': this._formatParameter.bind(this),
+            'var': this._formatParameter.bind(this),
+            'variable': this._formatParameter.bind(this),
+            '?=': this._formatTest.bind(this),
+            't': this._formatTest.bind(this),
+            'test': this._formatTest.bind(this)
+        };
 
-        this.testFormattingFunctions = {};
-        this.testFormattingFunctions[true] = this._formatSuccessfulTest.bind(this);
-        this.testFormattingFunctions[false] = this._formatFailedTest.bind(this);
+        this.testFormattingFunctions = {
+            true: this._formatSuccessfulTest.bind(this),
+            false: this._formatFailedTest.bind(this)
+        };
 
         this.cssFiles = [DEFAULT_CSS];
         this.template = DEFAULT_TEMPLATE;
@@ -102,7 +104,6 @@ class HTMLGenerator {
         return body;
     }
 
-    // Get or default since maps do not implement it.
     _getElementFormattingFunction(element) {
         let regex = new RegExp(DISCRIMINANT_DETECTION_REGEX, 'g');
         let match = regex.exec(element);
