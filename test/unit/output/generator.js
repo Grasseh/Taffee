@@ -139,35 +139,61 @@ describe('Output Unit', function() {
             });
         });
 
+        describe('Invoker formatting', function() {
+            it('Should delete an invoker declaration', function() {
+                let mdLine = '[](invoker: PHPInvoker)';
+                let expectedLine = '';
+
+                let gen = new HTMLGenerator();
+                let res = gen._formatInvoker(mdLine, '[](invoker: PHPInvoker)', {});
+                let formatedLine = res[0];
+
+                assert.strictEqual(formatedLine, expectedLine);
+            });
+        });
+
+        describe('Module formatting', function() {
+            it('Should delete a module declaration', function() {
+                let mdLine = '[](module: MODULE)';
+                let expectedLine = '';
+
+                let gen = new HTMLGenerator();
+                let res = gen._formatInvoker(mdLine, '[](module: MODULE)', {});
+                let formatedLine = res[0];
+
+                assert.strictEqual(formatedLine, expectedLine);
+            });
+        });
+
         describe('Parameter formatting', function() {
             it('Should format a line with a single parameter', function() {
-                let mdLine = 'A line containing a [parameter](#v).';
+                let mdLine = 'A line containing a [parameter](var: v).';
                 let expectedLine = 'A line containing a parameter.';
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatParameter(mdLine, '[parameter](#v)', {});
+                let res = gen._formatParameter(mdLine, '[parameter](var: v)', {});
                 let formatedLine = res[0];
 
                 assert.strictEqual(formatedLine, expectedLine);
             });
 
             it('Should format only the first parameter', function() {
-                let mdLine = 'A line containing a [first](#v) parameter and a [first](#v) parameter.';
-                let expectedLine = 'A line containing a first parameter and a [first](#v) parameter.';
+                let mdLine = 'A line containing a [first](var: v) parameter and a [first](var: v) parameter.';
+                let expectedLine = 'A line containing a first parameter and a [first](var: v) parameter.';
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatParameter(mdLine, '[first](#v)', {});
+                let res = gen._formatParameter(mdLine, '[first](var: v)', {});
                 let formatedLine = res[0];
 
                 assert.strictEqual(formatedLine, expectedLine);
             });
 
             it('Should update the parameters map', function() {
-                let mdLine = 'A line containing a [p](#v).';
+                let mdLine = 'A line containing a [p](var: v).';
                 let parametersMap = {};
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatParameter(mdLine, '[p](#v)', parametersMap);
+                let res = gen._formatParameter(mdLine, '[p](var: v)', parametersMap);
                 let updatedMap = res[1];
 
                 assert.strictEqual(Object.keys(updatedMap).length, 1);
@@ -177,7 +203,7 @@ describe('Output Unit', function() {
 
         describe('0 parameters test formatting', function() {
             it('Should format a passing test', function() {
-                let mdLine = 'A [p](?=a.pass()) test.';
+                let mdLine = 'A [p](test: a.pass()) test.';
 
                 let testParameters = {};
                 let test = new TestStub('pass', 'a', 'p', testParameters);
@@ -185,14 +211,14 @@ describe('Output Unit', function() {
                 let testResults = [testResult];
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatTest(mdLine, '[p](?=a.pass())', {}, testResults);
+                let res = gen._formatTest(mdLine, '[p](test: a.pass())', {}, testResults);
 
                 let expectedLine = 'A <span class="successful-test">p</span> test.';
                 assert.strictEqual(res[0], expectedLine);
             });
 
             it('Should format a failed test', function() {
-                let mdLine = 'A [f](?=a.fail()) test.';
+                let mdLine = 'A [f](test: a.fail()) test.';
 
                 let testParameters = {};
                 let test = new TestStub('fail', 'a', 'f', testParameters);
@@ -200,7 +226,7 @@ describe('Output Unit', function() {
                 let testResults = [testResult];
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatTest(mdLine, '[f](?=a.fail())', {}, testResults);
+                let res = gen._formatTest(mdLine, '[f](test: a.fail())', {}, testResults);
 
                 let expectedLine = 'A <span class="failed-test">'
                     + '<span class="failed-test-expected-result">f</span> '
@@ -212,7 +238,7 @@ describe('Output Unit', function() {
 
         describe('1 parameter test formatting', function() {
             it('Should format a passing test with a matching parameter', function() {
-                let mdLine = 'A [p](?=a.pass(#v)) test.';
+                let mdLine = 'A [p](test: a.pass(v)) test.';
                 let parameters = {};
                 parameters['v'] = 'A';
 
@@ -223,14 +249,14 @@ describe('Output Unit', function() {
                 let testResults = [testResult];
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatTest(mdLine, '[p](?=a.pass(#v))', parameters, testResults);
+                let res = gen._formatTest(mdLine, '[p](test: a.pass(v))', parameters, testResults);
 
                 let expectedLine = 'A <span class="successful-test">p</span> test.';
                 assert.strictEqual(res[0], expectedLine);
             });
 
             it('Should not format a passing test without a matching parameter', function() {
-                let mdLine = 'A [p](?=a.pass(#v)) test.';
+                let mdLine = 'A [p](test: a.pass(v)) test.';
                 let parameters = {};
                 parameters['v'] = 'B';
 
@@ -241,16 +267,16 @@ describe('Output Unit', function() {
                 let testResults = [testResult];
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatTest(mdLine, '[p](?=a.pass(#v))', parameters, testResults);
+                let res = gen._formatTest(mdLine, '[p](test: a.pass(v))', parameters, testResults);
 
-                let expectedLine = 'A [p](?=a.pass(#v)) test.';
+                let expectedLine = 'A [p](test: a.pass(v)) test.';
                 assert.strictEqual(res[0], expectedLine);
             });
         });
 
         describe('Multi parameter test formatting', function() {
             it('Should format a passing test with all matching parameters', function() {
-                let mdLine = 'A [p](?=a.pass(#v, #v2, #v3)) test.';
+                let mdLine = 'A [p](test: a.pass(v, v2, v3)) test.';
                 let parameters = {};
                 parameters['v'] = 'A';
                 parameters['v2'] = 'B';
@@ -265,14 +291,14 @@ describe('Output Unit', function() {
                 let testResults = [testResult];
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatTest(mdLine, '[p](?=a.pass(#v, #v2, #v3))', parameters, testResults);
+                let res = gen._formatTest(mdLine, '[p](test: a.pass(v, v2, v3))', parameters, testResults);
 
                 let expectedLine = 'A <span class="successful-test">p</span> test.';
                 assert.strictEqual(res[0], expectedLine);
             });
 
             it('Should not format a passing test without all matching parameters', function() {
-                let mdLine = 'A [p](?=a.pass(#v, #v2, #v3)) test.';
+                let mdLine = 'A [p](test: a.pass(v, v2, v3)) test.';
                 let parameters = {};
                 parameters['v'] = 'A';
                 parameters['v2'] = 'B';
@@ -287,9 +313,9 @@ describe('Output Unit', function() {
                 let testResults = [testResult];
 
                 let gen = new HTMLGenerator();
-                let res = gen._formatTest(mdLine, '[p](?=a.pass(#v, #v2, #v3))', parameters, testResults);
+                let res = gen._formatTest(mdLine, '[p](test: a.pass(v, v2, v3))', parameters, testResults);
 
-                let expectedLine = 'A [p](?=a.pass(#v, #v2, #v3)) test.';
+                let expectedLine = 'A [p](test: a.pass(v, v2, v3)) test.';
                 assert.strictEqual(res[0], expectedLine);
             });
         });
