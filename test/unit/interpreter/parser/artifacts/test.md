@@ -1,5 +1,5 @@
 [](invoker: NiceInvoker)
-[](m: NiceModule)
+[](m: ../NiceModule.ext)
 # PARAMETERLESS
 [T1](t: a.pass())  
 [T2](t: a.pass())

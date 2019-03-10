@@ -40,7 +40,7 @@ const DISCRIMINANT_DETECTION_REGEX = `\\]\\((${ELEMENT_DISCRIMINANTS_REGEX})`;
 
 class MarkdownParser extends GenericParser{
     constructor(){
-        super()
+        super();
         this.elementParsingFunctions={
             'i': this._parseInvoker.bind(this),
             'inv': this._parseInvoker.bind(this),
@@ -55,7 +55,7 @@ class MarkdownParser extends GenericParser{
             '?=': this._parseTests.bind(this),
             't': this._parseTests.bind(this),
             'test': this._parseTests.bind(this)
-        }
+        };
 
         this.module = '';
         this.invoker = '';
@@ -104,7 +104,7 @@ class MarkdownParser extends GenericParser{
 
         this.invoker = value;
     }
-    
+
     _parseModule(match){
         let moduleElementsRegex = new RegExp(MODULE_ELEMENTS_REGEX, 'g');
         let moduleElements = moduleElementsRegex.exec(match);
@@ -154,7 +154,7 @@ class MarkdownParser extends GenericParser{
 
         testParameters.forEach((param) => {
             parameters.push(this.params[param]);
-        })
+        });
 
         return parameters;
     }
