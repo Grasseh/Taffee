@@ -4,39 +4,7 @@ const TestSuiteDescriptor = require('../testsuite/TestSuiteDescriptor');
 const path = require('path');
 const fs = require('fs'); // eslint-disable-line no-unused-vars
 
-// const RegexConstants = require('../util/regex_constants');
-
-const DISCRIMINANT_VALUE_INDEX = 1;
-
-const TEST_EXPECTED_RESULT_INDEX = 1;
-const TEST_CLASS_INDEX = 2;
-const TEST_NAME_INDEX = 3;
-const TEST_PARAMETERS_INDEX = 4;
-
-const PARAMETER_VALUE_INDEX = 1;
-const PARAMETER_NAME_INDEX = 2;
-
-const INVOKER_VALUE_INDEX = 2;
-const MODULE_VALUE_INDEX = 2;
-
-const INVOKER_DISCRIMINANTS_REGEX = 'i|inv|invoker';
-const INVOKER_ELEMENTS_REGEX = `\\[(.*)?\\]\\((?:${INVOKER_DISCRIMINANTS_REGEX})\\:?\\s?([\\w\\d]+)\\)`;
-
-const MODULE_DISCRIMINANTS_REGEX = 'm|mod|module';
-const MODULE_ELEMENTS_REGEX = `\\[(.*)?\\]\\((?:${MODULE_DISCRIMINANTS_REGEX})\\:?\\s?([\\w\\d\\.\\/]+)\\)`;
-
-const TEST_DISCRIMINANTS_REGEX = '\\?=|test|t';
-const TEST_ELEMENTS_REGEX = `(?:\\[[&]?(.*?)\\])\\((?:${TEST_DISCRIMINANTS_REGEX})\\:?\\s?(?:(.*?)\\.)?(.*?)\\((.*)\\)\\)`;
-const TEST_PARAMETER_NAME_REGEX = '[\\w\\d]+';
-
-const PARAMETER_DISCRIMINANTS_REGEX = '#|variable|var|v';
-const PARAMETER_ELEMENTS_REGEX = `\\[(.*)?\\]\\((?:${PARAMETER_DISCRIMINANTS_REGEX})\\:?\\s?([\\w\\d]+)\\)`;
-
-const ELEMENT_DISCRIMINANTS_REGEX = `${INVOKER_DISCRIMINANTS_REGEX}|${MODULE_DISCRIMINANTS_REGEX}|${PARAMETER_DISCRIMINANTS_REGEX}|${TEST_DISCRIMINANTS_REGEX}`;
-const ELEMENT_DETECTION_REGEX = `\\[.*?\\]\\((?:${ELEMENT_DISCRIMINANTS_REGEX})\\:?\\s?.*?\\)+`;
-
-const DISCRIMINANT_DETECTION_REGEX = `\\]\\((${ELEMENT_DISCRIMINANTS_REGEX})`;
-
+const RegexConstants = require('../util/regex_constants');
 
 class MarkdownParser extends GenericParser{
     constructor(){
@@ -48,11 +16,9 @@ class MarkdownParser extends GenericParser{
             'm': this._parseModule.bind(this),
             'mod': this._parseModule.bind(this),
             'module': this._parseModule.bind(this),
-            '#': this._parseParameter.bind(this),
             'v': this._parseParameter.bind(this),
             'var': this._parseParameter.bind(this),
             'variable': this._parseParameter.bind(this),
-            '?=': this._parseTests.bind(this),
             't': this._parseTests.bind(this),
             'test': this._parseTests.bind(this)
         };
@@ -72,16 +38,16 @@ class MarkdownParser extends GenericParser{
     }
 
     _getElementParsingFunction(element) {
-        let regex = new RegExp(DISCRIMINANT_DETECTION_REGEX, 'g');
+        let regex = new RegExp(RegexConstants.DISCRIMINANT_DETECTION_REGEX, 'g');
         let match = regex.exec(element);
-        let discriminant = match[DISCRIMINANT_VALUE_INDEX];
+        let discriminant = match[RegexConstants.DISCRIMINANT_VALUE_INDEX];
         let fn = this.elementParsingFunctions[discriminant];
 
         return fn;
     }
 
     _generateTests(mdContent){
-        let regex = new RegExp(ELEMENT_DETECTION_REGEX, 'g');
+        let regex = new RegExp(RegexConstants.ELEMENT_DETECTION_REGEX, 'g');
         let matches = mdContent.match(regex);
         if(null !== matches){
             this._parseMatches(matches);
@@ -98,41 +64,41 @@ class MarkdownParser extends GenericParser{
     }
 
     _parseInvoker(match){
-        let invokerElementsRegex = new RegExp(INVOKER_ELEMENTS_REGEX, 'g');
+        let invokerElementsRegex = new RegExp(RegexConstants.INVOKER_ELEMENTS_REGEX, 'g');
         let invokerElements = invokerElementsRegex.exec(match);
-        let value = invokerElements[INVOKER_VALUE_INDEX];
+        let value = invokerElements[RegexConstants.INVOKER_VALUE_INDEX];
 
         this.invoker = value;
     }
 
     _parseModule(match){
-        let moduleElementsRegex = new RegExp(MODULE_ELEMENTS_REGEX, 'g');
+        let moduleElementsRegex = new RegExp(RegexConstants.MODULE_ELEMENTS_REGEX, 'g');
         let moduleElements = moduleElementsRegex.exec(match);
-        let value = moduleElements[MODULE_VALUE_INDEX];
+        let value = moduleElements[RegexConstants.MODULE_VALUE_INDEX];
 
         this.module = value;
     }
 
     _parseParameter(match){
-        let parameterElementsRegex = new RegExp(PARAMETER_ELEMENTS_REGEX, 'g');
+        let parameterElementsRegex = new RegExp(RegexConstants.PARAMETER_ELEMENTS_REGEX, 'g');
         let parameterElements = parameterElementsRegex.exec(match);
-        let value = parameterElements[PARAMETER_VALUE_INDEX];
-        let name = parameterElements[PARAMETER_NAME_INDEX];
+        let value = parameterElements[RegexConstants.PARAMETER_VALUE_INDEX];
+        let name = parameterElements[RegexConstants.PARAMETER_NAME_INDEX];
 
         this.params[name] = value;
     }
 
     _parseTests(match){
-        let testElementsRegex = new RegExp(TEST_ELEMENTS_REGEX, 'g');
+        let testElementsRegex = new RegExp(RegexConstants.TEST_ELEMENTS_REGEX, 'g');
         let testElements = testElementsRegex.exec(match);
 
-        let expectedResult = testElements[TEST_EXPECTED_RESULT_INDEX];
-        let testName = testElements[TEST_NAME_INDEX];
-        let testClass = testElements[TEST_CLASS_INDEX];
+        let expectedResult = testElements[RegexConstants.TEST_EXPECTED_RESULT_INDEX];
+        let testName = testElements[RegexConstants.TEST_NAME_INDEX];
+        let testClass = testElements[RegexConstants.TEST_CLASS_INDEX];
 
-        let testParameters = testElements[TEST_PARAMETERS_INDEX];
+        let testParameters = testElements[RegexConstants.TEST_PARAMETERS_INDEX];
 
-        let parameterNamesRegex = new RegExp(TEST_PARAMETER_NAME_REGEX, 'g');
+        let parameterNamesRegex = new RegExp(RegexConstants.TEST_PARAMETER_NAME_REGEX, 'g');
         let parameterNames = testParameters.match(parameterNamesRegex);
 
         // Avoid null pointer exceptions. Regex returns null if there is no match.

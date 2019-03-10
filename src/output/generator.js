@@ -17,11 +17,9 @@ class HTMLGenerator {
             'm': this._formatModule.bind(this),
             'mod': this._formatModule.bind(this),
             'module': this._formatModule.bind(this),
-            '#': this._formatParameter.bind(this),
             'v': this._formatParameter.bind(this),
             'var': this._formatParameter.bind(this),
             'variable': this._formatParameter.bind(this),
-            '?=': this._formatTest.bind(this),
             't': this._formatTest.bind(this),
             'test': this._formatTest.bind(this)
         };
