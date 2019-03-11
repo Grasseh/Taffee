@@ -66,3 +66,6 @@ coverage.lcov
 
 # Test Output
 test/integration/artifacts/application/output.html
+
+# Mac OS
+.DS_Store
