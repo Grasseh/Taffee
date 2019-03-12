@@ -57,6 +57,7 @@ class HTMLGenerator {
     }
 
     _generateHtmlBody(inputMdFilePath, testResults) {
+        console.log(testResults);
         let converter = new showdown.Converter();
         let mdContent = fs.readFileSync(inputMdFilePath, 'UTF-8');
 
