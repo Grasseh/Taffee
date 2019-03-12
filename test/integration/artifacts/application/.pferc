@@ -1,0 +1,4 @@
+{
+    "outputPath" : "test/integration/artifacts/application/",
+    "basePath" : "test/integration/artifacts/markdown"
+}
