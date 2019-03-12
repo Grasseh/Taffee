@@ -57,7 +57,6 @@ class HTMLGenerator {
     }
 
     _generateHtmlBody(inputMdFilePath, testResults) {
-        console.log(testResults);
         let converter = new showdown.Converter();
         let mdContent = fs.readFileSync(inputMdFilePath, 'UTF-8');
 
@@ -115,7 +114,6 @@ class HTMLGenerator {
     }
 
     _formatTest(mdContent, match, paramsMap, testResults) {
-        console.log(match);
         let testElementsRegex = new RegExp(RegexConstants.TEST_ELEMENTS_REGEX, 'g');
         let testElements = testElementsRegex.exec(match);
 
@@ -143,7 +141,6 @@ class HTMLGenerator {
             return isTrue;
         });
 
-        console.log(testResult);
 
         if(undefined !== testResult) {
             let formatTest = this.testFormattingFunctions[testResult.isSuccess()];

@@ -15,7 +15,7 @@ class TestRunner{
                 params : test.getParameters()
             };
             let actualResult = this.invoker.invoke(test.getTestName(), this.descriptor.getTestFileName(), options);
-            let success = actualResult === test.getExpectedResult();
+            let success = actualResult.toString() === test.getExpectedResult();
             this.results.push(new (this._getTestResult())(test, success, actualResult));
         }
         return new (this._getTestSuiteResult())(this.results, this.descriptor.getMarkdown());

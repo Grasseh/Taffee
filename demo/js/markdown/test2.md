@@ -14,8 +14,8 @@ When the project function is called then we see the output [Hella World](t:Test.
 ## Adding a number
 
 Adding a single number is simple.
-Assuming we have a number [5](var:var1), then if the system adds one, 
-we see the output [51](t:Test.testPlusOne(var1)).
+Assuming we have a number [5](var:number), then if the system adds one, 
+we see the output [6](t:Test.testPlusOne(number)).
 
 ## Adding a book
 Assuming we have a book with an ISBN number[12345](var:isbn), a title [Test And Testing](var:title) and a description [A book about tests](var:test),
