@@ -8,6 +8,9 @@ Our project rocks and needs to output Hello world!
 ## Example
 When the project function is called then we see the output [Hello World](t:Test.testHelloWorld()).
 
+## Example
+When the project function is called then we see the output [Hella World](t:Test.testHelloWorld()).
+
 ## Adding a number
 
 Adding a single number is simple.

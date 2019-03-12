@@ -19,7 +19,7 @@ class TestResult {
     }
 
     getParameters() {
-        return this.parameters;
+        return this._parameters;
     }
 }
 
