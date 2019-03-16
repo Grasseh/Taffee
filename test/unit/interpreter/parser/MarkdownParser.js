@@ -16,13 +16,13 @@ describe('MarkdownParser', function() {
             assert.strictEqual(descriptor.getTests()[1].getTestName(), 'pass');
             assert.strictEqual(descriptor.getTests()[2].getTestClass(), 'a');
             assert.strictEqual(descriptor.getTests()[2].getTestName(), 'pass');
-            assert.strictEqual(descriptor.getTests()[2].getParameters().length, 1);
-            assert.strictEqual(descriptor.getTests()[2].getParameters()[0], 'A');
+            assert.strictEqual(Object.keys(descriptor.getTests()[2].getParameters()).length, 1);
+            assert.strictEqual(descriptor.getTests()[2].getParameters()['v'], 'A');
             assert.strictEqual(descriptor.getTests()[3].getTestClass(), 'a');
             assert.strictEqual(descriptor.getTests()[3].getTestName(), 'pass');
-            assert.strictEqual(descriptor.getTests()[3].getParameters().length, 2);
-            assert.strictEqual(descriptor.getTests()[3].getParameters()[0], 'B');
-            assert.strictEqual(descriptor.getTests()[3].getParameters()[1], 'C');
+            assert.strictEqual(Object.keys(descriptor.getTests()[3].getParameters()).length, 2);
+            assert.strictEqual(descriptor.getTests()[3].getParameters()['v'], 'B');
+            assert.strictEqual(descriptor.getTests()[3].getParameters()['v2'], 'C');
         });
     });
 
