@@ -15,7 +15,7 @@ Whenever we package it we gotta fill this space
 
 ## Usage
 
-In development, we can use it with `npm start` which launch the runner.
+In develorment, we can use it with `npm start` which launch the runner.
 In integration, we need to add a `bin` to the package so the end users can add
 the runner easily to their own `package.json` in the `scripts`.
 
@@ -30,3 +30,4 @@ the runner easily to their own `package.json` in the `scripts`.
 7. Make sure your style is fine with `npm run eslint`
 8. Commit your changes
 9. Make a pull-request on the repo
+10. Compile your executable with `npm run compile`
