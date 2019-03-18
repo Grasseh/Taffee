@@ -5,6 +5,15 @@
 
 BDD Framework to sweetly display software test results from Markdown files.
 
+## Index
+
+ - [Getting started](#getting-started)
+    - [Dependencies](#dependencies)
+    - [Setup](#setup)
+    - [Usage](#usage)
+ - [Contributing](#contributing)
+ - [License](#license)
+
 ## Getting started
 
 ### Dependencies
@@ -25,7 +34,6 @@ BDD Framework to sweetly display software test results from Markdown files.
  - `npm install git+https://github.com/Grasseh/PFE_H_2019.git --save-dev`
  - Make a directory in your project for your Markdown files and the outputs
  - Add a `.pferc` file to the root of your project similar to the following :
-
 ```
 {
     "outputPath" : "/path/to/markdown/output",
@@ -45,7 +53,7 @@ BDD Framework to sweetly display software test results from Markdown files.
 
 ### Usage
 
-### Example 1
+#### Example 1
 
 [test1.md](demo/js/markdown/test1.md)
 ```
@@ -74,3 +82,7 @@ If you wish to contribute please read the following guide:
 9. Make a pull-request on the repo
 10. Ask a reviewer to validate your pull-request
 11. Be collaborative and respectful =)
+
+## License
+
+The code is released under [MIT license](LICENSE) and its dependencies have their own licensing. For more informations, please consult their website.
