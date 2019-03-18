@@ -9,14 +9,15 @@ BDD Framework to sweetly display software test results from Markdown files.
 
 ### Dependencies
 
-| NodeJS   | ^10.15  |
-|----------|---------|
-| eslint   | ^5.12.0 |
-| husky    | ^1.3.1  |
-| mocha    | ^5.2.0  |
-| nyc      | ^13.1.0 |
-| sinon    | ^7.2.2  |
-| showdown | ^1.9.0  |
+| Dependency | Version |
+|------------|---------|
+| NodeJS     | ^10.15  |
+| eslint     | ^5.12.0 |
+| husky      | ^1.3.1  |
+| mocha      | ^5.2.0  |
+| nyc        | ^13.1.0 |
+| sinon      | ^7.2.2  |
+| showdown   | ^1.9.0  |
 
 ### Setup
 
@@ -46,15 +47,16 @@ BDD Framework to sweetly display software test results from Markdown files.
 
 ### Example 1
 
+[test1.md](demo/js/markdown/test1.md)
 ```
-[](i:PhpInvoker)
-[](m:../testModule.php)
+[](i:NodeInvoker)
+[](m:../testFacade.js)
 
 # Saying hello world!
 Our project rocks and needs to output Hello world!
 
 ## Example
-When the project function is called then we see the output [Hello World](t:Test.myTestFn()).
+When the project function is called then we see the output [Hello World](t:Test.testHelloWorld()).
 ```
 
 ## Contributing
