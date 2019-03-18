@@ -7,26 +7,26 @@ BDD Framework to sweetly display software test results from Markdown files.
 
 ## Index
 
+ - [Dependencies](#dependencies)
  - [Getting started](#getting-started)
-    - [Dependencies](#dependencies)
     - [Setup](#setup)
     - [Usage](#usage)
  - [Contributing](#contributing)
  - [License](#license)
 
+ ## Dependencies
+
+ | Dependency | Version |
+ |------------|---------|
+ | NodeJS     | ^10.15  |
+ | eslint     | ^5.12.0 |
+ | husky      | ^1.3.1  |
+ | mocha      | ^5.2.0  |
+ | nyc        | ^13.1.0 |
+ | sinon      | ^7.2.2  |
+ | showdown   | ^1.9.0  |
+
 ## Getting started
-
-### Dependencies
-
-| Dependency | Version |
-|------------|---------|
-| NodeJS     | ^10.15  |
-| eslint     | ^5.12.0 |
-| husky      | ^1.3.1  |
-| mocha      | ^5.2.0  |
-| nyc        | ^13.1.0 |
-| sinon      | ^7.2.2  |
-| showdown   | ^1.9.0  |
 
 ### Setup
 
