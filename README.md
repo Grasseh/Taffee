@@ -17,12 +17,12 @@ BDD Framework to sweetly display software test results from Markdown files.
 | mocha      | ^5.2.0  |
 | nyc        | ^13.1.0 |
 | sinon      | ^7.2.2  |
-| showdown   | ^1.9.0  |
+| showdown   | ^1.9.0  |s
 
 ### Setup
 
  - Make sure you have the latest version of NodeJS and NPM
- - `npm install git+https://git@github.com/visionmedia/express.git --save-dev`
+ - `npm install git+https://github.com/Grasseh/PFE_H_2019.git --save-dev`
  - Make a directory in your project for your Markdown files and the outputs
  - Add a `.pferc` file to the root of your project similar to the following :
 
