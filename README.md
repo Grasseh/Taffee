@@ -3,23 +3,20 @@
 [![Build Status](https://travis-ci.org/Grasseh/PFE_H_2019.svg?branch=master)](https://travis-ci.org/Grasseh/PFE_H_2019)
 [![Code Coverage](https://codecov.io/gh/grasseh/PFE_H_2019/branch/master/graph/badge.svg)](https://codecov.io/gh/grasseh/PFE_H_2019)
 
-BDD Framework to sweetly display software test results.
-
-## Description
-
-Insert a fancy translated description from whatever we decided to do in Vision Doc.
+BDD Framework to sweetly display software test results from Markdown files.
 
 ## Getting started
 
 ### Dependencies
 
-- NodeJS  : ^10.15
-- `eslint` : `^5.12.0`
-- `husky` : `^1.3.1`
-- `mocha` : `^5.2.0`
-- `nyc` : `^13.1.0`
-- `sinon` : `^7.2.2`
-- `showdown` : `^1.9.0`
+| NodeJS   | ^10.15  |
+|----------|---------|
+| eslint   | ^5.12.0 |
+| husky    | ^1.3.1  |
+| mocha    | ^5.2.0  |
+| nyc      | ^13.1.0 |
+| sinon    | ^7.2.2  |
+| showdown | ^1.9.0  |
 
 ### Setup
 
