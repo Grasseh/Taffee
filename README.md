@@ -16,15 +16,18 @@ BDD Framework to sweetly display software test results from Markdown files.
 
  ## Dependencies
 
- | Dependency | Version |
- |------------|---------|
- | NodeJS     | ^10.15  |
- | eslint     | ^5.12.0 |
- | husky      | ^1.3.1  |
- | mocha      | ^5.2.0  |
- | nyc        | ^13.1.0 |
- | sinon      | ^7.2.2  |
- | showdown   | ^1.9.0  |
+ | Dependency  | Version |
+ |-------------|---------|
+ | NodeJS      | ^10.15  |
+ | argparse    | ^1.0.10 |
+ | cosmiconfig | ^5.1.0  |
+ | eslint      | ^5.12.0 |
+ | handlebars  | ^4.1.0  |
+ | husky       | ^1.3.1  |
+ | mocha       | ^5.2.0  |
+ | nyc         | ^13.3.0 |
+ | showdown    | ^1.9.0  |
+ | sinon       | ^7.2.2  |
 
 ## Getting started
 
