@@ -17,7 +17,7 @@ BDD Framework to sweetly display software test results from Markdown files.
 | mocha      | ^5.2.0  |
 | nyc        | ^13.1.0 |
 | sinon      | ^7.2.2  |
-| showdown   | ^1.9.0  |s
+| showdown   | ^1.9.0  |
 
 ### Setup
 
