@@ -4,7 +4,7 @@
   "description": "Behavior Driven Development Test Report Framework",
   "main": "src/index.js",
   "bin": {
-    "pfe": "./bin/cli.js"
+    "pfe": "./bin/pfe"
   },
   "scripts": {
     "start": "node src/run.js",
@@ -28,7 +28,7 @@
     "Report",
     "Framework"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Grasseh/PFE_H_2019/issues"
   },

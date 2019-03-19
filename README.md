@@ -89,3 +89,10 @@ If you wish to contribute please read the following guide:
 ## License
 
 The code is released under [MIT license](LICENSE) and its dependencies have their own licensing. For more informations, please consult their website.
+
+Original contributors (**Les Chevaliers de Coallier**):
+ - [Grasseh](https://github.com/Grasseh)
+ - [Stalfy](https://github.com/Stalfy)
+ - [KB07](https://github.com/KB07)
+ - [doomy23](https://github.com/doomy23)
+ - [Lolskate](https://github.com/Lolskate)
