@@ -1,10 +1,10 @@
 {
-  "name": "pfe",
+  "name": "taffee",
   "version": "0.0.1",
   "description": "Behavior Driven Development Test Report Framework",
   "main": "src/index.js",
   "bin": {
-    "pfe": "./bin/pfe"
+    "taffee": "./bin/taffee"
   },
   "scripts": {
     "start": "node src/run.js",

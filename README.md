@@ -1,4 +1,4 @@
-# PFE (Nom à déterminer)
+# Taffee.JS
 
 [![Build Status](https://travis-ci.org/Grasseh/PFE_H_2019.svg?branch=master)](https://travis-ci.org/Grasseh/PFE_H_2019)
 [![Code Coverage](https://codecov.io/gh/grasseh/PFE_H_2019/branch/master/graph/badge.svg)](https://codecov.io/gh/grasseh/PFE_H_2019)
@@ -48,7 +48,7 @@ BDD Framework to sweetly display software test results from Markdown files.
 ...
 "scripts": {
     ...
-    "bdd" : "pfe -c .pfrec"
+    "bdd" : "taffee -c .pfrec"
   },
 ...
 ```
