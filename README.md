@@ -1,25 +1,78 @@
-# PFE (Nom à déterminer)
+# Taffee.JS
 
 [![Build Status](https://travis-ci.org/Grasseh/PFE_H_2019.svg?branch=master)](https://travis-ci.org/Grasseh/PFE_H_2019)
 [![Code Coverage](https://codecov.io/gh/grasseh/PFE_H_2019/branch/master/graph/badge.svg)](https://codecov.io/gh/grasseh/PFE_H_2019)
 
-BDD Framework to sweetly display software test results.
+BDD Framework to sweetly display software test results from Markdown files.
 
-## Description
+## Index
 
-Insert a fancy translated description from whatever we decided to do in Vision Doc.
+ - [Dependencies](#dependencies)
+ - [Getting started](#getting-started)
+    - [Setup](#setup)
+    - [Usage](#usage)
+ - [Contributing](#contributing)
+ - [License](#license)
 
-## Installation
+ ## Dependencies
 
-Whenever we package it we gotta fill this space
+ | Dependency  | Version |
+ |-------------|---------|
+ | NodeJS      | ^10.15  |
+ | argparse    | ^1.0.10 |
+ | cosmiconfig | ^5.1.0  |
+ | eslint      | ^5.12.0 |
+ | handlebars  | ^4.1.0  |
+ | husky       | ^1.3.1  |
+ | mocha       | ^5.2.0  |
+ | nyc         | ^13.3.0 |
+ | showdown    | ^1.9.0  |
+ | sinon       | ^7.2.2  |
 
-## Usage
+## Getting started
 
-In development, we can use it with `npm start` which launch the runner.
-In integration, we need to add a `bin` to the package so the end users can add
-the runner easily to their own `package.json` in the `scripts`.
+### Setup
 
-## Development
+ - Make sure you have the latest version of NodeJS and NPM
+ - `npm install git+https://github.com/Grasseh/PFE_H_2019.git --save-dev`
+ - Make a directory in your project for your Markdown files and the outputs
+ - Add a `.pferc` file to the root of your project similar to the following :
+```
+{
+    "outputPath" : "/path/to/markdown/output",
+    "basePath" : "/path/to/markdown"
+}
+```
+- To use it with npm easily : add the framework to your `scripts` in *package.json* with something like this :
+```
+...
+"scripts": {
+    ...
+    "bdd" : "taffee -c .pfrec"
+  },
+...
+```
+ - Make your test cases in the directory specified in the config
+
+### Usage
+
+#### Example 1
+
+[test1.md](demo/js/markdown/test1.md)
+```
+[](i:NodeInvoker)
+[](m:../testFacade.js)
+
+# Saying hello world!
+Our project rocks and needs to output Hello world!
+
+## Example
+When the project function is called then we see the output [Hello World](t:Test.testHelloWorld()).
+```
+
+## Contributing
+
+If you wish to contribute please read the following guide:
 
 1. Clone this repository
 2. Run `npm install` at the root of the repo.
@@ -30,3 +83,16 @@ the runner easily to their own `package.json` in the `scripts`.
 7. Make sure your style is fine with `npm run eslint`
 8. Commit your changes
 9. Make a pull-request on the repo
+10. Ask a reviewer to validate your pull-request
+11. Be collaborative and respectful =)
+
+## License
+
+The code is released under [MIT license](LICENSE) and its dependencies have their own licensing. For more informations, please consult their website.
+
+Original contributors (**Les Chevaliers de Coallier**):
+ - [Grasseh](https://github.com/Grasseh)
+ - [Stalfy](https://github.com/Stalfy)
+ - [KB07](https://github.com/KB07)
+ - [doomy23](https://github.com/doomy23)
+ - [Lolskate](https://github.com/Lolskate)

@@ -1,8 +1,11 @@
 {
-  "name": "pfe",
+  "name": "taffee",
   "version": "0.0.1",
   "description": "Behavior Driven Development Test Report Framework",
   "main": "src/index.js",
+  "bin": {
+    "taffee": "./bin/taffee"
+  },
   "scripts": {
     "start": "node src/run.js",
     "eslint": "eslint src test --fix",
@@ -25,7 +28,7 @@
     "Report",
     "Framework"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Grasseh/PFE_H_2019/issues"
   },
