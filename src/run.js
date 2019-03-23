@@ -7,7 +7,7 @@ const HTMLGenerator = require('./output/generator');
 // Load the user configs
 // TODO : Search in arg for path
 const confParser = new configParser();
-let {basePath, outputPath, cssFiles, template} = confParser.parseConfig();
+let {paths : {basePath, outputPath, cssFiles, template}, args} = confParser.parseConfig();
 // We locate the files with the specified FileLocator from the config
 let fileLocator = new App.interpreter.MarkdownFileLocator();
 let files = fileLocator.locateFiles(basePath);
