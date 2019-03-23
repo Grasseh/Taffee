@@ -116,10 +116,10 @@ class MarkdownParser extends GenericParser{
     }
 
     _getParameters(testParameters){
-        let parameters = [];
+        let parameters = {};
 
         testParameters.forEach((param) => {
-            parameters.push(this.params[param]);
+            parameters[param] = this.params[param];
         });
 
         return parameters;

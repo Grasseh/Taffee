@@ -141,6 +141,7 @@ class HTMLGenerator {
             return isTrue;
         });
 
+
         if(undefined !== testResult) {
             let formatTest = this.testFormattingFunctions[testResult.isSuccess()];
             mdContent = formatTest(mdContent, match, testResult);
