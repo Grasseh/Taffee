@@ -1,7 +1,6 @@
 [](i:NodeInvoker)
 [](m:../testFacade.js)
 
-
 # Saying hello world!
 Our project rocks and needs to output Hello world!
 
