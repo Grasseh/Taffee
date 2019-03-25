@@ -1,7 +1,7 @@
 /* global describe, it */
 const assert = require('assert');
 
-const MarkdownFileLocator = require('../../../../src/interpreter/MarkdownFileLocator');
+const MarkdownFileLocator = require('../../../src/filesearch/MarkdownFileLocator');
 
 describe('MarkdownFileLocator', function() {
     describe('locateFiles', function() {
