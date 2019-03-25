@@ -6,7 +6,6 @@ const DESIRED_EXT = '.md';
 class MarkdownFileLocator {
     locateFiles(basePath) {
         if (false === fs.existsSync(basePath)) {
-            console.log('Specified path not found.');
             return [];
         }
 
