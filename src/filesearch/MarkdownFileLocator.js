@@ -1,29 +1,36 @@
-const GenericFileLocator = require('./GenericFileLocator');
-
 const fs = require('fs');
 const path = require('path');
 
-class MarkdownFileLocator extends GenericFileLocator{
-    locateFiles(basePath, options = {recursive: false}){
-        return this._readdir(basePath, options);
+const DESIRED_EXT = '.md';
+
+class MarkdownFileLocator {
+    locateFiles(basePath) {
+        if (false === fs.existsSync(basePath)) {
+            console.log('Specified path not found.');
+            return [];
+        }
+
+        if(DESIRED_EXT === path.extname(basePath)) {
+            return [basePath];
+        }
+
+        return this._scanPath(basePath);
     }
 
-    _readdir(basePath, options){
-        let files = fs.readdirSync(basePath, {withFileTypes: true});
+    _scanPath(basePath) {
+        let ext = path.extname(basePath);
+        if('' !== ext && DESIRED_EXT !== ext) {
+            return [];
+        }
+
+        if(DESIRED_EXT === path.extname(basePath)) {
+            return [basePath];
+        }
+
         let foundFiles = [];
-
-        files.forEach(file => {
-            if(file.isFile()) {
-                let ext = path.extname(path.join(basePath, file.name));
-
-                if(ext === '.md')
-                    foundFiles.push(path.join(basePath, file.name));
-
-            }
-            else if(file.isDirectory() && options.recursive) {
-                let foundFilesInSubDir = this._readdir(path.join(basePath, file.name), options);
-                foundFiles = foundFiles.concat(foundFilesInSubDir);
-            }
+        let files = fs.readdirSync(basePath);
+        files.forEach((file) => {
+            foundFiles = foundFiles.concat(this._scanPath(path.join(basePath, file)));
         });
 
         return foundFiles;
