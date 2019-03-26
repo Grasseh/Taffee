@@ -16,7 +16,7 @@ class ConfigParser{
         parser.addArgument(
             ['-c', '--config'],
             {
-                help: 'path to the config file'
+                help: 'Path to the configuration file.'
             },
         );
         parser.addArgument(
@@ -32,7 +32,7 @@ class ConfigParser{
     }
 
     parsePaths(configPath){
-        const explorer = this._getCosmiconfig()('pfe');
+        const explorer = this._getCosmiconfig()('taffee');
         let configs = explorer.searchSync();
         if(configPath){
             configs = explorer.loadSync(configPath);

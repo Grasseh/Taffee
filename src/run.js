@@ -57,6 +57,10 @@ if(template) {
     htmlGenerator.setTemplate(template);
 }
 
+if('' !== path.extname(basePath)) {
+    basePath = path.dirname(basePath);
+}
+
 files.forEach((inFile) => {
     let outFile = inFile.replace(basePath, outputPath);
     outFile = outFile.replace('.md', '.html');

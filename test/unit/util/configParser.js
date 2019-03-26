@@ -23,7 +23,7 @@ describe('ConfigParser', function() {
             assert.strictEqual(testResult.outputPath, paths.outputPath);
             assert(cosmiconfigStub.called);
             assert(!explorersStub.loadSync.called);
-            assert(explorerStub.calledWith('pfe'));
+            assert(explorerStub.calledWith('taffee'));
         });
 
         it('Should return config paths on provided path', function() {
@@ -47,7 +47,7 @@ describe('ConfigParser', function() {
             assert.strictEqual(testResult.basePath, paths.basePath);
             assert.strictEqual(testResult.outputPath, paths.outputPath);
             assert(cosmiconfigStub.called);
-            assert(explorerStub.calledWith('pfe'));
+            assert(explorerStub.calledWith('taffee'));
             assert(explorersStub.loadSync.calledWith('abcd'));
         });
 
@@ -65,7 +65,7 @@ describe('ConfigParser', function() {
             let configPath = null;
             configParser.parsePaths(configPath);
             assert(cosmiconfigStub.called);
-            assert(explorerStub.calledWith('pfe'));
+            assert(explorerStub.calledWith('taffee'));
             assert(processStub.called);
             assert(processStubFn.exit.calledWith(1));
         });
