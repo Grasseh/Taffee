@@ -1,4 +1,6 @@
 {
     "outputPath" : "/mnt/e/ets/PFE_H_2019/demo/js/markdown/output",
-    "basePath" : "/mnt/e/ets/PFE_H_2019/demo/js/markdown"
+    "basePath" : "/mnt/e/ets/PFE_H_2019/demo/js/markdown",
+    "cssFiles" : "mnt/e/ets/PFE_H_2019/test/integration/artifacts/basic.css",
+    "template" : "mnt/e/ets/PFE_H_2019/test/integration/artifacts/template.html"
 }

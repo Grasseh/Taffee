@@ -3,13 +3,13 @@ const ArgumentParser = require('argparse').ArgumentParser;
 
 class ConfigParser{
     parseConfig(){
-        let configPath = this.parseArgs();
-        return this.parsePaths(configPath);
+        let args = this.parseArgs();
+        return {paths: this.parsePaths(args.config), args};
     }
 
     parseArgs(){
         let parser = new (this._getArgParser())({
-            version: '0.2',
+            version: '0.3',
             addHelp: true,
             description: 'Behavior Driven Development Test Framework'
         });
@@ -17,10 +17,18 @@ class ConfigParser{
             ['-c', '--config'],
             {
                 help: 'path to the config file'
+            },
+        );
+        parser.addArgument(
+            ['-e', '--verbose'],
+            {
+                help: 'Increase software verbosity',
+                nargs: 0,
+                defaultValue : false
             }
         );
         let args = parser.parseArgs();
-        return args.config;
+        return args;
     }
 
     parsePaths(configPath){
@@ -35,7 +43,9 @@ class ConfigParser{
         }
         let basePath = configs.config.basePath;
         let outputPath = configs.config.outputPath;
-        return {basePath, outputPath};
+        let cssFiles = configs.config.cssFile;
+        let template = configs.config.template;
+        return {basePath, outputPath, cssFiles, template};
     }
 
     _getArgParser(){

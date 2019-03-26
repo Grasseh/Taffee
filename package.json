@@ -1,6 +1,6 @@
 {
   "name": "taffee",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "description": "Behavior Driven Development Test Report Framework",
   "main": "src/index.js",
   "bin": {
