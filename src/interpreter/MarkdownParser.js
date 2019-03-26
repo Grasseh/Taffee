@@ -1,4 +1,3 @@
-const GenericParser = require('./GenericParser');
 const Test = require('../testsuite/Test');
 const TestSuiteDescriptor = require('../testsuite/TestSuiteDescriptor');
 const path = require('path');
@@ -6,9 +5,8 @@ const fs = require('fs'); // eslint-disable-line no-unused-vars
 
 const RegexConstants = require('../util/regex_constants');
 
-class MarkdownParser extends GenericParser{
-    constructor(){
-        super();
+class MarkdownParser {
+    constructor() {
         this.elementParsingFunctions={
             'i': this._parseInvoker.bind(this),
             'inv': this._parseInvoker.bind(this),
