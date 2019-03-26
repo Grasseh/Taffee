@@ -4,65 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const HTMLGenerator = require('../../../src/output/generator');
 
-class TestStub {
-    constructor(name, testClass, expectedResult, parameters) {
-        this.testName = name;
-        this.testClass = testClass;
-        this.expectedResult = expectedResult;
-        this.parameters = parameters;
-    }
-
-    getTestName() {
-        return this.testName;
-    }
-
-    getTestClass() {
-        return this.testClass;
-    }
-
-    getExpectedResult() {
-        return this.expectedResult;
-    }
-
-    getParameters() {
-        return this.parameters;
-    }
-}
-
-class TestResultStub {
-    constructor(success, actualResult, test) {
-        this.success = success;
-        this.actualResult = actualResult;
-        this.test = test;
-    }
-
-    isSuccess() {
-        return this.success;
-    }
-
-    getActualResult() {
-        return this.actualResult;
-    }
-
-    getTest() {
-        return this.test;
-    }
-}
-
-class TestSuiteResultStub {
-    constructor(testFileName, testResults) {
-        this.testFileName = testFileName;
-        this.testResults = testResults;
-    }
-
-    getTestFileName() {
-        return this.testFileName;
-    }
-
-    getTestResults() {
-        return this.testResults;
-    }
-}
+const Test = require('../../../src/testsuite/Test');
+const TestResult = require('../../../src/testsuite/TestResult');
+const TestSuiteResult = require('../../../src/testsuite/TestSuiteResult');
 
 describe('Output Integration', function() {
     describe('HTMLGenerator', function() {
@@ -73,41 +17,41 @@ describe('Output Integration', function() {
             let template = path.join(__dirname, '..', 'artifacts', 'output', 'template.html');
             let testResults = [];
 
-            let t1 = new TestStub('pass', 'a', 'T1', {});
-            let tr1 = new TestResultStub(true, 'T1', t1);
+            let t1 = new Test('a', 'pass', 'T1', {});
+            let tr1 = new TestResult(t1, true, 'T1');
             testResults.push(tr1);
 
-            let t2 = new TestStub('fail', 'a', 'T2', {});
-            let tr2 = new TestResultStub(false, 'T2_ACTUAL', t2);
+            let t2 = new Test('a', 'fail', 'T2', {});
+            let tr2 = new TestResult(t2, false, 'T2_ACTUAL');
             testResults.push(tr2);
 
             let tp3 = {};
             tp3['var1'] = 'V2';
-            let t3 = new TestStub('pass', 'a', 'T3', tp3);
-            let tr3 = new TestResultStub(true, 'T3', t3);
+            let t3 = new Test('a', 'pass', 'T3', tp3);
+            let tr3 = new TestResult(t3, true, 'T3');
             testResults.push(tr3);
 
             let tp4 = {};
             tp4['var1'] = 'V2';
-            let t4 = new TestStub('fail', 'a', 'T4', tp4);
-            let tr4 = new TestResultStub(false, 'T4_ACTUAL', t4);
+            let t4 = new Test('a', 'fail', 'T4', tp4);
+            let tr4 = new TestResult(t4, false, 'T4_ACTUAL');
             testResults.push(tr4);
 
             let tp5 = {};
             tp5['var1'] = 'V1';
             tp5['var2'] = 'V2';
-            let t5 = new TestStub('pass', 'a', 'T5', tp5);
-            let tr5 = new TestResultStub(true, 'T5', t5);
+            let t5 = new Test('a', 'pass', 'T5', tp5);
+            let tr5 = new TestResult(t5, true, 'T5');
             testResults.push(tr5);
 
             let tp6 = {};
             tp6['var1'] = 'V1';
             tp6['var2'] = 'V2';
-            let t6 = new TestStub('fail', 'a', 'T6', tp6);
-            let tr6 = new TestResultStub(false, 'T6_ACTUAL', t6);
+            let t6 = new Test('a', 'fail', 'T6', tp6);
+            let tr6 = new TestResult(t6, false, 'T6_ACTUAL');
             testResults.push(tr6);
 
-            let testSuiteResult = new TestSuiteResultStub(testFile, testResults);
+            let testSuiteResult = new TestSuiteResult(testResults, testFile);
 
             let htmlGenerator = new HTMLGenerator();
             htmlGenerator.setCssFiles(cssFile);

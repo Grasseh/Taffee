@@ -1,9 +1,8 @@
 class TestResult {
-    constructor(test, success, actualResult, parameters = {}) {
+    constructor(test, success, actualResult) {
         this._test = test;
         this._success = success;
         this._actualResult = actualResult;
-        this._parameters = parameters;
     }
 
     getTest(){
@@ -16,10 +15,6 @@ class TestResult {
 
     getActualResult(){
         return this._actualResult;
-    }
-
-    getParameters() {
-        return this._parameters;
     }
 }
 
