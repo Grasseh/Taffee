@@ -12,7 +12,7 @@ describe('PhpInvoker Integration', function() {
                 className : 'Test',
                 params : {a : 1, b : 2}
             };
-            let projectName = path.join(process.cwd(), 'test', 'integration', 'my artifacts', 'testModule.php');
+            let projectName = path.join(process.cwd(), 'test', 'integration', 'artifacts', 'invoker', 'testModule.php');
             let testResult = phpInvoker.invoke(testName, projectName, options);
             assert.strictEqual(testResult, 'Hello World');
         });
@@ -24,7 +24,7 @@ describe('PhpInvoker Integration', function() {
                 className : 'Test',
                 params : {a : 1, b : 2}
             };
-            let projectName = path.join(process.cwd(), 'test', 'integration', 'my artifacts', 'testModule.php');
+            let projectName = path.join(process.cwd(), 'test', 'integration', 'artifacts', 'invoker', 'testModule.php');
             let testResult = phpInvoker.invoke(testName, projectName, options);
             assert.strictEqual(testResult, '3');
         });

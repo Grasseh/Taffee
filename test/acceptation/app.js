@@ -8,7 +8,7 @@ describe('Accept Application Test', function() {
     it('Should work from A to Z', function() {
         this.timeout(5000);
         let configPath = path.join(__dirname, '.testrc');
-        let command = `node src/run.js --verbose --config "${configPath}"`;
+        let command = `node src/run.js --config "${configPath}"`;
         let options = {};
 
         let output = execSync(command, options);
