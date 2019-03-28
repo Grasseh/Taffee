@@ -5,7 +5,7 @@ const ACCEPTED_EXTENSIONS = ['.md', '.mdwn', '.mdown', '.mkd', '.mkdn', '.markdo
 
 class MarkdownFileLocator {
     locateFiles(basePath) {
-        if (false === fs.existsSync(basePath)) {
+        if (!fs.existsSync(basePath)) {
             return [];
         }
 

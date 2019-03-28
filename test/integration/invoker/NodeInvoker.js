@@ -22,6 +22,15 @@ describe('NodeInvoker Integration', function() {
             let testResult = nodeInvoker.invoke(testName, projectName, options);
             assert.strictEqual(testResult, 3);
         });
+
+        it('Should work with folder names containing spaces', function() {
+            let nodeInvoker = new NodeInvoker();
+            let testName = 'otherFun';
+            let options = {params : {a : 1, b : 2}};
+            let projectName = path.join(process.cwd(), 'test', 'integration', 'artifacts', 'invoker', 'spaced directory', 'testModule');
+            let testResult = nodeInvoker.invoke(testName, projectName, options);
+            assert.strictEqual(testResult, 3);
+        });
     });
 });
 
