@@ -44,7 +44,7 @@ function processFile(inputPath, outputPath) {
         console.log(`Generating HTML File at ${outputPath}`);
     }
 
-    let html = htmlGenerator.generate(result, inputPath, outputPath);
+    let html = htmlGenerator.generate(result, result.getMarkdown(), outputPath);
 
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, html);
