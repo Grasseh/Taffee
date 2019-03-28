@@ -1,11 +1,12 @@
-const App = require('./index');
 const fs = require('fs');
 const path = require('path');
 const configParser = require('./util/configParser');
 const testRunner = require('./runner/TestRunner');
 const HTMLGenerator = require('./output/generator');
+const MarkdownParser = require('./parser/MarkdownParser');
+const MarkdownFileLocator = require('./locator/MarkdownFileLocator');
 
-let parser = new App.interpreter.MarkdownParser();
+let parser = new MarkdownParser();
 let htmlGenerator = new HTMLGenerator();
 
 function processFile(inputFile, outputFile) {
@@ -46,7 +47,7 @@ if(args.verbose){
     console.log(`Loading files from ${basePath}`);
 }
 
-let fileLocator = new App.filesearch.MarkdownFileLocator();
+let fileLocator = new MarkdownFileLocator();
 let files = fileLocator.locateFiles(basePath);
 
 if(cssFiles) {

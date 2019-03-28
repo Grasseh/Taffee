@@ -1,13 +1,14 @@
 /* global describe, it */
 const assert = require('assert');
+const path = require('path');
 
-const MarkdownParser = require('../../../../src/interpreter/MarkdownParser');
+const MarkdownParser = require('../../../src/parser/MarkdownParser');
 
 describe('MarkdownParser', function() {
     describe('parseFile', function() {
         it('returns testsuitedescriptor with correct invoker and # of tests', function() {
             let markdownParser = new MarkdownParser();
-            let descriptor = markdownParser.parseFile(`${__dirname}/artifacts/test.md`);
+            let descriptor = markdownParser.parseFile(path.join(__dirname, '..', 'artifacts', 'parser', 'test.md'));
             assert.strictEqual(descriptor.getInvoker(), 'NiceInvoker');
             assert.strictEqual(descriptor.getTests().length, 4);
             assert.strictEqual(descriptor.getTests()[0].getTestClass(), 'a');
@@ -29,7 +30,7 @@ describe('MarkdownParser', function() {
     describe('empty markdown', function() {
         it('returns testsuitedescriptor with no tests', function() {
             let markdownParser = new MarkdownParser();
-            let descriptor = markdownParser.parseFile(`${__dirname}/artifacts/noElements.md`);
+            let descriptor = markdownParser.parseFile(path.join(__dirname, '..', 'artifacts', 'parser', 'noElements.md'));
             assert.strictEqual(descriptor.getTests().length, 0);
         });
     });
