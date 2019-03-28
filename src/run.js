@@ -57,6 +57,7 @@ if(args.verbose) {
     console.log(`Loading files from ${baseInputPath}\n`);
 }
 
+console.log(cssFiles);
 if(cssFiles) {
     htmlGenerator.setCssFiles(cssFiles);
 }
@@ -70,5 +71,8 @@ let inputPaths = fileLocator.locateFiles(baseInputPath, baseOutputPath);
 
 inputPaths.forEach((inputPath) => {
     let outputPath = convertPath(inputPath, baseInputPath, baseOutputPath);
+    console.log(inputPath);
+    console.log(outputPath);
+    console.log(path.relative(path.dirname(outputPath), inputPath));
     processFile(inputPath, outputPath);
 });

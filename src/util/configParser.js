@@ -49,7 +49,7 @@ class ConfigParser {
 
         let baseInputPath = configs.config.basePath;
         let baseOutputPath = configs.config.outputPath;
-        let cssFiles = configs.config.cssFile;
+        let cssFiles = configs.config.cssFiles;
         let template = configs.config.template;
         return { baseInputPath, baseOutputPath, cssFiles, template };
     }

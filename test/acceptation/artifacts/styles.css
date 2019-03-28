@@ -1,0 +1,34 @@
+body {
+    background-color: #ddd;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 1.2em;
+}
+
+h1 {
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+h2 {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 1.1em;
+}
+
+span {
+    padding: 1px;
+}
+
+span.successful-test {
+    background-color: #40d651;
+}
+
+span.failed-test {
+    background-color: #ff4040;
+}
+
+span.failed-test-expected-result {
+    text-decoration: line-through;
+}
+
+span.failed-test-actual-result {
+    font-style: italic;
+}
