@@ -1,5 +1,5 @@
-const TestResult = require('../testsuite/TestResult');
-const TestSuiteResult = require('../testsuite/TestSuiteResult');
+const TestResult = require('../model/TestResult');
+const TestSuiteResult = require('../model/TestSuiteResult');
 
 class TestRunner{
     constructor(descriptor){

@@ -1,5 +1,5 @@
-const Test = require('../testsuite/Test');
-const TestSuiteDescriptor = require('../testsuite/TestSuiteDescriptor');
+const Test = require('../model/Test');
+const TestSuiteDescriptor = require('../model/TestSuiteDescriptor');
 const path = require('path');
 const fs = require('fs'); // eslint-disable-line no-unused-vars
 

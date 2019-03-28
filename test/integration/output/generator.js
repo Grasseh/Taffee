@@ -4,9 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const HTMLGenerator = require('../../../src/output/generator');
 
-const Test = require('../../../src/testsuite/Test');
-const TestResult = require('../../../src/testsuite/TestResult');
-const TestSuiteResult = require('../../../src/testsuite/TestSuiteResult');
+const Test = require('../../../src/model/Test');
+const TestResult = require('../../../src/model/TestResult');
+const TestSuiteResult = require('../../../src/model/TestSuiteResult');
 
 describe('Output Integration', function() {
     describe('HTMLGenerator', function() {

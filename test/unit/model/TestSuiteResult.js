@@ -1,7 +1,7 @@
 /* global describe, it */
 const assert = require('assert');
 
-const TestSuiteResult = require('../../../src/testsuite/TestSuiteResult');
+const TestSuiteResult = require('../../../src/model/TestSuiteResult');
 
 describe('TestSuiteResult', function() {
     let testSuiteResult = null;

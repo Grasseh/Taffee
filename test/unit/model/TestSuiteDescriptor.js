@@ -1,7 +1,7 @@
 /* global describe, it */
 const assert = require('assert');
 
-const TestSuiteDescriptor = require('../../../src/testsuite/TestSuiteDescriptor');
+const TestSuiteDescriptor = require('../../../src/model/TestSuiteDescriptor');
 
 describe('TestSuiteDescriptor', function() {
     let testSuiteDescriptor = null;
