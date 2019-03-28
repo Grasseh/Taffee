@@ -1,4 +1,4 @@
 {
-    "outputPath" : "test/acceptation/artifacts/",
+    "outputPath" : "test/acceptation/artifacts",
     "basePath" : "test/acceptation/artifacts/test1.md"
 }

@@ -12,7 +12,7 @@ describe('Output Integration', function() {
     describe('HTMLGenerator', function() {
         it('Should convert MD to HTML', function() {
             let testFile = path.join(__dirname, '..', 'artifacts', 'output', 'OutputIntegrationTest.md');
-            let outputDir = path.join(__dirname, '..', 'artifacts', 'output');
+            let outputPath = path.join(__dirname, '..', 'artifacts', 'output', 'OutputIntegrationTest.html');
             let cssFile = path.join(__dirname, '..', 'artifacts', 'output', 'basic.css');
             let template = path.join(__dirname, '..', 'artifacts', 'output', 'template.html');
             let testResults = [];
@@ -56,7 +56,7 @@ describe('Output Integration', function() {
             let htmlGenerator = new HTMLGenerator();
             htmlGenerator.setCssFiles(cssFile);
             htmlGenerator.setTemplate(template);
-            let resultingHtml = htmlGenerator.generate(testSuiteResult, testFile, outputDir);
+            let resultingHtml = htmlGenerator.generate(testSuiteResult, testFile, outputPath);
 
             let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedOut.html');
             let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');

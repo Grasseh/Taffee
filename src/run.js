@@ -9,12 +9,24 @@ const MarkdownFileLocator = require('./locator/MarkdownFileLocator');
 let parser = new MarkdownParser();
 let htmlGenerator = new HTMLGenerator();
 
-function processFile(inputFile, outputFile) {
-    if (args.verbose) {
-        console.log(`Loading tests from ${inputFile}`);
+function convertPath(inputPath, baseInputPath, baseOutputPath) {
+    if('' !== path.extname(baseInputPath)) {
+        baseInputPath = path.dirname(baseInputPath);
     }
 
-    let descriptor = parser.parseFile(inputFile);
+    let ext = path.extname(inputPath);
+    let outputPath = inputPath.replace(ext, '.html');
+    outputPath = outputPath.replace(baseInputPath, baseOutputPath);
+
+    return outputPath;
+}
+
+function processFile(inputPath, outputPath) {
+    if (args.verbose) {
+        console.log(`Loading tests from ${inputPath}`);
+    }
+
+    let descriptor = parser.parseFile(inputPath);
 
     if (args.verbose) {
         console.log(`Preparing tests from ${descriptor.getMarkdown()}`);
@@ -29,26 +41,21 @@ function processFile(inputFile, outputFile) {
     let result = runner.run();
 
     if (args.verbose) {
-        console.log(`Generating HTML File at ${outputPath}/output.html`);
+        console.log(`Generating HTML File at ${outputPath}`);
     }
 
-    let resultingHtml = htmlGenerator.generate(result, result.getMarkdown(), outputPath);
+    let html = htmlGenerator.generate(result, inputPath, outputPath);
 
-    fs.mkdirSync(path.dirname(outputFile), { recursive: true });
-    fs.writeFileSync(outputFile, resultingHtml);
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, html);
 }
 
-// Load the user configs
 const confParser = new configParser();
-let {paths : {basePath, outputPath, cssFiles, template}, args} = confParser.parseConfig();
+let {paths : {baseInputPath, baseOutputPath, cssFiles, template}, args} = confParser.parseConfig();
 
-// We locate the files with the specified FileLocator from the config
-if(args.verbose){
-    console.log(`Loading files from ${basePath}`);
+if(args.verbose) {
+    console.log(`Loading files from ${baseInputPath}\n`);
 }
-
-let fileLocator = new MarkdownFileLocator();
-let files = fileLocator.locateFiles(basePath);
 
 if(cssFiles) {
     htmlGenerator.setCssFiles(cssFiles);
@@ -58,12 +65,10 @@ if(template) {
     htmlGenerator.setTemplate(template);
 }
 
-if('' !== path.extname(basePath)) {
-    basePath = path.dirname(basePath);
-}
+let fileLocator = new MarkdownFileLocator();
+let inputPaths = fileLocator.locateFiles(baseInputPath, baseOutputPath);
 
-files.forEach((inFile) => {
-    let outFile = inFile.replace(basePath, outputPath);
-    outFile = outFile.replace('.md', '.html');
-    processFile(inFile, outFile);
+inputPaths.forEach((inputPath) => {
+    let outputPath = convertPath(inputPath, baseInputPath, baseOutputPath);
+    processFile(inputPath, outputPath);
 });
