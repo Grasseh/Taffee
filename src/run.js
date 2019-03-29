@@ -1,67 +1,74 @@
-const App = require('./index');
 const fs = require('fs');
+const path = require('path');
 const configParser = require('./util/configParser');
 const testRunner = require('./runner/TestRunner');
 const HTMLGenerator = require('./output/generator');
+const MarkdownParser = require('./parser/MarkdownParser');
+const MarkdownFileLocator = require('./locator/MarkdownFileLocator');
 
-// Load the user configs
-// TODO : Search in arg for path
-const confParser = new configParser();
-let {paths : {basePath, outputPath, cssFiles, template}, args} = confParser.parseConfig();
-// We locate the files with the specified FileLocator from the config
-if(args.verbose){
-    console.log(`Loading files from ${basePath}`);
-}
-let fileLocator = new App.interpreter.MarkdownFileLocator();
-let files = fileLocator.locateFiles(basePath);
+let parser = new MarkdownParser();
+let htmlGenerator = new HTMLGenerator();
 
-// We parse each files with the specified parser from the config
-// and we generate the TestSuiteDescriptor then add it to the list
-let parser = new App.interpreter.MarkdownParser();
-let testSuiteDescriptors = [];
-
-for(let file of files){
-    if (args.verbose) {
-        console.log(`Loading tests from ${file}`);
+function convertPath(inputPath, baseInputPath, baseOutputPath) {
+    if('' !== path.extname(baseInputPath)) {
+        baseInputPath = path.dirname(baseInputPath);
     }
-    let testSuiteDescriptor = parser.parseFile(file);
-    testSuiteDescriptors.push(testSuiteDescriptor);
+
+    let ext = path.extname(inputPath);
+    let outputPath = inputPath.replace(ext, '.html');
+    outputPath = outputPath.replace(baseInputPath, baseOutputPath);
+
+    return outputPath;
 }
 
-// Create the TestRunner with each testSuiteDescriptors associated
-// and bind the Invoker
-let testRunners = [];
-for(let descriptor of testSuiteDescriptors){
+function processFile(inputPath, outputPath) {
+    if (args.verbose) {
+        console.log(`Loading tests from ${inputPath}`);
+    }
+
+    let descriptor = parser.parseFile(inputPath);
+
     if (args.verbose) {
         console.log(`Preparing tests from ${descriptor.getMarkdown()}`);
     }
-    let runner = new testRunner(descriptor);
-    testRunners.push(runner);
-}
 
-// Run each TestRunners, which generates the TestResult(s)
-// contained in the TestSuiteResult
-let testResults = [];
-for(let runner of testRunners){
+    let runner = new testRunner(descriptor);
+
     if (args.verbose) {
         console.log(`Running tests from ${runner.descriptor.getMarkdown()}`);
     }
+
     let result = runner.run();
-    testResults.push(result);
+
+    if (args.verbose) {
+        console.log(`Generating HTML File at ${outputPath}`);
+    }
+
+    let html = htmlGenerator.generate(result, result.getMarkdown(), outputPath);
+
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, html);
 }
 
-// Generate the outputs of the TestSuiteResult(s) in HTML
-let htmlGenerator = new HTMLGenerator();
-if(cssFiles){
+const confParser = new configParser();
+let {paths : {baseInputPath, baseOutputPath, cssFiles, template}, args} = confParser.parseConfig();
+
+if(args.verbose) {
+    console.log(`Loading files from ${baseInputPath}\n`);
+}
+
+if(cssFiles) {
     htmlGenerator.setCssFiles(cssFiles);
 }
-if(template){
+
+if(template) {
     htmlGenerator.setTemplate(template);
 }
-for(let result of testResults){
-    if (args.verbose) {
-        console.log(`Generating HTML File at ${outputPath}/output.html`);
-    }
-    let resultingHtml = htmlGenerator.generate(result, result.getMarkdown(), outputPath);
-    fs.writeFileSync(`${outputPath}/output.html`, resultingHtml);
-}
+
+let fileLocator = new MarkdownFileLocator();
+let inputPaths = fileLocator.locateFiles(baseInputPath, baseOutputPath);
+
+inputPaths.forEach((inputPath) => {
+    let outputPath = convertPath(inputPath, baseInputPath, baseOutputPath);
+    processFile(inputPath, outputPath);
+});

@@ -41,9 +41,10 @@ class HTMLGenerator {
         this.outputTemplate = template;
     }
 
-    generate(testSuiteResults, inputMdFilePath, outputDirectory) {
-        let relativeCssFiles = this.cssFiles.map((css) => path.relative(outputDirectory, css));
-        let body = this._generateHtmlBody(inputMdFilePath, testSuiteResults.getTestResults());
+    generate(testSuiteResults, inputPath, outputPath) {
+        let outputDir = path.dirname(outputPath);
+        let relativeCssFiles = this.cssFiles.map((css) => path.relative(outputDir, css));
+        let body = this._generateHtmlBody(inputPath, testSuiteResults.getTestResults());
 
         let templateParameters = {};
         templateParameters['cssFiles'] = relativeCssFiles;
@@ -56,9 +57,9 @@ class HTMLGenerator {
         return htmlContent;
     }
 
-    _generateHtmlBody(inputMdFilePath, testResults) {
+    _generateHtmlBody(inputPath, testResults) {
         let converter = new showdown.Converter();
-        let mdContent = fs.readFileSync(inputMdFilePath, 'UTF-8');
+        let mdContent = fs.readFileSync(inputPath, 'UTF-8');
 
         let regex = new RegExp(RegexConstants.ELEMENT_DETECTION_REGEX, 'g');
         let matches = mdContent.match(regex);
