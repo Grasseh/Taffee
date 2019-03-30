@@ -4,6 +4,7 @@ const assert = require('assert');
 const eol = require('eol');
 const fs = require('fs');
 const path = require('path');
+const rimraf = require('rimraf');
 
 describe('Accept Application Test', function() {
     it('Should work for a single file', function() {
@@ -18,11 +19,12 @@ describe('Accept Application Test', function() {
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
         expectedHtml = eol.auto(expectedHtml.slice(0, -1));
 
-        let resultedFile = path.join(__dirname, 'artifacts', 'test1.html');
+        let resultedFile = path.join(__dirname, 'output', 'test1.html');
         let resultingHtml = fs.readFileSync(resultedFile, 'UTF-8');
         resultingHtml = eol.auto(resultingHtml);
 
         assert.strictEqual(resultingHtml, expectedHtml);
+        rimraf.sync(path.join(__dirname, 'output'));
     });
 
     it('Should work recursively', function() {

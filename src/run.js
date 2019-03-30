@@ -61,7 +61,11 @@ class Main {
         logger.info(`Generating HTML File at ${outputPath}`);
         let content = generator.generate(result, result.getMarkdown(), outputPath);
 
-        fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+        let outputDir = path.dirname(outputPath);
+        if(!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+
         fs.writeFileSync(outputPath, content);
     }
 }
