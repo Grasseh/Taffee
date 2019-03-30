@@ -19,15 +19,17 @@ describe('Accept Application Test', function() {
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
         expectedHtml = eol.auto(expectedHtml.slice(0, -1));
 
-        // Because DOS exists.
-        expectedHtml = expectedHtml.replace('\\', '/');
 
         let resultedFile = path.join(__dirname, 'output', 'test1.html');
         let resultingHtml = fs.readFileSync(resultedFile, 'UTF-8');
         resultingHtml = eol.auto(resultingHtml);
 
-        assert.strictEqual(resultingHtml, expectedHtml);
+        // Because DOS exists.
+        resultingHtml = resultingHtml.replace(new RegExp(/\\/, 'g'), '/');
+
         rimraf.sync(path.join(__dirname, 'output'));
+
+        assert.strictEqual(resultingHtml, expectedHtml);
     });
 
     it('Should work recursively', function() {
@@ -42,12 +44,12 @@ describe('Accept Application Test', function() {
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
         expectedHtml = eol.auto(expectedHtml.slice(0, -1));
 
-        // Because DOS exists.
-        expectedHtml = expectedHtml.replace('\\', '/');
-
         let resultedFile = path.join(__dirname, 'artifacts', 'test1.html');
         let resultingHtml = fs.readFileSync(resultedFile, 'UTF-8');
         resultingHtml = eol.auto(resultingHtml);
+
+        // Because DOS exists.
+        resultingHtml = resultingHtml.replace(new RegExp(/\\/, 'g'), '/');
 
         assert.strictEqual(resultingHtml, expectedHtml);
     });

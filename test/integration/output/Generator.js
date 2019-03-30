@@ -59,6 +59,9 @@ describe('Output Integration', function() {
             htmlGenerator.setTemplate(template);
             let resultingHtml = htmlGenerator.generate(testSuiteResult, testFile, outputPath);
 
+            // Because DOS exists.
+            resultingHtml = resultingHtml.replace('\\', '/');
+
             let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedOut.html');
             let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
             expectedHtml = eol.auto(expectedHtml.slice(0, -1));
