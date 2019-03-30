@@ -1,3 +1,4 @@
+const eol = require('eol');
 const fs = require('fs');
 const handlebars = require('handlebars');
 const path = require('path');
@@ -54,7 +55,7 @@ class HTMLGenerator {
         let compiledTemplate = handlebars.compile(template.slice(0, -1));
         let htmlContent = compiledTemplate(templateParameters);
 
-        return htmlContent;
+        return eol.auto(htmlContent);
     }
 
     _generateHtmlBody(inputPath, testResults) {
