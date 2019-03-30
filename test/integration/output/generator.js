@@ -2,7 +2,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const HTMLGenerator = require('../../../src/output/generator');
+const HTMLGenerator = require('../../../src/output/Generator');
 
 const Test = require('../../../src/model/Test');
 const TestResult = require('../../../src/model/TestResult');

@@ -2,7 +2,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const HTMLGenerator = require('../../../src/output/generator');
+const HTMLGenerator = require('../../../src/output/Generator');
 
 class TestStub {
     constructor(name, testClass, expectedResult, parameters) {

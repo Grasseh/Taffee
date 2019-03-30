@@ -11,10 +11,7 @@ describe('Accept Application Test', function() {
         let command = `node bin/taffee --config "${configPath}"`;
         let options = {};
 
-        let output = execSync(command, options);
-        if(0 !== output.length) {
-            console.log(output.toString());
-        }
+        execSync(command, options);
 
         let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOutSingle.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
@@ -31,10 +28,7 @@ describe('Accept Application Test', function() {
         let command = `node bin/taffee -e --config "${configPath}"`;
         let options = {};
 
-        let output = execSync(command, options);
-        if(0 !== output.length) {
-            console.log(output.toString());
-        }
+        execSync(command, options);
 
         let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOutRecursive.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');

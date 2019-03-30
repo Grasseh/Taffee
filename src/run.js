@@ -2,9 +2,10 @@ const fs = require('fs');
 const path = require('path');
 
 const SilentLogger = require('./log/SilentLogger');
+const VerboseLogger = require('./log/VerboseLogger');
 const ConfigParser = require('./util/ConfigParser');
 const TestRunner = require('./runner/TestRunner');
-const HTMLGenerator = require('./output/generator');
+const HTMLGenerator = require('./output/Generator');
 const MarkdownParser = require('./parser/MarkdownParser');
 const MarkdownFileLocator = require('./locator/MarkdownFileLocator');
 
@@ -78,7 +79,7 @@ function main(conf = new ConfigParser(), logger = new SilentLogger()) {
     }
 
     if(args.verbose) {
-        main.setLogger(new SilentLogger());
+        main.setLogger(new VerboseLogger());
     }
 
     main.main(baseInputPath, baseOutputPath);
