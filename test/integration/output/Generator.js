@@ -1,5 +1,6 @@
 /* global describe, it */
 const assert = require('assert');
+const eol = require('eol');
 const fs = require('fs');
 const path = require('path');
 const HTMLGenerator = require('../../../src/output/Generator');
@@ -60,8 +61,9 @@ describe('Output Integration', function() {
 
             let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedOut.html');
             let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
+            expectedHtml = eol.auto(expectedHtml.slice(0, -1));
 
-            assert.strictEqual(resultingHtml, expectedHtml.slice(0, -1));
+            assert.strictEqual(resultingHtml, expectedHtml);
         });
     });
 });

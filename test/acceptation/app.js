@@ -1,6 +1,7 @@
 /* global describe, it */
 const { execSync } = require('child_process');
 const assert = require('assert');
+const eol = require('eol');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,11 +16,13 @@ describe('Accept Application Test', function() {
 
         let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOutSingle.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
+        expectedHtml = eol.auto(expectedHtml.slice(0, -1));
 
         let resultedFile = path.join(__dirname, 'artifacts', 'test1.html');
         let resultingHtml = fs.readFileSync(resultedFile, 'UTF-8');
+        resultingHtml = eol.auto(resultingHtml);
 
-        assert.strictEqual(resultingHtml, expectedHtml.slice(0, -1));
+        assert.strictEqual(resultingHtml, expectedHtml);
     });
 
     it('Should work recursively', function() {
@@ -32,10 +35,12 @@ describe('Accept Application Test', function() {
 
         let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOutRecursive.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
+        expectedHtml = eol.auto(expectedHtml.slice(0, -1));
 
         let resultedFile = path.join(__dirname, 'artifacts', 'test1.html');
         let resultingHtml = fs.readFileSync(resultedFile, 'UTF-8');
+        resultingHtml = eol.auto(resultingHtml);
 
-        assert.strictEqual(resultingHtml, expectedHtml.slice(0, -1));
+        assert.strictEqual(resultingHtml, expectedHtml);
     });
 });
