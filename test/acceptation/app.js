@@ -5,16 +5,34 @@ const fs = require('fs');
 const path = require('path');
 
 describe('Accept Application Test', function() {
-    it('Should work from A to Z', function() {
+    it('Should work for a single file', function() {
         this.timeout(5000);
-        let configPath = path.join(__dirname, '.testrc');
-        let command = `node src/run.js --config "${configPath}"`;
+        let configPath = path.join(__dirname, '.singlefilerc');
+        let command = `node bin/taffee --config "${configPath}"`;
         let options = {};
 
         let output = execSync(command, options);
         console.log(output.toString());
 
-        let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOut.html');
+        let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOutSingle.html');
+        let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
+
+        let resultedFile = path.join(__dirname, 'artifacts', 'test1.html');
+        let resultingHtml = fs.readFileSync(resultedFile, 'UTF-8');
+
+        assert.strictEqual(resultingHtml, expectedHtml.slice(0, -1));
+    });
+
+    it('Should work recursively', function() {
+        this.timeout(5000);
+        let configPath = path.join(__dirname, '.recursiverc');
+        let command = `node bin/taffee -e --config "${configPath}"`;
+        let options = {};
+
+        let output = execSync(command, options);
+        console.log(output.toString());
+
+        let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOutRecursive.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
 
         let resultedFile = path.join(__dirname, 'artifacts', 'test1.html');

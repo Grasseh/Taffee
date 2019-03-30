@@ -1,6 +1,9 @@
 /* global describe, it */
 const assert = require('assert');
 const sinon = require('sinon');
+const stdout = require('test-console').stdout;
+
+const VerboseLogger = require('../../../src/log/VerboseLogger');
 const ConfigParser = require('../../../src/util/configParser');
 
 describe('ConfigParser', function() {
@@ -60,6 +63,9 @@ describe('ConfigParser', function() {
 
         it('Should exit on no paths found', function() {
             let configParser = new ConfigParser();
+
+            let logger = new VerboseLogger();
+
             let explorersStub = {
                 searchSync : sinon.stub().returns(null),
             };
@@ -73,7 +79,12 @@ describe('ConfigParser', function() {
             let processStub = sinon.stub(configParser, '_getProcess').returns(processStubFn);
             let configPath = null;
 
-            configParser.parsePaths(configPath);
+            let inspect = stdout.inspect();
+            configParser.parsePaths(configPath, logger);
+            inspect.restore();
+            assert.strictEqual(inspect.output.length, 1);
+            assert.deepEqual(inspect.output, ['[ERROR] No config file found!\n']);
+
             assert(cosmiconfigStub.called);
             assert(explorerStub.calledWith('taffee'));
             assert(processStub.called);
