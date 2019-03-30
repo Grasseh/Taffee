@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const stdout = require('test-console').stdout;
 
 const VerboseLogger = require('../../../src/log/VerboseLogger');
-const ConfigParser = require('../../../src/util/configParser');
+const ConfigParser = require('../../../src/util/ConfigParser');
 
 describe('ConfigParser Unit', function() {
     describe('parsePaths', function() {

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SilentLogger = require('./log/SilentLogger');
-const ConfigParser = require('./util/configParser');
+const ConfigParser = require('./util/ConfigParser');
 const TestRunner = require('./runner/TestRunner');
 const HTMLGenerator = require('./output/generator');
 const MarkdownParser = require('./parser/MarkdownParser');
