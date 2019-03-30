@@ -12,7 +12,9 @@ describe('Accept Application Test', function() {
         let options = {};
 
         let output = execSync(command, options);
-        console.log(output.toString());
+        if(0 !== output.length) {
+            console.log(output.toString());
+        }
 
         let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOutSingle.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
@@ -30,7 +32,9 @@ describe('Accept Application Test', function() {
         let options = {};
 
         let output = execSync(command, options);
-        console.log(output.toString());
+        if(0 !== output.length) {
+            console.log(output.toString());
+        }
 
         let expectedFile = path.join(__dirname, 'artifacts', 'ExpectedOutRecursive.html');
         let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
