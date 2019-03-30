@@ -1,9 +1,9 @@
 const Test = require('../model/Test');
 const TestSuiteDescriptor = require('../model/TestSuiteDescriptor');
 const path = require('path');
-const fs = require('fs'); // eslint-disable-line no-unused-vars
+const fs = require('fs');
 
-const RegexConstants = require('../util/regex_constants');
+const RegexConstants = require('../util/RegexConstants');
 
 class MarkdownParser {
     constructor() {
@@ -27,11 +27,10 @@ class MarkdownParser {
         this.params = {};
     }
 
-    parseFile(filePath, options){ // eslint-disable-line no-unused-vars
+    parseFile(filePath) {
         let mdContent = fs.readFileSync(filePath, 'UTF-8');
 
         this._generateTests(mdContent);
-
         return this._generateDescriptor(filePath);
     }
 
@@ -44,15 +43,15 @@ class MarkdownParser {
         return fn;
     }
 
-    _generateTests(mdContent){
+    _generateTests(mdContent) {
         let regex = new RegExp(RegexConstants.ELEMENT_DETECTION_REGEX, 'g');
         let matches = mdContent.match(regex);
-        if(null !== matches){
+        if(null !== matches) {
             this._parseMatches(matches);
         }
     }
 
-    _parseMatches(matches){
+    _parseMatches(matches) {
         let parseElement;
 
         matches.forEach((match) => {
@@ -61,7 +60,7 @@ class MarkdownParser {
         });
     }
 
-    _parseInvoker(match){
+    _parseInvoker(match) {
         let invokerElementsRegex = new RegExp(RegexConstants.INVOKER_ELEMENTS_REGEX, 'g');
         let invokerElements = invokerElementsRegex.exec(match);
         let value = invokerElements[RegexConstants.INVOKER_VALUE_INDEX];
@@ -69,7 +68,7 @@ class MarkdownParser {
         this.invoker = value;
     }
 
-    _parseModule(match){
+    _parseModule(match) {
         let moduleElementsRegex = new RegExp(RegexConstants.MODULE_ELEMENTS_REGEX, 'g');
         let moduleElements = moduleElementsRegex.exec(match);
         let value = moduleElements[RegexConstants.MODULE_VALUE_INDEX];
@@ -77,7 +76,7 @@ class MarkdownParser {
         this.module = value;
     }
 
-    _parseParameter(match){
+    _parseParameter(match) {
         let parameterElementsRegex = new RegExp(RegexConstants.PARAMETER_ELEMENTS_REGEX, 'g');
         let parameterElements = parameterElementsRegex.exec(match);
         let value = parameterElements[RegexConstants.PARAMETER_VALUE_INDEX];
@@ -86,7 +85,7 @@ class MarkdownParser {
         this.params[name] = value;
     }
 
-    _parseTests(match){
+    _parseTests(match) {
         let testElementsRegex = new RegExp(RegexConstants.TEST_ELEMENTS_REGEX, 'g');
         let testElements = testElementsRegex.exec(match);
 
@@ -113,7 +112,7 @@ class MarkdownParser {
         this.tests.push(new Test(testClass, testName, expectedResult, parameters));
     }
 
-    _getParameters(testParameters){
+    _getParameters(testParameters) {
         let parameters = {};
 
         testParameters.forEach((param) => {
@@ -123,7 +122,7 @@ class MarkdownParser {
         return parameters;
     }
 
-    _generateDescriptor(filepath){
+    _generateDescriptor(filepath) {
 
         let directory = path.dirname(filepath);
         let testFileName = path.join(directory, this.module);

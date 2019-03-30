@@ -3,7 +3,7 @@ const handlebars = require('handlebars');
 const path = require('path');
 const showdown = require('showdown');
 
-const RegexConstants = require('../util/regex_constants');
+const RegexConstants = require('../util/RegexConstants');
 
 const DEFAULT_CSS = path.join(__dirname, '..', 'resources', 'output', 'styles.css');
 const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'templates', 'outputTemplate.html');
