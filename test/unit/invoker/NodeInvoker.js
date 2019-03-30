@@ -3,7 +3,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const NodeInvoker = require('../../../src/invoker/NodeInvoker');
 
-describe('NodeInvoker', function() {
+describe('NodeInvoker Unit', function() {
     describe('invoke', function() {
         it('Should return Hello world', function() {
             let nodeInvoker = new NodeInvoker();

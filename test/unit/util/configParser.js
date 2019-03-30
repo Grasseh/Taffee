@@ -6,7 +6,7 @@ const stdout = require('test-console').stdout;
 const VerboseLogger = require('../../../src/log/VerboseLogger');
 const ConfigParser = require('../../../src/util/configParser');
 
-describe('ConfigParser', function() {
+describe('ConfigParser Unit', function() {
     describe('parsePaths', function() {
         it('Should return config paths on default', function() {
             let configParser = new ConfigParser();

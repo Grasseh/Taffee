@@ -4,7 +4,7 @@ const path = require('path');
 const sinon = require('sinon');
 const PhpInvoker = require('../../../src/invoker/PhpInvoker');
 
-describe('PhpInvoker', function() {
+describe('PhpInvoker Unit', function() {
     describe('invoke', function() {
         it('Should return Hello world', function() {
             let phpInvoker = new PhpInvoker();
