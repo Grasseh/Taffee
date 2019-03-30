@@ -60,7 +60,7 @@ describe('Output Integration', function() {
             let resultingHtml = htmlGenerator.generate(testSuiteResult, testFile, outputPath);
 
             // Because DOS exists.
-            resultingHtml = resultingHtml.replace('\\', '/');
+            resultingHtml = resultingHtml.replace(new RegExp(/\\/, 'g'), '/');
 
             let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedOut.html');
             let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
