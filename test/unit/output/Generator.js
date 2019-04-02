@@ -1,8 +1,9 @@
 /* global describe, it */
 const assert = require('assert');
+const eol = require('eol');
 const fs = require('fs');
 const path = require('path');
-const HTMLGenerator = require('../../../src/output/generator');
+const HTMLGenerator = require('../../../src/output/Generator');
 
 class TestStub {
     constructor(name, testClass, expectedResult, parameters) {
@@ -93,8 +94,10 @@ describe('Output Unit', function() {
 
                 let gen = new HTMLGenerator();
                 let res = gen._generateHtmlBody(testFile, testResults);
+                res = eol.auto(res);
 
                 let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8').slice(0, -1);
+                expectedHtml = eol.auto(expectedHtml);
                 assert.strictEqual(res, expectedHtml);
             });
 
@@ -113,8 +116,10 @@ describe('Output Unit', function() {
 
                 let gen = new HTMLGenerator();
                 let res = gen._generateHtmlBody(testFile, testResults);
+                res = eol.auto(res);
 
                 let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8').slice(0, -1);
+                expectedHtml = eol.auto(expectedHtml);
                 assert.strictEqual(res, expectedHtml);
             });
 
@@ -133,8 +138,10 @@ describe('Output Unit', function() {
 
                 let gen = new HTMLGenerator();
                 let res = gen._generateHtmlBody(testFile, testResults);
+                res = eol.auto(res);
 
                 let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8').slice(0, -1);
+                expectedHtml = eol.auto(expectedHtml);
                 assert.strictEqual(res, expectedHtml);
             });
         });

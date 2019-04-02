@@ -1,8 +1,9 @@
 /* global describe, it */
 const assert = require('assert');
+const eol = require('eol');
 const fs = require('fs');
 const path = require('path');
-const HTMLGenerator = require('../../../src/output/generator');
+const HTMLGenerator = require('../../../src/output/Generator');
 
 const Test = require('../../../src/model/Test');
 const TestResult = require('../../../src/model/TestResult');
@@ -58,10 +59,14 @@ describe('Output Integration', function() {
             htmlGenerator.setTemplate(template);
             let resultingHtml = htmlGenerator.generate(testSuiteResult, testFile, outputPath);
 
+            // Because DOS exists.
+            resultingHtml = resultingHtml.replace(new RegExp(/\\/, 'g'), '/');
+
             let expectedFile = path.join(__dirname, '..', 'artifacts', 'output', 'ExpectedOut.html');
             let expectedHtml = fs.readFileSync(expectedFile, 'UTF-8');
+            expectedHtml = eol.auto(expectedHtml.slice(0, -1));
 
-            assert.strictEqual(resultingHtml, expectedHtml.slice(0, -1));
+            assert.strictEqual(resultingHtml, expectedHtml);
         });
     });
 });

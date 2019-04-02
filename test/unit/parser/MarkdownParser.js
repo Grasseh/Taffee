@@ -4,11 +4,11 @@ const path = require('path');
 
 const MarkdownParser = require('../../../src/parser/MarkdownParser');
 
-describe('MarkdownParser', function() {
+describe('MarkdownParser Unit', function() {
     describe('parseFile', function() {
-        it('returns testsuitedescriptor with correct invoker and # of tests', function() {
-            let markdownParser = new MarkdownParser();
-            let descriptor = markdownParser.parseFile(path.join(__dirname, '..', 'artifacts', 'parser', 'test.md'));
+        it('Should return a complete TestSuiteDescriptor', function() {
+            let parser = new MarkdownParser();
+            let descriptor = parser.parseFile(path.join(__dirname, '..', 'artifacts', 'parser', 'test.md'));
             assert.strictEqual(descriptor.getInvoker(), 'NiceInvoker');
             assert.strictEqual(descriptor.getTests().length, 4);
             assert.strictEqual(descriptor.getTests()[0].getTestClass(), 'a');
@@ -25,12 +25,10 @@ describe('MarkdownParser', function() {
             assert.strictEqual(descriptor.getTests()[3].getParameters()['v'], 'B');
             assert.strictEqual(descriptor.getTests()[3].getParameters()['v2'], 'C');
         });
-    });
 
-    describe('empty markdown', function() {
-        it('returns testsuitedescriptor with no tests', function() {
-            let markdownParser = new MarkdownParser();
-            let descriptor = markdownParser.parseFile(path.join(__dirname, '..', 'artifacts', 'parser', 'noElements.md'));
+        it('Should return a TestSuiteDescriptor with no tests', function() {
+            let parser = new MarkdownParser();
+            let descriptor = parser.parseFile(path.join(__dirname, '..', 'artifacts', 'parser', 'noElements.md'));
             assert.strictEqual(descriptor.getTests().length, 0);
         });
     });

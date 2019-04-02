@@ -90,7 +90,7 @@ class TestResultStub {
 
 describe('Runner Unit', function() {
     describe('run', function() {
-        it('Can handle a passing and a failing test!', function() {
+        it('Should handle a passing and a failing test', function() {
             let testA = new TestStub('test A', 'a', 'Hello World');
             let testB = new TestStub('test B', 'b', 'Hello Wool');
             let testParams = new TestStub('test params', 'c', '2', {a:'1', b:'1'});

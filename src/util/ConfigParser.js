@@ -2,9 +2,9 @@ const cosmiconfig = require('cosmiconfig');
 const ArgumentParser = require('argparse').ArgumentParser;
 
 class ConfigParser {
-    parseConfig() {
+    parseConfig(logger) {
         let args = this.parseArgs();
-        return { paths: this.parsePaths(args.config), args };
+        return { paths: this.parsePaths(args.config, logger), args };
     }
 
     parseArgs() {
@@ -24,7 +24,7 @@ class ConfigParser {
         parser.addArgument(
             ['-e', '--verbose'],
             {
-                help: 'Increase software verbosity',
+                help: 'Increase software verbosity.',
                 nargs: 0,
                 defaultValue : false
             }
@@ -34,7 +34,7 @@ class ConfigParser {
         return args;
     }
 
-    parsePaths(configPath) {
+    parsePaths(configPath, logger) {
         const explorer = this._getCosmiconfig()('taffee');
         let configs = explorer.searchSync();
 
@@ -43,7 +43,7 @@ class ConfigParser {
         }
 
         if(!configs) {
-            console.error('No config file found!');
+            logger.error('No config file found!');
             return this._getProcess().exit(1);
         }
 

@@ -1,9 +1,10 @@
+const eol = require('eol');
 const fs = require('fs');
 const handlebars = require('handlebars');
 const path = require('path');
 const showdown = require('showdown');
 
-const RegexConstants = require('../util/regex_constants');
+const RegexConstants = require('../util/RegexConstants');
 
 const DEFAULT_CSS = path.join(__dirname, '..', 'resources', 'output', 'styles.css');
 const DEFAULT_TEMPLATE = path.join(__dirname, '..', 'resources', 'output', 'templates', 'outputTemplate.html');
@@ -54,7 +55,7 @@ class HTMLGenerator {
         let compiledTemplate = handlebars.compile(template.slice(0, -1));
         let htmlContent = compiledTemplate(templateParameters);
 
-        return htmlContent;
+        return eol.auto(htmlContent);
     }
 
     _generateHtmlBody(inputPath, testResults) {
