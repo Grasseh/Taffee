@@ -1,5 +1,5 @@
-const TestResult = require('../testsuite/TestResult');
-const TestSuiteResult = require('../testsuite/TestSuiteResult');
+const TestResult = require('../model/TestResult');
+const TestSuiteResult = require('../model/TestSuiteResult');
 
 class TestRunner{
     constructor(descriptor){
@@ -11,10 +11,11 @@ class TestRunner{
     run(){
         for(let test of this.descriptor.getTests()){
             let options = {
-                className : test.getTestClass()
+                className : test.getTestClass(),
+                params : test.getParameters()
             };
             let actualResult = this.invoker.invoke(test.getTestName(), this.descriptor.getTestFileName(), options);
-            let success = actualResult === test.getExpectedResult();
+            let success = actualResult.toString() === test.getExpectedResult();
             this.results.push(new (this._getTestResult())(test, success, actualResult));
         }
         return new (this._getTestSuiteResult())(this.results, this.descriptor.getMarkdown());

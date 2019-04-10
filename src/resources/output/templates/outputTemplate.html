@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {{#each cssFiles}}
+        <link rel="stylesheet" href="{{this}}">
+        {{/each}}
+    </head>
+    <body>
+{{{content}}}
+    </body>
+</html>

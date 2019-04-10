@@ -1,54 +1,92 @@
-const App = require('./index');
 const fs = require('fs');
 const path = require('path');
-const testRunner = require('./runner/TestRunner');
-const HTMLGenerator = require('./output/generator');
 
-// Lookup the argv sent to the script for the run
-// (possibly use https://www.npmjs.com/package/yargs)
-let basePath = path.join(__dirname, '..', 'test', 'integration', 'artifacts', 'markdown');
+const SilentLogger = require('./log/SilentLogger');
+const VerboseLogger = require('./log/VerboseLogger');
+const ConfigParser = require('./util/ConfigParser');
+const TestRunner = require('./runner/TestRunner');
+const HTMLGenerator = require('./output/Generator');
+const MarkdownParser = require('./parser/MarkdownParser');
+const MarkdownFileLocator = require('./locator/MarkdownFileLocator');
 
-// Check the config of the project from the end user
-// (possibly use https://www.npmjs.com/package/cosmiconfig)
-// - Custom invokers
-// - Outputs
-// - ???
-let outputPath = path.join(__dirname, '..', 'test', 'integration', 'artifacts', 'application');
-let cssPath = 'basic.css';
+class Main {
+    constructor() {
+        this._generator = new HTMLGenerator();
+        this._locator = new MarkdownFileLocator();
+        this._logger = new SilentLogger();
+        this._parser = new MarkdownParser();
+    }
 
-// We locate the files with the specified FileLocator from the config
-let fileLocator = new App.interpreter.MarkdownFileLocator();
-let files = fileLocator.locateFiles(basePath);
+    getGenerator() {
+        return this._generator;
+    }
 
-// We parse each files with the specified parser from the config
-// and we generate the TestSuiteDescriptor then add it to the list
-let parser = new App.interpreter.MarkdownParser();
-let testSuiteDescriptors = [];
+    setLogger(logger) {
+        this._logger = logger;
+    }
 
-for(let file of files){
-    let testSuiteDescriptor = parser.parseFile(file);
-    testSuiteDescriptors.push(testSuiteDescriptor);
+    main(baseInputPath, baseOutputPath) {
+        this._logger.info(`Loading files from ${baseInputPath}`);
+
+        // Process all relevant files.
+        let inputPaths = this._locator.locateFiles(baseInputPath, baseOutputPath);
+        inputPaths.forEach((inputPath) => {
+            let outputPath = this._convertPath(inputPath, baseInputPath, baseOutputPath);
+            this._processFile(inputPath, outputPath, this._parser, this._generator, this._logger);
+        });
+    }
+
+    _convertPath(inputPath, baseInputPath, baseOutputPath) {
+        if('' !== path.extname(baseInputPath)) {
+            baseInputPath = path.dirname(baseInputPath);
+        }
+
+        let ext = path.extname(inputPath);
+        let outputPath = inputPath.replace(ext, '.html');
+        outputPath = outputPath.replace(baseInputPath, baseOutputPath);
+
+        return outputPath;
+    }
+
+    _processFile(inputPath, outputPath, parser, generator, logger) {
+        logger.info(`Loading tests from ${inputPath}`);
+        let descriptor = parser.parseFile(inputPath);
+
+        logger.info(`Preparing tests from ${descriptor.getMarkdown()}`);
+        let runner = new TestRunner(descriptor);
+
+        logger.info(`Running tests from ${runner.descriptor.getMarkdown()}`);
+        let result = runner.run();
+
+        logger.info(`Generating HTML File at ${outputPath}`);
+        let content = generator.generate(result, result.getMarkdown(), outputPath);
+
+        let outputDir = path.dirname(outputPath);
+        if(!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+
+        fs.writeFileSync(outputPath, content);
+    }
 }
 
-// Create the TestRunner with each testSuiteDescriptors associated
-// and bind the Invoker
-let testRunners = [];
-for(let descriptor of testSuiteDescriptors){
-    let runner = new testRunner(descriptor);
-    testRunners.push(runner);
+function main(conf = new ConfigParser(), logger = new SilentLogger()) {
+    let { paths: { baseInputPath, baseOutputPath, cssFiles, template }, args } = conf.parseConfig(logger);
+
+    let main = new Main();
+    if(undefined !== cssFiles) {
+        main.getGenerator().setCssFiles(cssFiles);
+    }
+
+    if(undefined !== template) {
+        main.getGenerator().setTemplate(template);
+    }
+
+    if(args.verbose) {
+        main.setLogger(new VerboseLogger());
+    }
+
+    main.main(baseInputPath, baseOutputPath);
 }
 
-// Run each TestRunners, which generates the TestResult(s)
-// contained in the TestSuiteResult
-let testResults = [];
-for(let runner of testRunners){
-    let result = runner.run();
-    testResults.push(result);
-}
-
-// Generate the outputs of the TestSuiteResult(s) in HTML
-let htmlGenerator = new HTMLGenerator();
-for(let result of testResults){
-    let resultingHtml = htmlGenerator.generate(result, result.getMarkdown(), outputPath, cssPath);
-    fs.writeFileSync(`${outputPath}/output.html`, resultingHtml);
-}
+module.exports = { Main, main };

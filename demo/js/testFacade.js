@@ -8,8 +8,8 @@ class TestFacade {
         return helloWorld.getHelloWorld();
     }
 
-    testPlusOne(number) {
-        return number + 1;
+    testPlusOne({number = 1}) {
+        return parseInt(number) + 1;
     }
 
     testGetHighestBookId(){
@@ -23,11 +23,11 @@ class TestFacade {
         return bookReceive;
     }
 
-    testLibraryAddBook(isbn, title, description){
+    testLibraryAddBook({isbn = 1, title = 'title', description = 'desc'}){
         let library = new Library();
         library.addBook(isbn, title, description);
 
-        return library.getBookByIsbn(isbn);
+        return library.getBookByIsbn(isbn).getIsbn();
     }
 
     testUpdateBook(){

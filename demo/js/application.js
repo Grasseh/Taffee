@@ -67,9 +67,6 @@ class Application {
 
     updateBookChoice(){
         let response = '';
-        let isbn = '';
-        let title = '';
-        let description = '';
         let id = '';
         let bookfound = null;
 

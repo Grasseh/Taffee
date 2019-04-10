@@ -1,11 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" href="basic.css">
-</head>
-<body>
-<p>This is the integration test file.<br />
-This file contains a <span class="successful-test">passing</span> test.<br />
-This file also contains a <span class="failed-test"><span class="failed-test-expected-result">failing</span> <span class="failed-test-actual-result">actualValue</span></span> test.</p>
-</body>
+    <head>
+        <link rel="stylesheet" href="basic.css">
+    </head>
+    <body>
+<h1 id="outputintegrationtest">OUTPUT INTEGRATION TEST</h1>
+<p>This is the output integration test file.<br />
+<br /></p>
+<h2 id="parameterlesstests">PARAMETERLESS TESTS</h2>
+<p>Parameterless tests are the simplest supported form of tests.<br />
+<br />
+Passing parameterless tests are written in a simple form: <span class="successful-test">T1</span>.<br />
+Failing tests will always <span class="failed-test"><span class="failed-test-expected-result">T2</span> <span class="failed-test-actual-result">T2_ACTUAL</span></span> show the expected and real results.<br />
+<br /></p>
+<h2 id="singleparametertests">SINGLE PARAMETER TESTS</h2>
+<p>Single parameter tests support text input declaration like links.<br />
+Assigning a variable is done like so: V1<br />
+This will assign the value V1 to the parameter named var1 in the background map.<br />
+Reassigning a variable is done by reusing the statement: V2. Parameter var1 now has a value of V2.<br />
+This variable can now be passed to a test, either passing or failing.<br />
+<span class="successful-test">T3</span><br />
+<span class="failed-test"><span class="failed-test-expected-result">T4</span> <span class="failed-test-actual-result">T4_ACTUAL</span></span><br />
+<br /></p>
+<h2 id="multiparametertests">MULTI PARAMETER TESTS</h2>
+<p>Multi parameter tests function in the same way as single parameter tests.<br />
+First assign variables: V1, V2<br />
+<span class="successful-test">T5</span><br />
+<span class="failed-test"><span class="failed-test-expected-result">T6</span> <span class="failed-test-actual-result">T6_ACTUAL</span></span></p>
+    </body>
 </html>

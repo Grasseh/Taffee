@@ -1,0 +1,6 @@
+{
+    "outputPath": "test/acceptation/output/",
+    "basePath": "test/acceptation/artifacts/test1.md",
+    "cssFiles": "test/acceptation/artifacts/styles.css",
+    "template": "test/acceptation/artifacts/template.html"
+}

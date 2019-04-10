@@ -1,2 +1,4 @@
-This is a [passing](?=a.passingTest()) test.  
-This is a [failing](?=a.failingTest()) test.
+[](inv: OUTPUTInvoker)
+[](module: NiceModule)
+This is a [passing](test:a.passingTest()) test.  
+This is a [failing](test: a.failingTest()) test.
