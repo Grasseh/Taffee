@@ -39,7 +39,7 @@ class HTMLGenerator {
     }
 
     setTemplate(template) {
-        this.outputTemplate = template;
+        this.template = template;
     }
 
     generate(testSuiteResults, inputPath, outputPath) {
