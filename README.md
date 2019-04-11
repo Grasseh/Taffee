@@ -48,7 +48,7 @@ BDD Framework to sweetly display software test results from Markdown files.
 ...
 "scripts": {
     ...
-    "bdd" : "taffee -c .pfrec"
+    "bdd" : "taffee -c .tafferc"
   },
 ...
 ```
@@ -56,7 +56,7 @@ BDD Framework to sweetly display software test results from Markdown files.
 
 ### Usage
 
-#### Example 1
+#### Generic Markdown File
 
 [test1.md](demo/js/markdown/test1.md)
 ```
@@ -68,6 +68,59 @@ Our project rocks and needs to output Hello world!
 
 ## Example
 When the project function is called then we see the output [Hello World](t:Test.testHelloWorld()).
+```
+
+#### Invokers
+
+An invoker is a specific class which calls a specific script to execute as a child process in your system.
+An invoker can be defined in a markdown file using either `i`, `inv` or `invoker`.
+Here is a list of currently available invokers: 
+
+* PhpInvoker : Invokes a `php` file on your system.
+* NodeInvoker : Invokes a `node` file on your system.
+
+Declaration examples:
+```
+[](i:NodeInvoker)
+[](inv:PhpInvoker)
+[](invoker:NodeInvoker)
+```
+
+#### Modules
+
+A module is an entry-point to the software you want to run the tests on. 
+It contains the class that will have tests ran on.
+It can be defined in a markdown file using either `m`, `mod` or `module`.
+
+Declaration example:
+```
+[](m:../testFacade.js)
+[](mod:~/projects/myProject/testFacade.php)
+[](module:./myModule.js)
+```
+
+The entry-point must contain a class of the same name as the one given by the tests defined further in the Markdown.
+This class must also possess the functions declared in the Markdown. 
+These functions must contain the provided named parameters as an object (which allows unordered processing).
+
+Example : 
+Markdown:
+```
+[](i:NodeInvoker)
+[](m:../testFacade.js)
+[1](v:a), [2](v:b)
+[Expected](t:Test.myTest(a, b)).
+```
+
+Module (testfacade.js):
+```
+class Test{
+    myTest({a = 0, b = 0}){
+        if(a + b === 3){
+            return "Expected";
+        }
+    }
+}
 ```
 
 ## Contributing
